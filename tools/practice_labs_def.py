@@ -8,10 +8,14 @@ tests/practice-labs.py proves, for every lab, that the sample solution passes an
 
 R = 'https://github.com/TheAlgorithms/Python/blob/master/'
 
+def ref(repo, path, license='MIT', branch='master', local=None):
+    """A reference file in another repository. `local` is the bundled copy (MIT files only); None means link-only."""
+    return {'repo': repo, 'path': path, 'url': f'https://github.com/{repo}/blob/{branch}/{path}', 'local': local, 'license': license}
+
 def lab(id, title, track, level, concept, prompt, fn, starter, solution, test, hints, ref, mutants=()):
+    reference = ref if isinstance(ref, dict) else {'repo': 'TheAlgorithms/Python', 'path': ref, 'url': R + ref, 'local': 'third_party/thealgorithms-python/' + ref, 'license': 'MIT'}
     return dict(id=id, title=title, track=track, level=level, concept=concept, prompt=prompt, fn=fn, starter=starter.strip('\n') + '\n',
-                solution=solution.strip('\n') + '\n', test=test.strip('\n') + '\n', hints=list(hints), mutants=[m.strip('\n') + '\n' for m in mutants],
-                reference={'repo': 'TheAlgorithms/Python', 'path': ref, 'url': R + ref, 'local': 'third_party/thealgorithms-python/' + ref, 'license': 'MIT'})
+                solution=solution.strip('\n') + '\n', test=test.strip('\n') + '\n', hints=list(hints), mutants=[m.strip('\n') + '\n' for m in mutants], reference=reference)
 
 SORT_TEST = '''
 import random
@@ -173,7 +177,7 @@ for _ in range(200):
 ''',
      ['Set the distance when you first discover a node and never change it.', 'A node is "seen" when it is already a key of dist.'],
      'graphs/breadth_first_search.py',
-     ['def bfs_distances(graph, start):\n    return {start: 0}\n', 'def bfs_distances(graph, start):\n    dist = {start: 0}\n    stack = [start]\n    while stack:\n        node = stack.pop()\n        for nxt in graph.get(node, []):\n            dist[nxt] = dist[node] + 1\n            if nxt not in dist or True:\n                if len(dist) < 50:\n                    stack.append(nxt)\n            if len(dist) > 20:\n                break\n    return dist\n']),
+     ['def bfs_distances(graph, start):\n    return {start: 0}\n', 'def bfs_distances(graph, start):\n    dist = {start: 0}\n    for node in list(graph):\n        for nxt in graph.get(node, []):\n            if node in dist and nxt not in dist:\n                dist[nxt] = dist[node] + 1\n    return dist\n']),
  lab('dfs-order', 'Depth-first search', 'Graphs', 'Intermediate', 'Follow one path as deep as it goes, then backtrack.',
      'The graph is a dict from node to a list of neighbours. Write <code>dfs_order(graph, start)</code> returning the list of nodes in the order a <b>recursive depth-first search</b> first visits them, trying neighbours in the order they are listed.',
      'dfs_order',

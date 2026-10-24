@@ -1,3 +1,8 @@
+## Practice hub and the v7 merge (October 2026)
+
+New at `#/practice`: **421 practice-quiz questions** (pre- and post-lesson quizzes for 70 lessons in Machine Learning, AI Foundations and Data Science; MIT, from three Microsoft repositories), **27 hands-on Python labs** graded by hidden tests in your browser (algorithms, AI search, autograd, reinforcement learning, machine learning), a **Notebooks & course texts** page (65 notebooks and 79 texts copied unmodified from ISLP labs, Hands-On ML, Zero to Hero, LangChain Academy, the Hugging Face Agents Course and OSSU, with Colab and download links), and a **Sources & licences** page covering 30 repositories from your catalog (13 copied with their licence, 17 link only). The v7 textbook build (Textbooks atlas, Algorithm Design, ISLR, Operating Systems, Computer Networking) is merged in. See [`PHASE10_PRACTICE_HUB_NOTES.md`](PHASE10_PRACTICE_HUB_NOTES.md), [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and `docs/RESEARCH_ATLAS.md`.
+Tests: `node tests/practice-hub.test.cjs`, `python tests/practice-labs.py`, `python tests/practice-experience.py` (run Python tests with `PYTHONUTF8=1`).
+
 ## v4 — Statistical Learning textbook course (October 2026)
 
 This version extends v3 with a ten-lesson **Statistical Learning (ISLR with R)** course inside **Courses**, detailed guided study under **Textbooks**, ten original interactive SVG figures and ten downloadable **base-R practice scripts** (`downloads/r-labs/`). Original Manim source animations live in `video/manim/islr_scenes.py` (syntax checked, not rendered). Source subsection locators from the uploaded ISLR edition are available in each guided chapter and open the original pages through the local PDF reader.

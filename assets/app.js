@@ -25,6 +25,9 @@
   const courses = [window.DB_COURSE, window.OS_COURSE, window.NETWORK_COURSE, window.ISLR_COURSE, window.ALGO_COURSE, window.AI_COURSE, window.AGENTS_COURSE, window.ML_COURSE, window.LLM_COURSE, window.PROMPT_COURSE, window.DL_COURSE, ...legacy].filter(Boolean);
   const BOOK_FOR_COURSE = {'operating-systems':'os','computer-networking':'network','statistical-learning':'islr','algorithm-design':'algo',databases:'db','deep-learning':'d2l','ai-foundations':'aima','machine-learning':'islr','llm-engineering':'llm','prompt-engineering':'davies'};
   const bookFor = c => BOOK_FOR_COURSE[c.id] || null;
+  // Practice hub links (quizzes and coding labs) for the courses they match
+  const PRACTICE_FOR_COURSE = { 'machine-learning': ['Practice quizzes', '#/practice/quizzes/ml'], 'ai-foundations': ['Practice quizzes', '#/practice/quizzes/ai'], 'algorithm-design': ['Coding labs', '#/practice/labs'], 'deep-learning': ['Coding lab: autograd', '#/practice/lab/autograd-value'] };
+  const practiceLink = c => PRACTICE_FOR_COURSE[c.id] ? `<a class="btn full" href="${PRACTICE_FOR_COURSE[c.id][1]}">${PRACTICE_FOR_COURSE[c.id][0]} →</a>` : '';
   const CATS = [['all', 'All courses'], ['databases', 'Databases'], ['foundations', 'Foundations'], ['generative', 'Generative AI'], ['systems', 'Systems']];
   const getCourse = id => courses.find(c => c.id === id);
   const minutes = c => c.lessons.reduce((a, l) => a + (l.minutes || 5), 0);
@@ -179,6 +182,7 @@
         <div class="learn-course-cta"><a class="btn sm" href="#/diagnostic/${esc(c.id)}">${window.LearningEngine.diagnostic(c.id) ? 'View placement result' : 'Take placement check'}</a><a class="btn sm" href="#/my-learning">Study progress</a>${window.AgentsEvidence && window.AgentsEvidence.supports(c) ? `<a class="btn sm" href="#/evidence/${esc(c.id)}">Evidence of understanding</a>` : ''}</div>
         ${c.reference ? `<p class="ref">📖 ${esc(c.reference)}</p>` : ''}
         <a class="btn full" href="${bookFor(c) ? '#/book/' + bookFor(c) : '#/books'}">${bookFor(c) ? 'Related textbook &amp; figures' : 'Browse textbook chapter indexes'} →</a>
+        ${practiceLink(c)}
         ${c.lang === 'python' && !['operating-systems','computer-networking'].includes(c.id) ? `<a class="btn full" href="downloads/slides/${c.id}-quickstart.pptx" download>↓ Course slides (.pptx)</a>` : ''}
         <p class="outcome"><b>Outcome:</b> ${esc(c.outcome)}</p></div>
       </aside></div>`;
@@ -491,6 +495,7 @@
     else if (parts[0] === 'review') window.LearningUI.reviewPage(app, courses, parts);
     else if (parts[0] === 'evidence' && getCourse(parts[1]) && window.AgentsEvidence && window.AgentsEvidence.supports(getCourse(parts[1]))) window.AgentsEvidence.page(app, getCourse(parts[1]));
     else if (parts[0] === 'books' || parts[0] === 'book') window.TextbookAtlas.render(app, parts[0] === 'book' ? parts[1] : null);
+    else if (parts[0] === 'practice' && window.PracticeHub) window.PracticeHub.render(app, parts.slice(1));
     else if (parts[0] === 'prompts') promptLibraryPage();
     else if (parts[0] === 'course' && getCourse(parts[1])) {
       const c = getCourse(parts[1]); const l = parts[2] && c.lessons.find(x => x.id === parts[2]);

@@ -1,22 +1,21 @@
 """Proves that every hands-on algorithm lab of the Practice hub grades correctly, in real Python:
 the sample solution passes, the starter fails, and each deliberately wrong variant fails. Also checks hints, attribution and that the
 bundled upstream reference file exists. Run: python tests/practice-labs.py"""
-import ast, json, pathlib, sys, time
+import ast, json, pathlib, subprocess, sys, time
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.dont_write_bytecode = True
-from practice_labs_def import LABS
+from practice_labs_all import LABS
 
-def run(code, test):
-    ns = {}
-    exec(compile(code, '<learner>', 'exec'), ns)
-    exec(compile(test, '<hidden-test>', 'exec'), ns)
+RUNNER = "import sys, json; d = json.load(sys.stdin); ns = {}; exec(compile(d['code'], '<learner>', 'exec'), ns); exec(compile(d['test'], '<hidden-test>', 'exec'), ns)"
 
 def passes(code, test):
+    """Each variant runs in its own process with a time limit, so a wrong variant that loops forever cannot hang the suite."""
     try:
-        run(code, test); return True
-    except BaseException:
+        r = subprocess.run([sys.executable, '-I', '-c', RUNNER], input=json.dumps({'code': code, 'test': test}), capture_output=True, text=True, timeout=30)
+        return r.returncode == 0
+    except subprocess.TimeoutExpired:
         return False
 
 ids = [l['id'] for l in LABS]
@@ -33,13 +32,17 @@ for l in LABS:
     for i, m in enumerate(l['mutants']):
         assert not passes(m, l['test']), f"{l['id']}: wrong variant {i} passes the tests, so the tests are too weak:\n{m}"
     for code in (l['starter'], l['solution'], l['test'], *l['mutants']): ast.parse(code)
-    assert f"def {l['fn']}(" in l['starter'] and f"def {l['fn']}(" in l['solution'], l['id']
+    defines = lambda code: f"def {l['fn']}(" in code or f"class {l['fn']}" in code
+    assert defines(l['starter']) and defines(l['solution']), l['id']
     assert 'TODO' in l['starter'], l['id'] + ' starter should say what to do'
     assert len(l['hints']) >= 2 and all(len(h) > 20 for h in l['hints']), l['id']
     assert l['level'] in ('Beginner', 'Intermediate', 'Advanced') and l['prompt'].count('<code>') >= 1
     r = l['reference']
-    assert r['license'] == 'MIT' and r['url'].startswith('https://github.com/TheAlgorithms/Python/blob/master/')
-    assert (ROOT / r['local']).is_file(), 'missing bundled reference ' + r['local']
+    assert r['url'].startswith('https://github.com/' + r['repo'] + '/blob/'), r['url']
+    if r['local']:                                   # only MIT files are bundled; anything else is link-only
+        assert r['license'] in ('MIT', 'Apache-2.0', 'BSD-2-Clause') and (ROOT / r['local']).is_file(), 'missing bundled reference ' + r['local']
+    else:
+        assert r['license'] in ('MIT', 'Apache-2.0', 'BSD-2-Clause', 'BSD-3-Clause'), l['id'] + ': link-only references still need a known permissive licence'
     # the learner must not be able to pass by calling the reference solution through the standard library only
     for banned in ('sorted(', '.sort()'):
         if l['track'] == 'Sorting': assert banned not in l['solution'], f"{l['id']}: sample solution should not use {banned}"
