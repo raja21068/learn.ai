@@ -1,0 +1,410 @@
+[
+  {
+    "id": "lateness",
+    "chapter": 4,
+    "section": "4.2 Scheduling to Minimize Lateness: An Exchange Argument",
+    "pdf": 151,
+    "title": "Deadline ordering and the exchange proof",
+    "duration": 52,
+    "visual": "lateness",
+    "objectives": [
+      "Compute completion time and lateness for a complete, no-idle schedule",
+      "Distinguish maximum lateness from the sum of late penalties",
+      "Prove earliest-deadline-first by exchanging inverted adjacent jobs"
+    ],
+    "concepts": [
+      [
+        "Formal objective",
+        "For a single available machine, every job i has positive processing time tᵢ and deadline dᵢ. All jobs are available at the same starting time; preemption is not used. Its completion time is fᵢ. **In this uploaded edition**, lateness is ℓᵢ=max(0,fᵢ−dᵢ): a job finishing early has lateness zero, never negative. We minimize L=maxᵢ ℓᵢ over all schedules. This is not the objective “minimize total tardiness.”"
+      ],
+      [
+        "Greedy algorithm",
+        "Sort jobs by nondecreasing deadline and run them consecutively without idle time. The theorem is sometimes called earliest-due-date ordering; do not confuse it with the preemptive earliest-deadline-first scheduler for online jobs."
+      ],
+      [
+        "Exchange argument",
+        "An inversion is a pair of consecutive jobs i followed by j despite dᵢ>dⱼ. Swap them. Job j finishes sooner, so its lateness cannot rise. Job i then finishes when j previously finished, but dᵢ≥dⱼ means its lateness cannot exceed the old lateness of j. All other completion times remain unchanged."
+      ],
+      [
+        "Proof boundary",
+        "Repeatedly exchange inversions in an optimal schedule to reach the deadline-ordered schedule without increasing maximum lateness. This requires no release times, no dependencies, one machine and jobs scheduled without interruption. The same proof does not establish optimality when jobs have distinct release times."
+      ],
+      [
+        "Checking actual output",
+        "Use the timeline to check deadlines against actual completion times. The textbook records zero lateness for any early completion. The objective is determined by the single greatest nonnegative lateness."
+      ]
+    ],
+    "pseudocode": "Sort all jobs by nondecreasing deadline\ntime ← 0; L ← 0\nfor job i in sorted order:\n    time ← time + processing[i]\n    lateness[i] ← max(0, time − deadline[i])\n    L ← max(L, lateness[i])\nreturn schedule, L",
+    "proof": "Given any optimal no-idle schedule, if adjacent jobs i,j form a deadline inversion dᵢ>dⱼ, let the two-job block begin at T. Initially i ends at T+tᵢ and j at T+tᵢ+tⱼ. Swapping makes j finish no later, and i finish at the old completion time of j. Hence ℓᵢ(new)=max(0,T+tᵢ+tⱼ−dᵢ) ≤ max(0,T+tᵢ+tⱼ−dⱼ)=ℓⱼ(old), while ℓⱼ(new)≤ℓⱼ(old). The maximum lateness in that block cannot increase. Repeated exchanges remove all inversions and yield deadline order without increasing maximum lateness.",
+    "worked": "Jobs A:(t=3,d=7), B:(t=2,d=3), C:(t=4,d=9), D:(t=1,d=4). Deadline order B,D,A,C gives completion times 2,3,6,10 and lateness 0,0,0,+1, so L=1. Input order A,B,C,D gives completion 3,5,9,10 and lateness 0,+2,0,+6, so L=6. Unlike signed scheduling slack, the textbook’s lateness never becomes negative.",
+    "pitfall": "EDF does not necessarily minimize total weighted completion time or the number of late jobs. Distinct release times invalidate this straightforward adjacent-swap proof.",
+    "exercise": "For jobs B,D,A,C above, which job realizes the maximum lateness and what is its value?",
+    "answer": "C completes at time 10 with deadline 9, so its lateness is +1 and L=1.",
+    "quiz": [
+      "Which objective is optimized by sorting all available jobs by deadline?",
+      "Maximum lateness on a single machine",
+      [
+        "Number of missed deadlines in arbitrary release-time schedules",
+        "Sum of squared lateness",
+        "Total weighted completion time"
+      ]
+    ]
+  },
+  {
+    "id": "caching",
+    "chapter": 4,
+    "section": "4.3 Optimal Caching: A More Complex Exchange Argument",
+    "pdf": 157,
+    "title": "Optimal offline caching: farthest in future",
+    "duration": 58,
+    "visual": "caching",
+    "objectives": [
+      "Simulate cache requests with hit and miss accounting",
+      "Choose the farthest next access on a miss",
+      "Explain why the optimality statement is offline, not practical future-blind caching"
+    ],
+    "concepts": [
+      [
+        "Problem and metric",
+        "A cache holds k distinct items. A request costs zero if its item is present; otherwise it causes a cache miss and the item must be loaded, potentially evicting one resident item. Minimize the number of misses for a known finite request sequence and a specified starting cache."
+      ],
+      [
+        "Optimal rule",
+        "When forced to evict an item on a miss, remove the resident item whose next request occurs farthest in the future (or is never requested again). This Belady/farthest-in-future strategy needs the entire future access sequence."
+      ],
+      [
+        "The exchange insight",
+        "Compare a supposedly optimal schedule with farthest-in-future. At their first differing eviction, replace the optimal schedule’s immediate choice with the farthest-future victim. Until the earlier future request for the other candidate, the modified schedule can simulate the original with no additional miss. Repeating exchanges yields an optimal schedule agreeing with the greedy choices."
+      ],
+      [
+        "What this does NOT show",
+        "Least-recently-used (LRU) evicts the item least recently accessed in the past; it is an online heuristic and is not guaranteed optimal for a known offline trace. Frequency counts alone are also not the same as next-use positions."
+      ],
+      [
+        "Trace discipline",
+        "Display the three cache slots after each access, the hit/miss flag and the outgoing page. Mark an item never used again as having infinite next-use distance."
+      ]
+    ],
+    "pseudocode": "cache ← initial k items; misses ← 0\nfor position j, request r in stream:\n    if r in cache: continue\n    misses ← misses + 1\n    if cache full:\n        victim ← argmax_{x in cache} next_use(x, j)\n        evict(victim)\n    load(r)\nreturn misses",
+    "proof": "Let greedy G and an optimal schedule O have identical cache states until a miss at time t where O evicts y but G evicts x, with next(x)≥next(y). Modify O to evict x and retain y instead. Until the next request to y, this changed cache can satisfy at least all requests O could without being worse: x is not needed before y. At the first divergence later, it can swap the identity of the extra cached item or pay no more than O does. The modified schedule is still optimal and agrees with G on one more decision; iterating proves optimality. The formal exchange uses consistent cache states and miss counting, not a naive “fewer future accesses” claim.",
+    "worked": "Initial cache {A,B,C}; independently authored request stream [A,C,B,D,A,D,E,B,D,A,C], capacity 3. At D (position 4), A is next at 5, B next at 8, C next at 11, so evict C. At E (position 7), among A, B and D, A is needed latest (at 10), so evict A. The later requests A and C cause misses; total misses are D,E,A,C (four).",
+    "pitfall": "The greedy algorithm is optimal only with advance knowledge of all requests. It cannot be implemented exactly as an online policy when future accesses are unknown.",
+    "exercise": "Initial cache {A,B,C}; remaining accesses after a D miss are A at 5, B at 8 and C at 11. Which page should leave?",
+    "answer": "C, because its next request is farthest away (position 11).",
+    "quiz": [
+      "Which page should the offline optimal policy evict?",
+      "The one whose next use is latest",
+      [
+        "The least recently requested page",
+        "The one with lowest global frequency",
+        "The alphabetically last item"
+      ]
+    ]
+  },
+  {
+    "id": "huffman",
+    "chapter": 4,
+    "section": "4.8 Huffman Codes and Data Compression",
+    "pdf": 187,
+    "title": "Huffman prefix coding and greedy merges",
+    "duration": 64,
+    "visual": "huffman",
+    "objectives": [
+      "Construct a binary prefix code by merging two least-weight trees",
+      "Compute weighted external-path length in bits",
+      "State the sibling-exchange and reduction justification"
+    ],
+    "concepts": [
+      [
+        "Objective and feasibility",
+        "A binary prefix code assigns each symbol a binary string so no symbol code is the prefix of another. This permits unambiguous decoding. Given symbol frequencies fᵢ, minimize total encoded length Σ fᵢ·length(codeᵢ). We assume a binary code alphabet and symbols with nonnegative occurrence counts."
+      ],
+      [
+        "Algorithm",
+        "Create one leaf per symbol, each weighted by its frequency. Repeatedly take the two lowest-weight trees, merge them under a new parent of their summed weight, and return the final tree. Assign 0 and 1 to child edges. The exact bit strings depend on tie breaking, while optimal total cost does not."
+      ],
+      [
+        "Structural lemma",
+        "In some optimal full binary prefix-code tree, the two least frequent symbols are siblings at maximum depth. Using an exchange argument, swapping leaf labels so low frequencies move deepest cannot increase weighted code length."
+      ],
+      [
+        "Reduction step",
+        "Contract those two sibling leaves into a meta-symbol of weight f₁+f₂. Every original code length of the contracted leaves is one more than their parent’s code length. Therefore original cost equals contracted cost plus f₁+f₂. An optimal solution to the smaller problem extends to an optimal solution to the original."
+      ],
+      [
+        "Time bound",
+        "A binary heap supports n−1 minimum-pair extraction/merge steps in O(n log n). A code tree alone does not prove an arbitrary code is optimal; the merge history and cost identity are the key evidence."
+      ]
+    ],
+    "pseudocode": "heap ← one weighted leaf per symbol\nwhile heap has more than one tree:\n    x ← extract_min(heap)\n    y ← extract_min(heap)\n    p ← parent(x,y) with weight x.w+y.w\n    insert(heap,p)\nlabel left edges 0 and right edges 1\nreturn root and prefix codes",
+    "proof": "First consider an optimal full binary tree. Two leaves at maximum depth can be selected as siblings. By swapping symbols of lowest weights into these deepest positions, cost cannot rise: for weights f_low≤f_high and depths d_deep≥d_shallow, assigning f_low to d_deep changes cost by (f_low−f_high)(d_deep−d_shallow)≤0. Thus an optimal tree with the two lowest-weight symbols as siblings exists. Contracting those siblings gives a smaller optimal tree; otherwise replacing it with a better reduced tree would reduce the original cost, contradiction. Induction justifies each greedy merge.",
+    "worked": "Frequencies A:5, B:7, C:10, D:15. Merge A+B→12; merge C+12→22; merge D+22→37. Weighted cost equals sum of merge weights 12+22+37=71 bits for those 37 symbol occurrences. A valid code assignment is D:0, C:10, A:110, B:111 (cost 15·1+10·2+5·3+7·3=71).",
+    "pitfall": "Huffman optimality is relative to the specified symbol frequencies and prefix-free binary code objective. It is not a guarantee of optimal compression on all data sources or a substitute for arithmetic coding.",
+    "exercise": "What is the final weighted path length for frequencies 5, 7, 10, 15?",
+    "answer": "71 bits, computed as 12+22+37 across the three merges (equivalently weighted code lengths).",
+    "quiz": [
+      "How are trees selected in each Huffman merge?",
+      "The two minimum-frequency roots",
+      [
+        "The two longest codewords",
+        "The two largest frequencies",
+        "Any two sibling leaves"
+      ]
+    ]
+  },
+  {
+    "id": "karatsuba",
+    "chapter": 5,
+    "section": "5.5 Integer Multiplication",
+    "pdf": 257,
+    "title": "Three products instead of four: recursive multiplication",
+    "duration": 58,
+    "visual": "karatsuba",
+    "objectives": [
+      "Derive the three-product split identity",
+      "Trace recursive multiplication on small numbers",
+      "Compare 3T(n/2)+O(n) to quadratic multiplication"
+    ],
+    "concepts": [
+      [
+        "The standard four-product split",
+        "For n-digit integers write x=a·Bᵐ+b and y=c·Bᵐ+d. Their product is ac·B²ᵐ + (ad+bc)·Bᵐ + bd. Computing ac, ad, bc, bd recursively gives four half-size products, not an improvement over quadratic multiplication."
+      ],
+      [
+        "Three recursive multiplications",
+        "Compute z₂=ac, z₀=bd and p=(a+b)(c+d). Then z₁=p−z₂−z₀=ad+bc. Combine x·y=z₂·B²ᵐ + z₁·Bᵐ + z₀. This is the algebraic core of the book’s faster recursive-multiply algorithm."
+      ],
+      [
+        "Worked base-ten split",
+        "For 12×34 take a=1,b=2,c=3,d=4,B=10,m=1. z₂=3, z₀=8, p=3×7=21 and z₁=21−3−8=10. Then 3×100 + 10×10 + 8 = 408."
+      ],
+      [
+        "Correctness and recurrence",
+        "The identity is exact by distributivity. Three recursive multiplications on roughly half-size inputs, plus linear-time addition and subtraction, yield T(n)=3T(n/2)+O(n) and O(n^log₂3)≈O(n^1.585) basic operations in the idealized digit/bit model."
+      ],
+      [
+        "Implementation issues",
+        "Unequal input lengths need padding or careful splitting; signed inputs need sign handling; base cases terminate recursion. Intermediate sums a+b and c+d may have one additional digit, which does not change the asymptotic exponent."
+      ]
+    ],
+    "pseudocode": "multiply(x,y):\n    if small: return x*y\n    split at m digits: x=a*B^m+b, y=c*B^m+d\n    z2 ← multiply(a,c)\n    z0 ← multiply(b,d)\n    p  ← multiply(a+b,c+d)\n    z1 ← p−z2−z0\n    return z2*B^(2m) + z1*B^m + z0",
+    "proof": "Expand (a+b)(c+d)=ac+ad+bc+bd. Therefore p−z₂−z₀=ad+bc, and substitution in z₂B²ᵐ+z₁Bᵐ+z₀ reproduces (aBᵐ+b)(cBᵐ+d) exactly. By induction on the number of digits, if recursive products are correct then the assembled result is correct. The recurrence has three half-size calls plus linear-size arithmetic; its exponent is log₂3 rather than 2.",
+    "worked": "12×34=408. Half-splits: ac=1×3=3; bd=2×4=8; (a+b)(c+d)=3×7=21. Cross term 21−3−8=10; reconstruction 300+100+8=408.",
+    "pitfall": "Do not omit the subtraction of z₂ and z₀ when forming the middle coefficient; (a+b)(c+d) alone contains extra terms. Practical big-integer multiplication may switch algorithms at different sizes.",
+    "exercise": "With x=12 and y=34, what is the middle coefficient after three multiplications?",
+    "answer": "10, because (1+2)(3+4)−(1·3)−(2·4)=21−3−8=10.",
+    "quiz": [
+      "What changes the recursion exponent compared with schoolbook multiplication?",
+      "Three half-size multiplications instead of four",
+      [
+        "More additions alone",
+        "Sorting digits before multiplication",
+        "Using signed numbers"
+      ]
+    ]
+  },
+  {
+    "id": "fft",
+    "chapter": 5,
+    "section": "5.6 Convolutions and the Fast Fourier Transform",
+    "pdf": 260,
+    "title": "Convolution and the FFT butterfly",
+    "duration": 74,
+    "visual": "fft",
+    "objectives": [
+      "Calculate a short linear convolution directly",
+      "Explain Fourier evaluation, pointwise products and inversion",
+      "Derive radix-2 FFT from even/odd coefficient splitting"
+    ],
+    "concepts": [
+      [
+        "Convolution of coefficient vectors",
+        "For a=(a₀,…,aₘ₋₁) and b=(b₀,…,bₙ₋₁), their linear convolution c has length m+n−1 with cₖ=Σᵢ₊ⱼ₌ₖ aᵢbⱼ. It is also the coefficient vector of polynomial product A(x)B(x)."
+      ],
+      [
+        "Why evaluation helps",
+        "Polynomial multiplication is expensive in the coefficient representation because each output gathers many pair products. Evaluate at enough distinct points, multiply the scalar values and interpolate to coefficients. Complex roots of unity allow fast structured evaluation/inversion."
+      ],
+      [
+        "Even/odd recurrence",
+        "For even n, separate A(x)=A_even(x²)+x·A_odd(x²). At n-th roots of unity, paired values at x and −x share the same even and odd subcomputations, permitting two n/2-point FFTs plus O(n) combination."
+      ],
+      [
+        "Butterflies and complexity",
+        "For each k in the first half, X[k]=E[k]+ωₙᵏO[k] and X[k+n/2]=E[k]−ωₙᵏO[k]. The recurrence T(n)=2T(n/2)+O(n) gives O(n log n) complex arithmetic for power-of-two input size."
+      ],
+      [
+        "Convolution length and zero-padding",
+        "To obtain the linear—not circular—convolution, pad both vectors to an FFT length N≥m+n−1. Multiply their FFTs pointwise and apply the inverse FFT. Without sufficient padding, high-order coefficients wrap around (alias)."
+      ]
+    ],
+    "pseudocode": "N ← power of 2 with N ≥ len(a)+len(b)−1\nA ← FFT(pad(a,N)); B ← FFT(pad(b,N))\nfor k=0..N−1: C[k] ← A[k]·B[k]\nc ← inverseFFT(C)\nreturn real parts of c[0:len(a)+len(b)−1]",
+    "proof": "The Fourier transform at N roots of unity is evaluation of the coefficient polynomial at those N distinct roots. For N≥m+n−1, the product polynomial has degree <N and is uniquely determined by its N values. Pointwise products evaluate A(x)B(x) correctly, and inverse Fourier interpolation returns its coefficients. The even/odd identity is algebraically exact; at each recursion level, two halves plus n butterfly operations yield O(n log n).",
+    "worked": "a=[1,2], b=[3,4]. The linear convolution is [3,10,8]. Pad to N=4: a=[1,2,0,0], b=[3,4,0,0]. Their Fourier products inverse-transform to [3,10,8,0]. A four-point FFT of [1,2,3,4] is [10,−2+2i,−2,−2−2i] using exp(−2πik/n).",
+    "pitfall": "Unpadded FFT multiplication computes circular convolution and may alias. Distinguish the DFT of one sequence, which has length N, from the linear convolution of two sequences, which has length m+n−1.",
+    "exercise": "Compute the linear convolution of [1,2] and [3,4].",
+    "answer": "[3,10,8]: coefficients 1·3; 1·4+2·3; 2·4.",
+    "quiz": [
+      "Why must FFT vectors be padded for linear convolution?",
+      "To prevent circular wraparound (aliasing)",
+      [
+        "To enforce real numbers only",
+        "To make all frequencies zero",
+        "To avoid multiplying pointwise"
+      ]
+    ]
+  },
+  {
+    "id": "segmented",
+    "chapter": 6,
+    "section": "6.3 Segmented Least Squares: Multi-way Choices",
+    "pdf": 287,
+    "title": "Piecewise regression with a segmentation penalty",
+    "duration": 72,
+    "visual": "segmented",
+    "objectives": [
+      "Compute least-squares error of a candidate interval",
+      "Build the optimal-prefix dynamic program",
+      "Trace back optimal piecewise-linear segments"
+    ],
+    "concepts": [
+      [
+        "Why segmentation is necessary",
+        "A single regression line may miss abrupt changes; one line per point has almost no fitting error but overfits. For ordered x₁<⋯<xₙ, partition the observations into contiguous segments; fit a separate least-squares line to each segment."
+      ],
+      [
+        "Objective and penalty",
+        "If eᵢⱼ is minimum squared residual error for fitting points i through j by one line and C>0 is penalty per fitted segment, minimize Σsegments (eᵢⱼ+C). The penalty makes model complexity visible rather than silently favoring n one-point segments."
+      ],
+      [
+        "Dynamic programming recurrence",
+        "Let M[j] be minimum objective on the first j points and M[0]=0. For the last segment starting at i, M[j]=min_{1≤i≤j}{M[i−1]+eᵢⱼ+C}. Store the minimizing i to recover boundaries; the last interval must be some [i,j]."
+      ],
+      [
+        "Computing local fits",
+        "With the sums Σx, Σy, Σx², Σxy, Σy² precomputed on prefixes, each interval’s least-squares coefficients and residual can be computed in constant time when well-conditioned; degenerate single-point intervals have SSE=0. The book first gives a straightforward O(n³) preprocessing approach and notes O(n²) improvement."
+      ],
+      [
+        "Proof and complexity",
+        "Condition on the first index i of the last segment. Any better prefix than M[i−1] would improve the full partition, contradiction. There are O(n²) last-segment candidates across the DP; once interval errors are available, filling M takes O(n²)."
+      ]
+    ],
+    "pseudocode": "for all 1≤i≤j≤n: e[i,j] ← leastSquaresSSE(points i..j)\nM[0] ← 0\nfor j=1..n:\n   M[j] ← min over i=1..j of M[i−1]+e[i,j]+C\n   prev[j] ← minimizing i\ntrace backward from j=n via prev to recover segments",
+    "proof": "Every partition of the first j points ends with some segment [i,j]. Its cost is prefixCost(i−1)+eᵢⱼ+C. Replacing its prefix with the optimal one cannot worsen the partition, so M[j] is at most this expression. Conversely, combining an optimal prefix with the fitted final segment forms a feasible partition with exactly the expression. Minimizing over all i is therefore both a lower and upper bound on the optimum. Induction from M[0]=0 proves correctness.",
+    "worked": "Six points (0,0),(1,1),(2,2),(3,8),(4,9),(5,10), penalty C=3. Splitting after x=2 gives two perfect straight-line segments (each SSE=0), total objective 2C=6. Fitting all six points uses one line with positive residual error; the DP compares its SSE+3 against 6.",
+    "pitfall": "Be precise about whether C is counted once per segment or once per break; this example counts a penalty per segment. One-point intervals have zero SSE but still pay C. Overfitting reappears when C approaches zero.",
+    "exercise": "With two perfect-fit segments and C=3, what objective value does the segmentation achieve?",
+    "answer": "6: 0 residual error from each of the two segments plus 2×3 in penalties.",
+    "quiz": [
+      "Which extra term prevents a one-line-per-point solution from being automatically preferred?",
+      "A fixed cost per fitted segment",
+      [
+        "A mandatory zero error",
+        "A maximum number of points",
+        "A random permutation of x values"
+      ]
+    ]
+  },
+  {
+    "id": "rna",
+    "chapter": 6,
+    "section": "6.5 RNA Secondary Structure: Dynamic Programming over Intervals",
+    "pdf": 298,
+    "title": "RNA interval DP with noncrossing pair constraints",
+    "duration": 68,
+    "visual": "rna",
+    "objectives": [
+      "State the complementary pairing and separation rules",
+      "Prove why a paired endpoint partitions into two independent intervals",
+      "Fill and trace an interval DP matrix"
+    ],
+    "concepts": [
+      [
+        "Abstract model, not physical folding",
+        "The textbook models a simplified RNA single strand of bases A,C,G,U. Allowed pairs are A–U and C–G. In this combinatorial model, a base pairs at most once, arcs cannot cross, and paired positions must have at least four intervening positions (distance ≥5). Maximize the number of pairs. Real molecular folding also depends on thermodynamic energy and other interactions."
+      ],
+      [
+        "Why one prefix index is insufficient",
+        "When base j pairs with some t<j, the noncrossing property separates remaining candidate pairs into [i,t−1] and [t+1,j−1]. Tracking only a prefix optimum cannot express the two independent internal intervals."
+      ],
+      [
+        "Interval recurrence",
+        "Let OPT(i,j) be the largest legal number of pairs in [i,j], or zero for empty/too-short ranges. Either base j is unpaired and gives OPT(i,j−1), or j pairs with t≤j−5 and compatible bases. Then 1+OPT(i,t−1)+OPT(t+1,j−1). Take the maximum."
+      ],
+      [
+        "Filling order",
+        "Compute intervals in increasing length so each recurrence refers only to shorter ones. Save the choice (unpaired j or paired t,j), then recursively trace the two subintervals. The straightforward algorithm has O(n²) DP states and up to O(n) candidate mates per state, so O(n³) time."
+      ],
+      [
+        "Independent validation",
+        "Every traced pair must satisfy complementarity, separation, single-use and noncrossing. A high pair count alone is insufficient evidence that the predicted structure is feasible."
+      ]
+    ],
+    "pseudocode": "OPT(i,j) ← 0 for j−i<5 or empty interval\nfor span=5..n−1:\n  for i with j=i+span<n:\n    OPT(i,j) ← OPT(i,j−1)\n    for t=i..j−5:\n      if compatible(base[t],base[j]):\n        OPT(i,j) ← max(OPT(i,j), 1+OPT(i,t−1)+OPT(t+1,j−1))\nreturn OPT(0,n−1) and its noncrossing traceback",
+    "proof": "Fix any legal optimal pairing on [i,j]. If j is unpaired, all pairs lie in [i,j−1], yielding the first recurrence option. Otherwise j is paired with exactly one compatible t≤j−5. A crossing pair would violate the admissibility rule, so every remaining pair lies wholly in [i,t−1] or [t+1,j−1]. Replacing either part with its interval optimum cannot decrease the number of pairs. Thus the second recurrence option realizes the best structure with j paired to t; maximizing all cases is exact by induction on interval length.",
+    "worked": "For the illustrative sequence A C G U A U C G A U, only complementary pairs with at least four interior bases can be considered. The step-by-step matrix shades each interval of a given span and highlights the optimal count for [1,n].",
+    "pitfall": "This model forbids crossing arcs and short loops. It does not claim to compute experimentally observed RNA structures or minimum free-energy folding. Pair feasibility must be checked, not inferred from the DP value.",
+    "exercise": "Why are two independent subproblems needed when positions t and j are paired?",
+    "answer": "Any remaining admissible pair lies entirely left of t or between t and j. A connection crossing the (t,j) arc would violate noncrossing, so the two intervals can be optimized separately.",
+    "quiz": [
+      "What feature makes two interval subproblems valid after pairing t with j?",
+      "Pair arcs are forbidden to cross",
+      [
+        "All bases must pair",
+        "Any bases may pair",
+        "Each interval has equal length"
+      ]
+    ]
+  },
+  {
+    "id": "project",
+    "chapter": 7,
+    "section": "7.11 Project Selection",
+    "pdf": 422,
+    "title": "Project dependencies as a minimum-cut decision",
+    "duration": 72,
+    "visual": "project",
+    "objectives": [
+      "Encode prerequisite closure constraints as directed edges",
+      "Build a source/sink capacity network",
+      "Explain why minimum cut yields maximum achievable net project value"
+    ],
+    "concepts": [
+      [
+        "Prerequisite-constrained objective",
+        "Each project i has net value pᵢ, positive or negative. Choosing i may require choosing project j: i→j is a prerequisite arc. A feasible selected set A must be closed under prerequisite arcs: if i∈A and i→j, then j∈A. Maximize Σi∈A pᵢ."
+      ],
+      [
+        "Source and sink arcs",
+        "For each positive pᵢ, add source→i with capacity pᵢ. For negative pᵢ, add i→sink with capacity −pᵢ. For every prerequisite i→j, add i→j with a capacity larger than the sum of all positive values (the textbook uses infinity as a conceptual shorthand)."
+      ],
+      [
+        "Reading a cut",
+        "Take all projects on the source side of an s–t cut as selected. An optimal finite minimum cut cannot sever a prohibitively high-capacity prerequisite arc, so the source-side projects form a feasible closed set. The cut pays for positive projects left unselected and negative projects selected."
+      ],
+      [
+        "Value-cost identity",
+        "Let P⁺=Σpᵢ>0 pᵢ. For a feasible closed cut, cutCapacity=P⁺−Σselected pᵢ. Thus minimizing the cut maximizes selected net value. The original maximum-flow/min-cut theorem computes the minimum cut efficiently."
+      ],
+      [
+        "Reconstruction and checks",
+        "Recover source-reachable vertices in the residual graph after max flow. Verify each selected project’s prerequisites are selected, compute net value independently, and report ties or alternative optimal sets only when proven."
+      ]
+    ],
+    "pseudocode": "Pplus ← sum(max(0,p[i]) for all projects)\nfor i with p[i]>0: addEdge(source,i,p[i])\nfor i with p[i]<0: addEdge(i,sink,−p[i])\nfor each prerequisite i→j: addEdge(i,j,Pplus+1)\ncompute min s−t cut (S,T)\nreturn selected=S−{source}, netValue=Pplus−cutCapacity",
+    "proof": "For any feasible project set A, consider the cut S={source}∪A. Closure ensures no prerequisite arc i→j goes from A to its complement. Its capacity is precisely Σpositive omitted pᵢ + Σnegative selected (−pᵢ), equal to P⁺−Σi∈A pᵢ. Conversely, every minimum cut has capacity≤P⁺ (cut with only source on its side), so a prerequisite edge of capacity P⁺+1 cannot cross. Its source-side projects are feasible. Therefore feasible sets correspond to minimum-cut candidates with complementary objective values, proving optimality.",
+    "worked": "Projects A:+8, B:+7, C:−6, D:−5, prerequisites A→C, B→C, B→D. Selecting A and C yields net +2; choosing A,B,C,D yields 8+7−6−5=4, the optimum. Here P⁺=15 and minimum cut capacity is 15−4=11. The diagram shows prerequisite closure and selected projects.",
+    "pitfall": "The source side of an arbitrary low-capacity cut is not necessarily valid if prerequisite arcs have insufficient capacities. A large-enough “infinite” bound must exceed the total positive budget; prerequisite direction i→j means i REQUIRES j.",
+    "exercise": "Why does a cut that selects B but omits D violate this instance’s constraints?",
+    "answer": "B→D means any selection containing B must also include D; a cut separating B from D crosses a forbidden high-capacity arc.",
+    "quiz": [
+      "In project selection, what does arc A→C mean?",
+      "Selecting A requires selecting C",
+      [
+        "Selecting C requires selecting A",
+        "A and C cannot coexist",
+        "A and C have the same net value"
+      ]
+    ]
+  }
+]

@@ -1,0 +1,11 @@
+downloads/*.pdf
+_backup_old_site/
+.claude/
+# Never publish third-party books
+*.pdf
+*.epub
+tests/artifacts/
+
+# rendered studio previews (large, regenerable)
+video/studio-data/
+video/studio-patched/

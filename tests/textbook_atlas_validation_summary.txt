@@ -1,0 +1,12 @@
+Textbook Atlas first-pass release validation:
+- source PDFs: 16 files, 15 distinct indexed titles (duplicate LLM handbook indexed once)
+- verified chapter/contents index: 228 entries
+- original book-topic companion guides: 15 focal + 10 extended = 25
+- figures: 15 first guides with independently authored SVG visualizations + 10 original flow diagrams
+- interactivity: 5 slider-controlled concept graphics
+- core courses preserved: 7 advanced course files, 137 runtime lessons plus legacy courses
+- JavaScript syntax: PASS
+- Node content tests: PASS
+- Existing offline Chromium/browser smoke tests: PASS
+- New textbook atlas browser tests (desktop 1320px/mobile 390px): PASS
+- known limitation: not full-book / complete figure audit; many source chapters indexed only

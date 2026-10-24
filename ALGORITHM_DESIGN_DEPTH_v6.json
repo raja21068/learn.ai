@@ -1,0 +1,309 @@
+[
+  {
+    "id": "dijkstra",
+    "chapter": 4,
+    "section": "4.4 Shortest Paths in a Graph",
+    "pdf": 163,
+    "name": "Dijkstra: why a settled distance cannot improve",
+    "visual": "dijkstra",
+    "time": 55,
+    "objectives": [
+      "Derive tentative distances by edge relaxation",
+      "Prove the nonnegative-edge invariant",
+      "Reconstruct a shortest path using predecessors"
+    ],
+    "ideas": [
+      [
+        "Problem and assumptions",
+        "Given a directed weighted graph and source s, minimize the total edge length of each path from s. The weights must be nonnegative for Dijkstra’s label-setting proof. A vertex is tentative until it has been selected as the smallest unvisited distance."
+      ],
+      [
+        "The relaxation operation",
+        "For an edge u→v of weight w, consider a route to v through u. If dist[u]+w < dist[v], replace dist[v] and store predecessor[v]=u. Initially dist[s]=0 and every other distance is infinite."
+      ],
+      [
+        "Algorithm state",
+        "Maintain the set S of permanently settled vertices. Extract the unsettled vertex with the minimum tentative distance, add it to S, and relax its outgoing edges. A binary heap gives O((|V|+|E|)log|V|) with conventional decrease-key or stale-entry handling."
+      ],
+      [
+        "Where the proof really uses a hypothesis",
+        "Consider any alternative path to the vertex v just selected. That path must first cross from settled to unsettled vertices at an edge (x,y). The prefix to x cannot beat dist[x] by induction; because remaining edges are nonnegative, the full alternative cannot be shorter than the minimum tentative value chosen for v."
+      ],
+      [
+        "Failure mode",
+        "Negative edges invalidate the conclusion that extending a path cannot decrease its length. On s→a (2), s→b (5), b→a (−10), settling a at 2 is premature: s→b→a costs −5. Do not silently apply Dijkstra to general signed-weight problems."
+      ]
+    ],
+    "pseudocode": "dist[s] = 0; dist[v ≠ s] = ∞\npriority queue Q ← all nodes by dist\nwhile Q not empty:\n    u ← extract_min(Q)\n    for each (u,v,w) with v unsettled:\n        if dist[u] + w < dist[v]:\n            dist[v] ← dist[u] + w\n            parent[v] ← u; decrease_key(Q,v)",
+    "proof": "Invariant: immediately after extraction, dist[u] equals the minimum s→u path length for each u in S. Suppose the next extracted vertex v had a shorter alternative P. On P take its first edge x→y leaving S. By induction dist[x] is optimal, so the prefix cost to y is at least dist[x]+w(x,y), a value relaxation had offered. Every later edge has nonnegative weight. Thus P cannot beat the current minimum unsettled candidate dist[v], contradiction.",
+    "worked": "Directed edges A→B:4, A→C:1, C→B:2, B→D:1, C→D:5, D→E:3, B→E:7. Source A. Settled order A,C,B,D,E gives final distances (0,3,1,4,7). The shortest path to E is A→C→B→D→E, length 1+2+1+3=7.",
+    "pitfall": "A graph with negative edge weights is not automatically a case for Dijkstra. Its selection invariant relies on nonnegative weights, even if the example happens to produce a plausible result.",
+    "exercise": "From source A, what is the distance to D and which predecessor chain certifies it?",
+    "answer": "distance 4, predecessors D←B←C←A, so A→C→B→D with cost 1+2+1.",
+    "quiz": [
+      "Which assumption licenses Dijkstra’s settled-vertex invariant?",
+      "All edge lengths are nonnegative",
+      [
+        "The graph is a DAG",
+        "The graph has no cycles",
+        "Every edge is unique"
+      ]
+    ]
+  },
+  {
+    "id": "mst",
+    "chapter": 4,
+    "section": "4.5 The Minimum Spanning Tree Problem; 4.6 Implementing Kruskal’s Algorithm: The Union-Find Data Structure",
+    "pdf": 168,
+    "name": "Minimum spanning trees: cut exchange + disjoint sets",
+    "visual": "mst",
+    "time": 60,
+    "objectives": [
+      "Apply the cut property without assuming all edges are safe",
+      "Simulate Kruskal and disjoint-set unions",
+      "Contrast minimum spanning tree with shortest-path tree"
+    ],
+    "ideas": [
+      [
+        "Objective",
+        "An MST connects every vertex in an undirected connected weighted graph using |V|−1 edges, no cycles, with minimum total edge weight. The global sum of tree-edge weights—not distance from a chosen root—is optimized."
+      ],
+      [
+        "Kruskal’s greedy decision",
+        "Sort edges by increasing weight. Add an edge only if its endpoints belong to different connected components of the selected forest. A disjoint-set / union-find structure tracks these components; path compression and union by rank support efficient operations."
+      ],
+      [
+        "Cut exchange argument",
+        "Take a cut (S,V−S), and let e be a cheapest edge crossing it. If an optimal spanning tree T does not use e, adding e forms a cycle. The cycle contains another crossing edge f; because weight(e) ≤ weight(f), replacing f with e yields an optimal tree that includes e. If weights are distinct, the unique lightest crossing edge is in every MST."
+      ],
+      [
+        "Cycle property and ties",
+        "When all weights are distinct, a uniquely heaviest edge on a cycle belongs to no MST. With ties, multiple MSTs can exist and “every” claims need care; it is enough to assert existence of an MST containing a safe minimum crossing edge."
+      ],
+      [
+        "Complexity and validation",
+        "Sorting dominates at O(|E| log |E|); union-find operations cost near-constant amortized time. Verify output has |V|−1 selected edges and one component. A low total alone does not establish it is a tree."
+      ]
+    ],
+    "pseudocode": "forest ← ∅; make_set(v) for each vertex v\nfor (u,v,w) in edges sorted by increasing weight:\n    if find(u) ≠ find(v):\n        union(u,v)\n        forest ← forest ∪ {(u,v,w)}\nreturn forest",
+    "proof": "Inductively suppose the chosen forest is contained in some MST T. When Kruskal chooses e joining two forest components, its current component defines a cut respected by previously chosen forest edges, and e is a cheapest crossing candidate by sorted processing and rejection of cycles. If e is absent from T, insert it into T and remove a crossing edge f on the created cycle with weight(f)≥weight(e). This maintains a minimum-cost spanning tree containing the enlarged forest. At |V|−1 edges, the forest is a spanning tree and therefore optimal.",
+    "worked": "Vertices A–E. Weighted edges AB=1, BC=2, AC=3, BD=4, CD=5, DE=6, CE=7, AE=9. Add AB, BC; reject AC (would close triangle); add BD; reject CD; add DE. Total MST cost is 1+2+4+6=13.",
+    "pitfall": "An MST does not generally preserve shortest paths from a chosen source. Dijkstra and Kruskal optimize fundamentally different objectives.",
+    "exercise": "Why is AC=3 rejected after AB=1 and BC=2 have been accepted?",
+    "answer": "A and C are already connected through A–B–C. Adding AC would create a cycle; skipping it preserves connectivity without extra cost.",
+    "quiz": [
+      "What does Kruskal check before accepting an edge?",
+      "Its endpoints are in different current components",
+      [
+        "It touches the source",
+        "It has the smallest weight in the entire graph",
+        "Its endpoints have equal distance"
+      ]
+    ],
+    "otherPDF": 177
+  },
+  {
+    "id": "closest-pair",
+    "chapter": 5,
+    "section": "5.4 Finding the Closest Pair of Points",
+    "pdf": 251,
+    "name": "Closest pair: cross-strip argument and 15-position bound",
+    "visual": "closest",
+    "time": 65,
+    "objectives": [
+      "Construct the x-coordinate split and cross-strip",
+      "Explain why y-order gives only a constant number of candidates",
+      "Derive T(n)=2T(n/2)+O(n)"
+    ],
+    "ideas": [
+      [
+        "Why brute force is quadratic",
+        "Computing all n(n−1)/2 pairwise distances is correct but needs Θ(n²) distance comparisons. Divide and conquer seeks O(n log n) without overlooking pairs that cross the partition."
+      ],
+      [
+        "Two sorted orders",
+        "Pre-sort points by x and y once. Split the x-sorted list into left and right halves; preserve y-sorted subsets during recursion. Compute the closest within each half and let δ be the smaller of those two distances."
+      ],
+      [
+        "Crossing pair geometry",
+        "Any cross-partition pair with distance <δ must have both endpoints within distance δ of the dividing vertical line. So only a central strip needs examination. Sort that strip by y using the inherited y-order, not by a fresh O(n log n) sort at every level."
+      ],
+      [
+        "Why few successors are checked",
+        "The edition’s proof partitions a δ-wide neighborhood on either side into δ/2 squares and shows a point only needs comparisons with the next 15 entries in the strip’s y-sorted order. This specific bound is conservative: the important conclusion is O(1) candidates per point, hence O(n) combine time."
+      ],
+      [
+        "Complexity and assumptions",
+        "With x/y presorting and linear splitting/merging of sorted lists, T(n)=2T(n/2)+O(n) and total time O(n log n). Coordinates and tie handling can be managed by consistent secondary keys; textbook exposition first assumes distinct x/y."
+      ]
+    ],
+    "pseudocode": "closest(P sorted by x, Py sorted by y):\n    if |P| ≤ 3: brute_force(P)\n    split P into left and right; partition Py in O(n)\n    δ ← min(closest(left), closest(right))\n    strip ← points with |x−mid| < δ, in y order\n    for each point p in strip:\n        compare p to up to next 15 strip points\n    return the closest pair seen",
+    "proof": "A better cross-split pair than δ must be in the strip by the x-coordinate lower bound on Euclidean distance. In y order, if two strip points are closer than δ, geometric packing in δ/2 boxes implies they cannot lie more than 15 positions apart, as established in Section 5.4 of this edition. Thus every improving pair is inspected. Correctness follows by induction over the recursive halves, and recurrence T(n)=2T(n/2)+O(n) yields O(n log n).",
+    "worked": "Points A(0,1), B(2,5), C(3,1.5), D(4,5.2), E(6,2), F(8,4). Split between x=3 and x=4. Best within left is distance AC≈3.04; best within right is EF≈2.83. Cross-strip comparison finds BD=√(4+0.04)≈2.01, the global minimum.",
+    "pitfall": "Do not re-sort the strip from scratch at every recursive call and still claim the linear combine recurrence without justification. Also do not copy a “next 7” constant into the book’s explicitly stated next-15 proof.",
+    "exercise": "Why can any cross-partition pair of distance <δ be ignored if either endpoint lies farther than δ from the divider?",
+    "answer": "Its horizontal separation already exceeds δ, so its Euclidean distance is at least that separation and cannot improve the candidate.",
+    "quiz": [
+      "What makes closest-pair merging linear time after presorting?",
+      "Only a constant number of y-neighbors per strip point need checking",
+      [
+        "Every pair in the strip is compared",
+        "All cross-pairs are checked",
+        "The strip has at most 15 points"
+      ]
+    ]
+  },
+  {
+    "id": "subset-sum",
+    "chapter": 6,
+    "section": "6.4 Subset Sums and Knapsacks: Adding a Variable",
+    "pdf": 292,
+    "name": "Subset sum: the missing capacity dimension",
+    "visual": "subset",
+    "time": 60,
+    "objectives": [
+      "Specify OPT(i,w) with item count and remaining capacity",
+      "Derive inclusion/exclusion recurrence",
+      "Recognize pseudo-polynomial runtime"
+    ],
+    "ideas": [
+      [
+        "Two-dimensional state",
+        "With nonnegative integer item weights w₁,…,wₙ and capacity W, define OPT(i,c) as the greatest total weight ≤c selectable from the first i items. Tracking only the number of items loses the capacity needed by future decisions."
+      ],
+      [
+        "Disjoint optimal cases",
+        "Any optimum either omits item i, producing OPT(i−1,c), or includes it when wᵢ≤c, producing wᵢ+OPT(i−1,c−wᵢ). Taking the maximum across exhaustive cases is correct."
+      ],
+      [
+        "Initialization and reconstruction",
+        "OPT(0,c)=0 for all capacities c; OPT(i,0)=0. Fill row by row. Trace backward: if OPT(i,c)=OPT(i−1,c), you may skip the item; otherwise include it and continue at c−wᵢ."
+      ],
+      [
+        "Why O(nW) is not polynomial in input length",
+        "There are (n+1)(W+1) states. O(nW) is pseudo-polynomial because a binary-encoded W can be exponentially larger than its bit length. Do not advertise this as a polynomial-time solution to arbitrary-encoded subset sum."
+      ],
+      [
+        "Subset sum versus 0–1 knapsack",
+        "This textbook section starts with maximizing the chosen sum of weights under a capacity. Standard 0–1 knapsack generalizes it to separate values vᵢ and weights wᵢ, with recurrence max(OPT(i−1,c),vᵢ+OPT(i−1,c−wᵢ)). Do not mix the two objectives."
+      ]
+    ],
+    "pseudocode": "for c = 0…W: M[0,c] ← 0\nfor i = 1…n:\n    for c = 0…W:\n        skip ← M[i−1,c]\n        take ← w[i]+M[i−1,c−w[i]] if w[i]≤c\n        M[i,c] ← max(skip,take if feasible)\ntrace back from (n,W) to recover selected weights",
+    "proof": "Fix (i,c). Any feasible chosen subset either excludes item i, in which case the best total cannot exceed OPT(i−1,c), or includes i, in which case the remaining subset has total at most OPT(i−1,c−wᵢ). Both choices are feasible whenever their prerequisites hold. Therefore their maximum equals OPT(i,c). Induct on i to prove every computed table entry is optimal.",
+    "worked": "Weights [3,4,6,7], capacity W=11. The table reaches OPT(4,11)=11 by taking weights 4 and 7. Greedily selecting 7 then 3 reaches 10, illustrating why a naive largest-first decision cannot replace the DP.",
+    "pitfall": "The time bound O(nW) depends on the numeric capacity, not only on input size in bits; it must be described as pseudo-polynomial.",
+    "exercise": "For weights [3,4,6,7] and W=10, find a subset attaining the optimum.",
+    "answer": "Choose 3 and 7 for total 10. No feasible total may exceed capacity 10, so this is optimal.",
+    "quiz": [
+      "For positive integer capacity W, what is the DP time complexity?",
+      "O(nW), pseudo-polynomial",
+      [
+        "O(n log W) for all inputs",
+        "O(W²) independently of n",
+        "O(2ⁿ) regardless of W"
+      ]
+    ]
+  },
+  {
+    "id": "alignment",
+    "chapter": 6,
+    "section": "6.6 Sequence Alignment",
+    "pdf": 304,
+    "name": "Sequence alignment: three-way recurrence and traceback",
+    "visual": "alignment",
+    "time": 60,
+    "objectives": [
+      "Compute a gap/mismatch cost matrix",
+      "Explain all three ways the last symbols can align",
+      "Reconstruct a minimum-cost alignment"
+    ],
+    "ideas": [
+      [
+        "Optimization model",
+        "Align strings X and Y without reversing symbol order. Each unmatched symbol costs a gap penalty δ, while aligned symbols incur mismatch cost α(xᵢ,yⱼ), commonly zero for a match. Seek minimum total cost."
+      ],
+      [
+        "State interpretation",
+        "D(i,j) is the minimum cost of aligning prefixes X[1…i] and Y[1…j]. Aligning the final two symbols gives D(i−1,j−1)+α; leaving xᵢ unmatched gives D(i−1,j)+δ; leaving yⱼ unmatched gives D(i,j−1)+δ."
+      ],
+      [
+        "Boundary conditions",
+        "D(i,0)=iδ and D(0,j)=jδ: aligning against an empty string consists solely of gaps. Every later cell depends on smaller prefix pairs, making a row-by-row DP legal."
+      ],
+      [
+        "Backtrace is a separate operation",
+        "To recover the alignment, start at (|X|,|Y|) and follow a predecessor attaining the minimum. Diagonal aligns two symbols, up aligns xᵢ to a gap, and left aligns a gap to yⱼ. Ties can produce several distinct optimal alignments."
+      ],
+      [
+        "Applications and limits",
+        "The mathematical framework supports edit-distance and biological alignment when scoring assumptions are appropriate. Real biological models often use more elaborate scoring, and interpreting similarity biologically needs domain evidence; the class exercise is just an algorithmic cost model."
+      ]
+    ],
+    "pseudocode": "D[i,0] ← iδ; D[0,j] ← jδ\nfor i = 1…|X|:\n    for j = 1…|Y|:\n        diag = D[i−1,j−1] + mismatch(X[i],Y[j])\n        up   = D[i−1,j] + δ\n        left = D[i,j−1] + δ\n        D[i,j] = min(diag, up, left)\ntrace back from D[|X|,|Y|]",
+    "proof": "An optimal alignment of nonempty prefixes must end in exactly one of three ways: pair the final letters, leave the last X letter unmatched, or leave the last Y letter unmatched. Removing that terminal decision leaves an optimal smaller-prefix alignment; otherwise replacing it by a cheaper one would improve the original. Therefore the recurrence is exact. Computing all mn states requires O(mn) time and memory (or O(min(m,n)) memory if only the score is needed).",
+    "worked": "Align X=GATT with Y=GCT, gap penalty 2, mismatch penalty 1. One optimum is GATT / GC-T: G/G=0, A/C=1, T/gap=2, T/T=0; total cost 3. Filling the full 5×4 DP grid confirms D(4,3)=3.",
+    "pitfall": "A long gap as a single event and a gap per symbol are different scoring models. This lesson uses a constant cost per unmatched symbol, matching the elementary recurrence.",
+    "exercise": "With gap penalty 2 and mismatch penalty 1, what cost aligns X=CAT with Y=CT using CA T / C- T?",
+    "answer": "C/C contributes 0, A/gap contributes 2, T/T contributes 0; total 2.",
+    "quiz": [
+      "Which transition aligns the last characters of both prefixes?",
+      "The diagonal predecessor plus its match/mismatch cost",
+      [
+        "Up plus two gap costs",
+        "Left plus two mismatches",
+        "Only a cell in the first row"
+      ]
+    ]
+  },
+  {
+    "id": "matching-flow",
+    "chapter": 7,
+    "section": "7.5 A First Application: The Bipartite Matching Problem",
+    "pdf": 393,
+    "name": "Bipartite matching: reversible decisions via residual paths",
+    "visual": "matching",
+    "time": 60,
+    "objectives": [
+      "Construct unit-capacity flow reduction",
+      "Find an augmenting path that reverses an earlier match",
+      "Prove maximum matching equals maximum flow"
+    ],
+    "ideas": [
+      [
+        "Input and constraint",
+        "Let G=(X∪Y,E) be bipartite. A matching selects edges with each vertex incident to at most one selected edge. The objective is maximum cardinality, not minimum weight or stable matching."
+      ],
+      [
+        "Flow reduction",
+        "Introduce source s and sink t. Add s→x for every x∈X, x→y for every original allowed pair, and y→t for every y∈Y, all capacity 1. Integral s–t flow decomposes into vertex-disjoint X–Y choices."
+      ],
+      [
+        "Augmenting paths reroute earlier choices",
+        "Suppose A was assigned to resource 1, but B can only use resource 1 and A can also use resource 2. The alternating augmenting path B→1→A→2 uses a backward residual edge to cancel A–1 before adding A–2 and B–1. Greedy matching without reassignment can stop too early."
+      ],
+      [
+        "Proof of equivalence",
+        "A matching of size k yields a feasible unit flow of value k. Conversely, integral max flow on integer capacities uses whole units on s→x→y→t paths; unit edges adjacent to each x and y guarantee a matching of size equal to the flow value. Max-flow/min-cut therefore certifies maximum cardinality."
+      ],
+      [
+        "Terminology and complexity",
+        "Bipartite matching maximizes matched pairs; Gale–Shapley stable matching instead requires preferences and rules out blocking pairs. They are different problems even though both have “matching” in the name. With appropriate algorithms, bipartite matching has polynomial-time solutions."
+      ]
+    ],
+    "pseudocode": "add source s, sink t\nfor x in X: add edge s→x capacity 1\nfor (x,y) in E: add edge x→y capacity 1\nfor y in Y: add edge y→t capacity 1\nrun max-flow on this network\nreturn {(x,y) : flow(x→y) = 1}",
+    "proof": "Every matching M maps to a feasible flow by routing one unit along s→x→y→t for each (x,y)∈M; no capacity is exceeded because M never reuses a vertex. Every integral feasible flow gives a matching: flow conservation and capacity-one source/sink arcs imply each x and y participates in at most one used x→y arc. Thus the objectives agree. Integrality of a max flow follows from integral capacities under augmenting-path algorithms.",
+    "worked": "Left A,B,C; right 1,2,3. Allowed A–1,A–2,B–1,C–2,C–3. If A–1 is chosen first, B cannot be added directly. Instead reroute along B→1→A→2 to replace A–1 by A–2 and add B–1. Finally add C–3. Matching size 3, the upper bound min(|X|,|Y|), proves optimality.",
+    "pitfall": "Do not call this the stable marriage problem: no preference rankings or blocking-pair constraints appear in maximum-cardinality bipartite matching.",
+    "exercise": "If left vertices are A and B and right vertices 1 and 2, with edges A–1,A–2,B–1, what is the maximum matching?",
+    "answer": "Choose B–1 and A–2 for size 2. Picking A–1 greedily must be undone or rerouted to achieve 2.",
+    "quiz": [
+      "Why does an augmenting path sometimes include a backward residual arc?",
+      "To undo a previous match and reassign that endpoint",
+      [
+        "To add a third endpoint to a matched edge",
+        "To make capacities negative",
+        "To enforce preference stability"
+      ]
+    ]
+  }
+]

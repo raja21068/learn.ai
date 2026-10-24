@@ -1,0 +1,214 @@
+{
+  "topic": "Why did the cascade cost five times more?",
+  "audience": "Learners of the LLM Engineering course",
+  "source": "LLM Service Lab engine",
+  "facts": {
+    "requests": 40,
+    "medium": {
+      "quality": 92.5,
+      "cost": 0.0148,
+      "p95": 1298
+    },
+    "cascade": {
+      "quality": 92.5,
+      "cost": 0.0755,
+      "p95": 3535,
+      "escalations": 19
+    },
+    "confidentWrong": 3,
+    "stayed": 21,
+    "smallRight": 18,
+    "costRatio": 5.1,
+    "p95Ratio": 2.7
+  },
+  "scenes": [
+    {
+      "expression": null,
+      "code": null,
+      "sources": [
+        "LLM Service Lab (assets/llm-lab.js)"
+      ],
+      "id": "title",
+      "visual_type": "text",
+      "objective": "Why did the cascade cost five times more?",
+      "narration": "A cascade tries a cheap model first and only calls the big one when needed. It sounds like a sure way to save money. So why did it cost about five times more than simply using the medium model?",
+      "duration_seconds": 17.6
+    },
+    {
+      "expression": null,
+      "code": null,
+      "sources": [
+        "LLM Service Lab (assets/llm-lab.js)"
+      ],
+      "id": "setup",
+      "visual_type": "flow",
+      "objective": "Request, small model, large model if unsure",
+      "narration": "Here is the setup. Every one of 40 requests goes to the small model first. If the small model is confident, we stop. If it is unsure, we send the request on to the large model, and we pay for both.",
+      "duration_seconds": 18.4,
+      "data": {
+        "labels": [
+          "Request",
+          "Small model",
+          "Large model"
+        ]
+      }
+    },
+    {
+      "id": "medium",
+      "visual_type": "bars",
+      "objective": "Quality: 92.5% and 92.5%",
+      "expression": null,
+      "code": null,
+      "sources": [
+        "LLM Service Lab (assets/llm-lab.js)"
+      ],
+      "data": {
+        "title": "Share answered correctly",
+        "unit": "%",
+        "bars": [
+          {
+            "label": "Medium model",
+            "value": 92.5
+          },
+          {
+            "label": "Cascade",
+            "value": 92.5
+          }
+        ]
+      },
+      "narration": "Start with quality. The medium model answers 92.5 percent of the requests correctly. The cascade reaches exactly the same 92.5 percent, so on quality alone it looks like a fair swap.",
+      "duration_seconds": 14.4
+    },
+    {
+      "id": "cost",
+      "visual_type": "bars",
+      "objective": "Cost: $0.0148 against $0.0755",
+      "expression": null,
+      "code": null,
+      "sources": [
+        "LLM Service Lab (assets/llm-lab.js)"
+      ],
+      "data": {
+        "title": "Total cost of 40 requests",
+        "unit": "$",
+        "bars": [
+          {
+            "label": "Medium model",
+            "value": 0.0148
+          },
+          {
+            "label": "Cascade",
+            "value": 0.0755
+          }
+        ]
+      },
+      "narration": "Now the price. The cascade costs $0.0755, about 5.1 times more than the medium model's $0.0148, for the same quality.",
+      "duration_seconds": 10
+    },
+    {
+      "id": "latency",
+      "visual_type": "bars",
+      "objective": "Latency for 19 of 20 requests: 1,298 against 3,535 milliseconds",
+      "expression": null,
+      "code": null,
+      "sources": [
+        "LLM Service Lab (assets/llm-lab.js)"
+      ],
+      "data": {
+        "title": "Time for 19 of 20 requests",
+        "unit": "ms",
+        "bars": [
+          {
+            "label": "Medium model",
+            "value": 1298
+          },
+          {
+            "label": "Cascade",
+            "value": 3535
+          }
+        ]
+      },
+      "narration": "It is slower too. With the cascade, 19 out of 20 requests need up to 3,535 milliseconds, against 1,298 for the medium model, about 2.7 times longer.",
+      "duration_seconds": 12.8
+    },
+    {
+      "id": "why",
+      "visual_type": "bars",
+      "objective": "19 of 40 requests paid for both models",
+      "expression": null,
+      "code": null,
+      "sources": [
+        "LLM Service Lab (assets/llm-lab.js)"
+      ],
+      "data": {
+        "title": "Where each request was answered",
+        "unit": "",
+        "bars": [
+          {
+            "label": "Small model alone",
+            "value": 21
+          },
+          {
+            "label": "Escalated to large",
+            "value": 19
+          }
+        ]
+      },
+      "narration": "The reason is in the logs. 19 of the 40 requests were too hard for the small model, so each of them paid for the small model's attempt and then for the large model as well. Only 21 stopped at the small model.",
+      "duration_seconds": 19.2
+    },
+    {
+      "id": "trap",
+      "visual_type": "bars",
+      "objective": "3 confident wrong answers slipped through",
+      "expression": null,
+      "code": null,
+      "sources": [
+        "LLM Service Lab (assets/llm-lab.js)"
+      ],
+      "data": {
+        "title": "The 21 requests the small model kept",
+        "unit": "",
+        "bars": [
+          {
+            "label": "Confident and right",
+            "value": 18
+          },
+          {
+            "label": "Confident and wrong",
+            "value": 3
+          }
+        ]
+      },
+      "narration": "There is a second problem. The small model kept 21 requests. 18 were right, but 3 were wrong, and it was confident, so the cascade had no way to know and never escalated them.",
+      "duration_seconds": 15.6
+    },
+    {
+      "expression": null,
+      "code": null,
+      "sources": [
+        "LLM Service Lab (assets/llm-lab.js)"
+      ],
+      "id": "lesson",
+      "visual_type": "flow",
+      "objective": "Right-size first. Cascade only if most requests are easy.",
+      "narration": "The lesson is to right-size first. A cascade only pays off when the cheap model can handle most of your traffic. Measure your own traffic before you build one, and then try the experiment yourself.",
+      "duration_seconds": 16,
+      "data": {
+        "labels": [
+          "Measure traffic",
+          "Right-size first",
+          "Cascade if easy"
+        ]
+      }
+    }
+  ],
+  "total_seconds": 124,
+  "studio_compatibility": {
+    "scene_format": "needs video/proposed/lesson-templates.patch (bars, labelled flow, duration_seconds)",
+    "project_config_min_seconds": 300,
+    "fits_project_config": false,
+    "missing_templates": []
+  },
+  "variant": "lesson-templates"
+}

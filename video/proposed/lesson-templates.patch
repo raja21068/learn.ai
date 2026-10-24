@@ -1,0 +1,480 @@
+diff --git a/docs/LESSON_TEMPLATES.md b/docs/LESSON_TEMPLATES.md
+new file mode 100644
+index 0000000..62bdf3c
+--- /dev/null
++++ b/docs/LESSON_TEMPLATES.md
+@@ -0,0 +1,14 @@
++# Lesson templates (proposed v0.7 additions)
++
++Three small, additive changes so that short lesson explainers can be built with the studio's fixed templates. Nothing here executes model-authored Python, and without the new optional fields every template generates byte-for-byte the same code as v0.6 (a test checks the SHA-256 of all eight).
++
++| Change | What it does | Where |
++|---|---|---|
++| `Scene.data` | A plain dict of short labels and numbers. Used only by `bars` and `flow`; any other visual type with `data` is rejected | `studio/models.py` |
++| `bars` template (skill `bar-comparison`) | 2 to 6 labelled non-negative numbers as bars, with optional title and unit (`$`, `ms`, `%`). Not offered to the AI planner (`needs_data`) | `studio/animation.py`, `studio/skills.py` |
++| Labelled `flow` | `data.labels` (2 to 4 labels) replaces "Input, Process, Output". Without `data` the old three boxes are unchanged | `studio/animation.py` |
++| Scene length | `duration_seconds` (3 to 90) stretches only the final wait, so the scene lasts about as long as its narration; never shorter than the animation plus 0.5 s | `studio/animation.py` |
++
++Validation is strict and fails closed: labels allow only letters, digits, space and `. , : % $ ( ) / + & -` (quotes, backslashes and non-ASCII text are rejected, not escaped), numbers must be finite and between 0 and 1,000,000,000, and `plan_collaboration` reports every violation before anything renders.
++
++Known limits: labels are ASCII only; `duration_seconds` is an estimate from the template's fixed run times, not a measurement of the narration audio; the narration itself is still not synthesised or aligned.
+diff --git a/skills/bar-comparison/SKILL.md b/skills/bar-comparison/SKILL.md
+new file mode 100644
+index 0000000..c6d9707
+--- /dev/null
++++ b/skills/bar-comparison/SKILL.md
+@@ -0,0 +1,20 @@
++# bar-comparison
++
++## Purpose
++Compare 2 to 6 labelled, non-negative numbers as bars, for example the cost or latency of two designs.
++
++## Agent contract
++- Select `visual_type: bars` in a **curated** storyboard. The AI planner is not offered this skill, because it needs exact data.
++- Put the numbers in `data`, never in prose: `{"title": "Cost per run", "unit": "$", "bars": [{"label": "Medium model", "value": 0.0148}, {"label": "Cascade", "value": 0.0755}]}`.
++- Take every number from a tested source (for example the engine of a lab), not from a typed guess.
++- Use the existing trusted `studio.animation.build_scene` renderer. Do not invent arbitrary Manim Python APIs.
++- All factual explanations require independent review.
++
++## Supported input
++- `id`, `objective`, `narration`, `visual_type: bars`
++- `data.bars`: 2 to 6 items, each exactly `{"label": text, "value": number}`; labels unique, at most 24 characters, only letters, digits, space and `. , : % $ ( ) / + & -`; values finite and between 0 and 1,000,000,000
++- `data.title` (optional, at most 60 characters) and `data.unit` (`""`, `"$"`, `"ms"` or `"%"`)
++- `duration_seconds` (optional, 3 to 90): the scene lasts about as long as its narration
++
++## Limitations
++A starter template: one group of bars, no axis ticks, no grouped or stacked bars, English-style labels only. Anything outside the rules above is rejected, never escaped.
+diff --git a/studio/animation.py b/studio/animation.py
+index 58261b7..145020a 100644
+--- a/studio/animation.py
++++ b/studio/animation.py
+@@ -1,5 +1,6 @@
+ """Fixed Manim templates: model-provided text is data, never executable Python."""
+ import ast
++import math
+ import re
+ from .models import Scene
+ from .skills import resolve_skill
+@@ -29,6 +30,144 @@ def safe_latex(value: str) -> str:
+         raise ValueError('LaTeX commands are not permitted in v0.3')
+     return value
+ 
++LABEL_PATTERN = re.compile(r"[A-Za-z0-9 .,:%$()/+&-]+")
++UNITS = {'': ('', ''), '$': ('$', ''), 'ms': ('', ' ms'), '%': ('', '%')}
++
++def safe_label(value, max_len: int = 24) -> str:
++    """Short plain-text label. Quotes, backslashes, brackets and non-ASCII text are rejected, never escaped."""
++    if not isinstance(value, str):
++        raise ValueError('Label must be text')
++    text = ' '.join(value.split())
++    if not 1 <= len(text) <= max_len or not LABEL_PATTERN.fullmatch(text):
++        raise ValueError('Unsupported label')
++    return text
++
++def safe_number(value) -> float:
++    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 1e9:
++        raise ValueError('Value must be a finite number between 0 and 1,000,000,000')
++    return float(value)
++
++def safe_bars(data) -> dict:
++    """Validate the data of a `bars` scene and return a normalised copy."""
++    if not isinstance(data, dict) or 'bars' not in data or set(data) - {'title', 'unit', 'bars'}:
++        raise ValueError('bars scenes need data with a "bars" list (and optionally "title" and "unit")')
++    unit = data.get('unit', '')
++    if unit not in UNITS:
++        raise ValueError('Unsupported unit; use one of: ' + ', '.join(repr(u) for u in UNITS))
++    title = safe_label(data['title'], 60) if data.get('title') else None
++    bars = data['bars']
++    if not isinstance(bars, list) or not 2 <= len(bars) <= 6:
++        raise ValueError('Between 2 and 6 bars are supported')
++    clean = []
++    for bar in bars:
++        if not isinstance(bar, dict) or set(bar) != {'label', 'value'}:
++            raise ValueError('Each bar needs exactly a label and a value')
++        clean.append({'label': safe_label(bar['label']), 'value': safe_number(bar['value'])})
++    if len({b['label'] for b in clean}) != len(clean):
++        raise ValueError('Bar labels must be unique')
++    if max(b['value'] for b in clean) <= 0:
++        raise ValueError('At least one bar must be above zero')
++    return {'title': title, 'unit': unit, 'bars': clean}
++
++def safe_flow_labels(data) -> list[str]:
++    if not isinstance(data, dict) or set(data) != {'labels'}:
++        raise ValueError('flow data may only contain "labels"')
++    labels = data['labels']
++    if not isinstance(labels, list) or not 2 <= len(labels) <= 4:
++        raise ValueError('Between 2 and 4 flow labels are supported')
++    return [safe_label(label, 20) for label in labels]
++
++def safe_duration(seconds):
++    """None keeps the template's own timing. Otherwise 3 to 90 seconds, so that a scene follows its narration."""
++    if seconds is None:
++        return None
++    if isinstance(seconds, bool) or not isinstance(seconds, (int, float)) or not 3 <= seconds <= 90:
++        raise ValueError('duration_seconds must be between 3 and 90')
++    return float(seconds)
++
++def format_value(value: float, unit: str) -> str:
++    prefix, suffix = UNITS[unit]
++    return prefix + (f'{value:,.0f}' if value >= 10000 else format(value, ',.4g')) + suffix
++
++def estimate_seconds(body: str) -> tuple[float, float]:
++    """(seconds of animation before the last wait, value of the last wait). Reads the fixed run_time and wait values of a template."""
++    lines = body.splitlines()
++    waits = [i for i, line in enumerate(lines) if line.strip().startswith('self.wait(')]
++    last = waits[-1] if waits else None
++    animated, final = 0.0, 0.0
++    for i, line in enumerate(lines):
++        text = line.strip()
++        if text.startswith('self.play('):
++            found = re.search(r'run_time=([0-9.]+)', text)
++            animated += float(found.group(1)) if found else 1.0
++        elif text.startswith('self.wait('):
++            value = float(re.fullmatch(r'self\.wait\(([0-9.]+)\)', text).group(1))
++            if i == last:
++                final = value
++            else:
++                animated += value
++    return animated, final
++
++def fit_duration(body: str, seconds: float) -> str:
++    """Stretch only the final wait so that the scene lasts about as long as its narration (never shorter than the animation + 0.5 s)."""
++    animated, _ = estimate_seconds(body)
++    hold = max(0.5, round(seconds - animated, 2))
++    lines = body.splitlines(keepends=True)
++    waits = [i for i, line in enumerate(lines) if line.strip().startswith('self.wait(')]
++    if not waits:
++        return body + f'        self.wait({hold})\n'
++    line = lines[waits[-1]]
++    lines[waits[-1]] = line[:len(line) - len(line.lstrip())] + f'self.wait({hold})\n'
++    return ''.join(lines)
++
++def bars_body(spec: dict) -> str:
++    labels = [b['label'] for b in spec['bars']]
++    values = [b['value'] for b in spec['bars']]
++    texts = [format_value(v, spec['unit']) for v in values]
++    head = ''
++    if spec['title']:
++        head = f"""        title = Text({spec['title']!r}, font_size=34).to_edge(UP)
++        if title.width > 12:
++            title.scale_to_fit_width(12)
++        self.play(Write(title), run_time=1)
++"""
++    return head + f"""        labels = {labels!r}
++        values = {values!r}
++        texts = {texts!r}
++        top = {max(values)!r}
++        colors = [BLUE, ORANGE, GREEN, YELLOW, PURPLE, RED]
++        n = len(values)
++        gap = min(3.4, 12 / n)
++        width = min(2.2, gap * .7)
++        base = -2.4
++        bars = VGroup(*[Rectangle(width=width, height=max(v / top * 3.4, .03), color=colors[i], fill_opacity=.75, stroke_width=2).move_to([(i - (n - 1) / 2) * gap, base + max(v / top * 3.4, .03) / 2, 0]) for i, v in enumerate(values)])
++        names = VGroup(*[Text(labels[i], font_size=24).next_to(bars[i], DOWN, buff=.2) for i in range(n)])
++        for name in names:
++            if name.width > gap - .15:
++                name.scale_to_fit_width(gap - .15)
++        numbers = VGroup(*[Text(texts[i], font_size=28).next_to(bars[i], UP, buff=.15) for i in range(n)])
++        axis = Line([-7, base, 0], [7, base, 0], color=GRAY)
++        self.play(Create(axis), run_time=.5)
++        self.play(LaggedStart(*[GrowFromEdge(b, DOWN) for b in bars], lag_ratio=.25), FadeIn(names), run_time=2)
++        self.play(FadeIn(numbers), run_time=1)
++        self.wait(2)
++"""
++
++def flow_body(labels: list[str]) -> str:
++    n = len(labels)
++    spacing, width = (4, 2.7) if n <= 3 else (3.4, 2.5)
++    return f"""        labels = {labels!r}
++        n = len(labels)
++        blocks = VGroup(*[RoundedRectangle(width={width}, height=1.2, corner_radius=.15, color=BLUE).move_to([(i - (n - 1) / 2) * {spacing}, 0, 0]) for i in range(n)])
++        names = VGroup(*[Text(label, font_size=27).move_to(blocks[i]) for i, label in enumerate(labels)])
++        for name in names:
++            if name.width > {width} - .4:
++                name.scale_to_fit_width({width} - .4)
++        arrows = VGroup(*[Arrow(blocks[i].get_right(), blocks[i + 1].get_left(), buff=.15) for i in range(n - 1)])
++        self.play(Create(blocks), Write(names), Create(arrows), run_time=3)
++        self.wait(2)
++"""
++
+ BODIES = {
+     'vector': '''        axes = NumberPlane(x_range=[-5, 5], y_range=[-3, 3])
+         vector = Arrow(ORIGIN, 3*RIGHT + 2*UP, buff=0, color=BLUE)
+@@ -68,8 +207,13 @@ BODIES = {
+ 
+ def build_scene(scene: Scene) -> str:
+     skill = resolve_skill(scene.visual_type)
++    seconds = safe_duration(scene.duration_seconds)
++    if scene.data is not None and scene.visual_type not in ('bars', 'flow'):
++        raise ValueError('data is only used by bars and flow scenes')
+     cls = 'Scene' + re.sub(r'[^A-Za-z0-9]', '', scene.id.title())
+-    if scene.visual_type == 'graph':
++    if scene.visual_type == 'bars':
++        body = bars_body(safe_bars(scene.data))
++    elif scene.visual_type == 'graph':
+         expr = safe_expression(scene.expression or 'x**2')
+         body = f'''        axes = Axes(x_range=[-4,4,1], y_range=[-2,8,2], x_length=10, y_length=5)
+         curve = axes.plot(lambda x: {expr}, x_range=[-2.5,2.5], color=BLUE)
+@@ -91,8 +235,12 @@ def build_scene(scene: Scene) -> str:
+         self.play(Write(label), run_time=2)
+         self.wait(2)
+ '''
++    elif scene.visual_type == 'flow' and scene.data is not None:
++        body = flow_body(safe_flow_labels(scene.data))
+     else:
+         body = BODIES[skill.visual_type]
++    if seconds is not None:
++        body = fit_duration(body, seconds)
+     return f'''from manim import *
+ 
+ class {cls}(Scene):
+diff --git a/studio/models.py b/studio/models.py
+index be7df90..7dee716 100644
+--- a/studio/models.py
++++ b/studio/models.py
+@@ -29,6 +29,7 @@ class Scene(BaseModel):
+     narration: str
+     visual_type: str = "text"
+     expression: str | None = None
++    data: dict | None = None      # plain numbers and short labels for the bars and flow templates; validated, never executed
+     code: str | None = None
+     duration_seconds: float | None = None
+     sources: list[str] = Field(default_factory=list)
+diff --git a/studio/skill_collaboration.py b/studio/skill_collaboration.py
+index 10e305d..0f69c7e 100644
+--- a/studio/skill_collaboration.py
++++ b/studio/skill_collaboration.py
+@@ -17,6 +17,7 @@ KEYWORDS = {
+  'sorting': ('sort','sorting','bubble sort','algorithm','array'),
+  'probability': ('probability','normal distribution','gaussian','statistics'),
+  'flow': ('pipeline','workflow','architecture','system','process','data flow'),
++ 'bars': ('bar chart','compare','comparison','versus','benchmark','cost'),
+  'text': ('introduction','overview','summary','conclusion','title'),
+ }
+ # Roles are stages in a scene production pipeline, not claims of autonomous execution.
+@@ -57,6 +58,17 @@ def plan_collaboration(project: Project) -> dict:
+         except ValueError as exc:
+             errors.append(f'{scene.id}: {exc}')
+             continue
++        try:
++            from .animation import safe_bars, safe_duration, safe_flow_labels
++            if scene.visual_type == 'bars':
++                safe_bars(scene.data)
++            elif scene.visual_type == 'flow' and scene.data is not None:
++                safe_flow_labels(scene.data)
++            elif scene.data is not None:
++                raise ValueError('data is only used by bars and flow scenes')
++            safe_duration(scene.duration_seconds)
++        except ValueError as exc:
++            errors.append(f'{scene.id}: {exc}')
+         if scene.visual_type == 'graph' and scene.expression:
+             try:
+                 from .animation import safe_expression
+diff --git a/studio/skills.py b/studio/skills.py
+index 83c33e6..c2e9703 100644
+--- a/studio/skills.py
++++ b/studio/skills.py
+@@ -7,6 +7,8 @@ class Skill:
+     description: str
+     visual_type: str
+     example_expression: str | None = None
++    needs_data: bool = False          # True: only curated storyboards may use it, the AI planner is not offered it
++    example_data: dict | None = None
+ 
+ SKILLS = (
+     Skill('equation-writing', 'Display and transform a short mathematical expression', 'equation', 'x^2 + 2x + 1'),
+@@ -15,7 +17,9 @@ SKILLS = (
+     Skill('neural-network', 'Show a feedforward network and connections', 'neural_network'),
+     Skill('sorting-algorithm', 'Animate a fixed bar-sort demonstration', 'sorting'),
+     Skill('probability-distribution', 'Show a normal-distribution bell curve', 'probability'),
+-    Skill('system-flow', 'Illustrate a three-stage data processing pipeline', 'flow'),
++    Skill('system-flow', 'Illustrate a three-stage data processing pipeline (optionally with 2 to 4 labelled boxes)', 'flow'),
++    Skill('bar-comparison', 'Compare 2 to 6 labelled non-negative numbers as bars', 'bars', None, True,
++          {'title': 'Cost per run', 'unit': '$', 'bars': [{'label': 'Medium model', 'value': 0.0148}, {'label': 'Cascade', 'value': 0.0755}]}),
+     Skill('concept-title', 'Show a legible concept title', 'text'),
+ )
+ SKILL_BY_TYPE = {s.visual_type: s for s in SKILLS}
+@@ -29,4 +33,4 @@ def resolve_skill(visual_type: str) -> Skill:
+     except KeyError as exc:
+         raise ValueError(f'Unsupported visual_type {visual_type!r}; supported: {", ".join(SKILL_BY_TYPE)}') from exc
+ 
+-SKILL_GUIDANCE = '\n'.join(f'- {s.visual_type}: {s.description}' for s in SKILLS)
++SKILL_GUIDANCE = '\n'.join(f'- {s.visual_type}: {s.description}' for s in SKILLS if not s.needs_data)
+diff --git a/tests/test_lesson_templates.py b/tests/test_lesson_templates.py
+new file mode 100644
+index 0000000..18e7433
+--- /dev/null
++++ b/tests/test_lesson_templates.py
+@@ -0,0 +1,141 @@
++import hashlib
++
++import pytest
++
++from studio.animation import (build_scene, estimate_seconds, fit_duration, format_value, safe_bars, safe_duration,
++                              safe_flow_labels, safe_label)
++from studio.models import Project, Scene
++from studio.skill_collaboration import plan_collaboration
++from studio.skills import SKILL_GUIDANCE, SKILLS, resolve_skill
++
++# SHA-256 of the code the v0.6 templates generate for id "g1", objective "Golden check" and each skill's example expression.
++GOLDEN = {
++    'equation': 'ffc3471b17f5676018888e985fcad235e3d490ca9d4fc0631babbfaf298f533d',
++    'graph': '6aebb9074ea96fbc265ba2fdacc45f445ca9932a20998a8749f6782cba11d2df',
++    'vector': '234e0142c359032a8afd1f3da8ccfe640a0bc76d42a0037c0f91b1ba279e5abe',
++    'neural_network': '12c3e04b51b76b34ddca0dd3134a7efed58ffcf0a44f5bf30dc7df6be666ac8f',
++    'sorting': '782a8975d2e76e73936425eb2a1d25fc7a731a0654bfd0a290993a0e4d9a8d0b',
++    'probability': 'b3bdf69a2cb76674bdce38a9cc83f6c3215fa26b596abbcd82777a4846eb1212',
++    'flow': '03474b1c392fe86ff1fe9c6872d1c197c8214d6afec8770aa12b32740b17f225',
++    'text': 'e0497e448db6fde73e2ab20894eeffb67d30e24fb4632f209db6505ff7b4ee8c',
++}
++BARS = {'title': 'Cost per run', 'unit': '$', 'bars': [{'label': 'Medium model', 'value': 0.0148}, {'label': 'Cascade', 'value': 0.0755}]}
++
++
++def scene(visual_type='bars', **kw):
++    return Scene(id='s1', objective='x', narration='n', visual_type=visual_type, **kw)
++
++
++@pytest.mark.parametrize('visual_type', sorted(GOLDEN))
++def test_existing_templates_generate_the_same_code_as_v06(visual_type):
++    skill = resolve_skill(visual_type)
++    code = build_scene(Scene(id='g1', objective='Golden check', narration='n', visual_type=visual_type, expression=skill.example_expression))
++    assert hashlib.sha256(code.encode()).hexdigest() == GOLDEN[visual_type]
++
++
++def test_bars_scene_generates_valid_python_with_the_values_and_formatted_numbers():
++    code = build_scene(scene(data=BARS))
++    compile(code, 'scene', 'exec')
++    assert '$0.0148' in code and '$0.0755' in code and "'Cascade'" in code and 'Cost per run' in code
++    assert 'Medium model' in code
++
++
++def test_bars_values_are_formatted_by_unit():
++    assert format_value(0.0148, '$') == '$0.0148'
++    assert format_value(1298, 'ms') == '1,298 ms'
++    assert format_value(92.5, '%') == '92.5%'
++    assert format_value(25000, '') == '25,000'
++
++
++@pytest.mark.parametrize('data', [
++    None, {}, {'bars': []}, {'bars': [{'label': 'A', 'value': 1}]},
++    {'bars': [{'label': str(i), 'value': 1} for i in range(7)]},
++    {'bars': [{'label': 'A', 'value': 1}, {'label': 'A', 'value': 2}]},
++    {'bars': [{'label': 'A', 'value': -1}, {'label': 'B', 'value': 2}]},
++    {'bars': [{'label': 'A', 'value': 0}, {'label': 'B', 'value': 0}]},
++    {'bars': [{'label': 'A', 'value': float('nan')}, {'label': 'B', 'value': 2}]},
++    {'bars': [{'label': 'A', 'value': float('inf')}, {'label': 'B', 'value': 2}]},
++    {'bars': [{'label': 'A', 'value': True}, {'label': 'B', 'value': 2}]},
++    {'bars': [{'label': 'A', 'value': '5'}, {'label': 'B', 'value': 2}]},
++    {'bars': [{'label': 'A', 'value': 1e10}, {'label': 'B', 'value': 2}]},
++    {'bars': [{'label': 'A', 'value': 1, 'color': 'red'}, {'label': 'B', 'value': 2}]},
++    {'bars': [{'label': 'A', 'value': 1}, {'label': 'B', 'value': 2}], 'unit': 'EUR'},
++    {'bars': [{'label': 'A', 'value': 1}, {'label': 'B', 'value': 2}], 'code': 'import os'},
++])
++def test_invalid_bars_data_is_rejected(data):
++    with pytest.raises(ValueError):
++        safe_bars(data)
++    with pytest.raises(ValueError):
++        build_scene(scene(data=data))
++
++
++@pytest.mark.parametrize('label', ["x'); import os #", 'a"b', 'back\\slash', '[list]', '', ' ', 'x' * 25, 'café', '{x}', 'a;b', '`x`', 'a=b', 'why?'])
++def test_labels_that_could_break_out_of_a_string_are_rejected(label):
++    with pytest.raises(ValueError):
++        safe_label(label)
++
++
++def test_label_whitespace_is_normalised_and_allowed_punctuation_passes():
++    assert safe_label('  Small   model ') == 'Small model'
++    assert safe_label('Cost ($) 5.1x, 92%') == 'Cost ($) 5.1x, 92%'
++
++
++def test_hostile_label_never_reaches_the_generated_code():
++    hostile = {'bars': [{'label': "A'); __import__('os').system('x') #", 'value': 1}, {'label': 'B', 'value': 2}]}
++    with pytest.raises(ValueError):
++        build_scene(scene(data=hostile))
++
++
++def test_data_is_only_accepted_for_bars_and_flow():
++    for visual_type in ('text', 'graph', 'sorting'):
++        with pytest.raises(ValueError):
++            build_scene(scene(visual_type, data=BARS, expression='x**2' if visual_type == 'graph' else None))
++
++
++def test_flow_without_data_is_unchanged_and_with_labels_shows_them():
++    assert 'Input' in build_scene(scene('flow'))
++    code = build_scene(scene('flow', data={'labels': ['Request', 'Small model', 'Large model']}))
++    compile(code, 'scene', 'exec')
++    assert "['Request', 'Small model', 'Large model']" in code and 'Input' not in code
++
++
++@pytest.mark.parametrize('data', [{'labels': ['Only one']}, {'labels': ['a', 'b', 'c', 'd', 'e']}, {'labels': 'abc'}, {'labels': [1, 2]},
++                                  {'labels': ['a', 'b'], 'extra': 1}, {'labels': ["a'", 'b']}, {'labels': ['x' * 21, 'b']}, {}, []])
++def test_invalid_flow_labels_are_rejected(data):
++    with pytest.raises(ValueError):
++        safe_flow_labels(data)
++
++
++def test_duration_follows_the_narration_length_and_only_changes_the_last_wait():
++    plain = build_scene(scene(data=BARS))
++    long = build_scene(scene(data=BARS, duration_seconds=14))
++    assert plain.count('self.wait(2)') == 1 and 'self.wait(9.5)' in long
++    assert plain.replace('self.wait(2)', 'self.wait(9.5)') == long
++    animated, hold = estimate_seconds(long)
++    assert abs(animated + hold - 14) < 0.01
++
++
++def test_a_short_duration_never_cuts_the_animation_and_bounds_are_enforced():
++    assert 'self.wait(0.5)' in fit_duration('        self.play(Write(x), run_time=4)\n        self.wait(2)\n', 3)
++    for bad in (0, 2.9, 91, -5, True, '10', float('nan')):
++        with pytest.raises(ValueError):
++            safe_duration(bad)
++    assert safe_duration(None) is None and safe_duration(3) == 3.0 and safe_duration(90) == 90.0
++
++
++def test_every_template_accepts_a_duration():
++    for skill in SKILLS:
++        code = build_scene(Scene(id='g1', objective='Golden check', narration='n', visual_type=skill.visual_type,
++                                 expression=skill.example_expression, data=skill.example_data, duration_seconds=20))
++        compile(code, 'scene', 'exec')
++        animated, hold = estimate_seconds(code)
++        assert 19.9 < animated + hold < 20.1 or hold == 0.5, skill.visual_type
++
++
++def test_bars_is_curated_only_and_the_planner_validates_its_inputs():
++    assert 'bars' not in SKILL_GUIDANCE and 'flow' in SKILL_GUIDANCE
++    good = plan_collaboration(Project(id='t', topic='Demo', scenes=[scene(data=BARS, duration_seconds=14)]))
++    assert good['ready'] and not good['errors'] and good['skills_used'] == ['bar-comparison']
++    for bad_scene in (scene(data={'bars': []}), scene(), scene('text', data=BARS), scene(data=BARS, duration_seconds=1)):
++        bad = plan_collaboration(Project(id='t', topic='Demo', scenes=[bad_scene]))
++        assert not bad['ready'] and bad['errors']
+diff --git a/tests/test_skill_collaboration.py b/tests/test_skill_collaboration.py
+index 052be64..8b55a93 100644
+--- a/tests/test_skill_collaboration.py
++++ b/tests/test_skill_collaboration.py
+@@ -5,7 +5,7 @@ def project(*scenes):
+     return Project(id='test', topic='Demo', scenes=list(scenes))
+ 
+ def test_catalog_only_implemented_skills():
+-    assert len(catalog()['implemented']) == 8
++    assert len(catalog()['implemented']) == 9
+ 
+ def test_keyword_selection():
+     assert suggest_visual_type('Plot a parabola graph')[0] == 'graph'
+diff --git a/tests/test_skills.py b/tests/test_skills.py
+index 52f8af2..2892f77 100644
+--- a/tests/test_skills.py
++++ b/tests/test_skills.py
+@@ -5,11 +5,11 @@ from studio.models import Scene
+ 
+ def test_all_registered_skills_compile():
+     for skill in SKILLS:
+-        scene = Scene(id='scene_001', objective='Example', narration='Test', visual_type=skill.visual_type, expression=skill.example_expression)
++        scene = Scene(id='scene_001', objective='Example', narration='Test', visual_type=skill.visual_type, expression=skill.example_expression, data=skill.example_data)
+         compile(build_scene(scene), f'{skill.name}.py', 'exec')
+ 
+ def test_registry():
+-    assert len(list_skills()) == 8
++    assert len(list_skills()) == 9
+     with pytest.raises(ValueError): resolve_skill('unknown')
+ 
+ def test_reject_latex_injection():

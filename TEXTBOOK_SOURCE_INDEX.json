@@ -1,0 +1,1079 @@
+[
+  {
+    "id": "os",
+    "title": "Operating System Concepts Essentials",
+    "authors": "Silberschatz · Galvin · Gagne",
+    "category": "Systems",
+    "courseId": null,
+    "pageCount": 782,
+    "chapters": [
+      {
+        "title": "Chapter 1 Introduction",
+        "pdfPage": 25
+      },
+      {
+        "title": "Chapter 2 Operating-System Structures",
+        "pdfPage": 77
+      },
+      {
+        "title": "Chapter 3 Processes",
+        "pdfPage": 127
+      },
+      {
+        "title": "Chapter 4 Threads",
+        "pdfPage": 185
+      },
+      {
+        "title": "Chapter 5 Process Synchronization",
+        "pdfPage": 225
+      },
+      {
+        "title": "Chapter 6 CPU Scheduling",
+        "pdfPage": 291
+      },
+      {
+        "title": "Chapter 7 Main Memory",
+        "pdfPage": 347
+      },
+      {
+        "title": "Chapter 8 Virtual Memory",
+        "pdfPage": 393
+      },
+      {
+        "title": "Chapter 9 Mass-Storage Structure",
+        "pdfPage": 463
+      },
+      {
+        "title": "Chapter 10 File-System Interface",
+        "pdfPage": 499
+      },
+      {
+        "title": "Chapter 11 File-System Implementation",
+        "pdfPage": 539
+      },
+      {
+        "title": "Chapter 12 I/O Systems",
+        "pdfPage": 583
+      },
+      {
+        "title": "Chapter 13 Protection",
+        "pdfPage": 623
+      },
+      {
+        "title": "Chapter 14 Security",
+        "pdfPage": 655
+      },
+      {
+        "title": "Chapter 15 The Linux System",
+        "pdfPage": 709
+      }
+    ],
+    "file": "silberschatz_a_galvin_pb_gagne_g_operating_system_concepts.pdf"
+  },
+  {
+    "id": "network",
+    "title": "Computer Networking: A Top-Down Approach",
+    "authors": "Kurose · Ross",
+    "category": "Networks",
+    "courseId": null,
+    "pageCount": 797,
+    "chapters": [
+      {
+        "title": "Chapter 1: Computer Networks and the Internet",
+        "pdfPage": 33
+      },
+      {
+        "title": "Chapter 2: Application Layer",
+        "pdfPage": 113
+      },
+      {
+        "title": "Chapter 3: Transport Layer",
+        "pdfPage": 213
+      },
+      {
+        "title": "Chapter 4: The Network Layer: Data Plane",
+        "pdfPage": 335
+      },
+      {
+        "title": "Chapter 5: The Network Layer: Control Plane",
+        "pdfPage": 409
+      },
+      {
+        "title": "Chapter 6: The Link Layer and LANs",
+        "pdfPage": 481
+      },
+      {
+        "title": "Chapter 7: Wireless and Mobile Networks",
+        "pdfPage": 563
+      },
+      {
+        "title": "Chapter 8: Security in Computer Networks",
+        "pdfPage": 639
+      }
+    ],
+    "file": "kurose_jf_ross_kw_computer_networking_a_topdown_approach.pdf"
+  },
+  {
+    "id": "d2l",
+    "title": "Dive into Deep Learning",
+    "authors": "Zhang · Lipton · Li · Smola",
+    "category": "AI / ML",
+    "courseId": "deep-learning",
+    "pageCount": 1197,
+    "chapters": [
+      {
+        "title": "Introduction",
+        "pdfPage": 43
+      },
+      {
+        "title": "Preliminaries",
+        "pdfPage": 72
+      },
+      {
+        "title": "Linear Neural Networks for Regression",
+        "pdfPage": 124
+      },
+      {
+        "title": "Linear Neural Networks for Classification",
+        "pdfPage": 169
+      },
+      {
+        "title": "Multilayer Perceptrons",
+        "pdfPage": 211
+      },
+      {
+        "title": "Builders' Guide",
+        "pdfPage": 254
+      },
+      {
+        "title": "Convolutional Neural Networks",
+        "pdfPage": 282
+      },
+      {
+        "title": "Modern Convolutional Neural Networks",
+        "pdfPage": 318
+      },
+      {
+        "title": "Recurrent Neural Networks",
+        "pdfPage": 377
+      },
+      {
+        "title": "Modern Recurrent Neural Networks",
+        "pdfPage": 423
+      },
+      {
+        "title": "Attention Mechanisms and Transformers",
+        "pdfPage": 466
+      },
+      {
+        "title": "Optimization Algorithms",
+        "pdfPage": 527
+      },
+      {
+        "title": "Computational Performance",
+        "pdfPage": 610
+      },
+      {
+        "title": "Computer Vision",
+        "pdfPage": 657
+      },
+      {
+        "title": "Natural Language Processing: Pretraining",
+        "pdfPage": 759
+      },
+      {
+        "title": "Natural Language Processing: Applications",
+        "pdfPage": 815
+      },
+      {
+        "title": "Reinforcement Learning",
+        "pdfPage": 854
+      },
+      {
+        "title": "Gaussian Processes",
+        "pdfPage": 871
+      },
+      {
+        "title": "Hyperparameter Optimization",
+        "pdfPage": 904
+      },
+      {
+        "title": "Generative Adversarial Networks",
+        "pdfPage": 955
+      },
+      {
+        "title": "Recommender Systems",
+        "pdfPage": 969
+      }
+    ],
+    "file": "zhang_a_lipton_zc_li_m_smola_aj_dive_into_deep_learning.pdf"
+  },
+  {
+    "id": "rl",
+    "title": "Reinforcement Learning: An Introduction",
+    "authors": "Sutton · Barto",
+    "category": "AI / ML",
+    "courseId": null,
+    "pageCount": 548,
+    "chapters": [
+      {
+        "title": "Chapter 1: Introduction",
+        "pdfPage": 23
+      },
+      {
+        "title": "Multi-armed Bandits",
+        "pdfPage": 47
+      },
+      {
+        "title": "Finite Markov Decision Processes",
+        "pdfPage": 69
+      },
+      {
+        "title": "Dynamic Programming",
+        "pdfPage": 95
+      },
+      {
+        "title": "Monte Carlo Methods",
+        "pdfPage": 113
+      },
+      {
+        "title": "Temporal-Difference Learning",
+        "pdfPage": 141
+      },
+      {
+        "title": "n-step Bootstrapping",
+        "pdfPage": 163
+      },
+      {
+        "title": "Planning and Learning with Tabular Methods",
+        "pdfPage": 181
+      },
+      {
+        "title": "On-policy Prediction with Approximation",
+        "pdfPage": 219
+      },
+      {
+        "title": "On-policy Control with Approximation",
+        "pdfPage": 265
+      },
+      {
+        "title": "Off-policy Methods with Approximation",
+        "pdfPage": 279
+      },
+      {
+        "title": "Eligibility Traces",
+        "pdfPage": 309
+      },
+      {
+        "title": "Policy Gradient Methods",
+        "pdfPage": 343
+      },
+      {
+        "title": "Psychology",
+        "pdfPage": 363
+      },
+      {
+        "title": "Neuroscience",
+        "pdfPage": 399
+      },
+      {
+        "title": "Applications and Case Studies",
+        "pdfPage": 443
+      },
+      {
+        "title": "Frontiers",
+        "pdfPage": 481
+      }
+    ],
+    "file": "sutton_rs_barto_ag_reinforcement_learning_an_introduction.pdf"
+  },
+  {
+    "id": "islr",
+    "title": "An Introduction to Statistical Learning (R edition)",
+    "authors": "James · Witten · Hastie · Tibshirani",
+    "category": "AI / ML",
+    "courseId": null,
+    "pageCount": 436,
+    "chapters": [
+      {
+        "title": "1 Introduction",
+        "pdfPage": 16
+      },
+      {
+        "title": "2 Statistical Learning",
+        "pdfPage": 30
+      },
+      {
+        "title": "3 Linear Regression",
+        "pdfPage": 73
+      },
+      {
+        "title": "4 Classification",
+        "pdfPage": 141
+      },
+      {
+        "title": "5 Resampling Methods",
+        "pdfPage": 188
+      },
+      {
+        "title": "6 Linear Model Selection and Regularization",
+        "pdfPage": 215
+      },
+      {
+        "title": "7 Moving Beyond Linearity",
+        "pdfPage": 277
+      },
+      {
+        "title": "8 Tree-Based Methods",
+        "pdfPage": 314
+      },
+      {
+        "title": "9 Support Vector Machines",
+        "pdfPage": 347
+      },
+      {
+        "title": "10 Unsupervised Learning",
+        "pdfPage": 383
+      }
+    ],
+    "file": "james_gareth_et_al_an_introduction_to_statistical_learning_w.pdf"
+  },
+  {
+    "id": "algo",
+    "title": "Algorithm Design",
+    "authors": "Kleinberg · Tardos",
+    "category": "Algorithms",
+    "courseId": null,
+    "pageCount": 864,
+    "chapters": [
+      {
+        "title": "1. Introduction: Some Representative Problems",
+        "pdfPage": 27
+      },
+      {
+        "title": "2. Basics of Algorithm Analysis",
+        "pdfPage": 55
+      },
+      {
+        "title": "3. Graphs",
+        "pdfPage": 99
+      },
+      {
+        "title": "4. Greedy Algorithms",
+        "pdfPage": 141
+      },
+      {
+        "title": "5. Divide and Conquer",
+        "pdfPage": 235
+      },
+      {
+        "title": "6. Dynamic Programming",
+        "pdfPage": 277
+      },
+      {
+        "title": "7. Network Flow",
+        "pdfPage": 363
+      },
+      {
+        "title": "8. NP and Computational Intractability",
+        "pdfPage": 477
+      },
+      {
+        "title": "9. PSPACE: A Class of Problems beyond NP",
+        "pdfPage": 557
+      },
+      {
+        "title": "10. Extending the Limits of Tractability",
+        "pdfPage": 579
+      },
+      {
+        "title": "11. Approximation Algorithms",
+        "pdfPage": 625
+      },
+      {
+        "title": "12. Local Search",
+        "pdfPage": 687
+      },
+      {
+        "title": "13. Randomized Algorithms",
+        "pdfPage": 733
+      }
+    ],
+    "file": "kleinberg_jon_tardos_eva_algorithm_design.pdf"
+  },
+  {
+    "id": "aima",
+    "title": "Artificial Intelligence: A Modern Approach (4e)",
+    "authors": "Russell · Norvig",
+    "category": "AI / ML",
+    "courseId": "ai-foundations",
+    "pageCount": 1132,
+    "chapters": [
+      {
+        "title": "Chapter 1: Introduction",
+        "pdfPage": 18
+      },
+      {
+        "title": "Chapter 2: Intelligent Agents",
+        "pdfPage": 53
+      },
+      {
+        "title": "Chapter 3: Solving Problems by Searching",
+        "pdfPage": 80
+      },
+      {
+        "title": "Chapter 4: Search in Complex Environments",
+        "pdfPage": 127
+      },
+      {
+        "title": "Chapter 5: Adversarial Search and Games",
+        "pdfPage": 163
+      },
+      {
+        "title": "Chapter 6: Constraint Satisfaction Problems",
+        "pdfPage": 197
+      },
+      {
+        "title": "Chapter 7: Logical Agents",
+        "pdfPage": 225
+      },
+      {
+        "title": "Chapter 8: First-Order Logic",
+        "pdfPage": 268
+      },
+      {
+        "title": "Chapter 9: Inference in First-Order Logic",
+        "pdfPage": 297
+      },
+      {
+        "title": "Chapter 10: Knowledge Representation",
+        "pdfPage": 331
+      },
+      {
+        "title": "Chapter 11: Automated Planning",
+        "pdfPage": 361
+      },
+      {
+        "title": "Chapter 12: Quantifying Uncertainty",
+        "pdfPage": 402
+      },
+      {
+        "title": "Chapter 13: Probabilistic Reasoning",
+        "pdfPage": 429
+      },
+      {
+        "title": "Chapter 14: Probabilistic Reasoning over Time",
+        "pdfPage": 478
+      },
+      {
+        "title": "Chapter 15: Probabilistic Programming",
+        "pdfPage": 517
+      },
+      {
+        "title": "Chapter 16: Making Simple Decisions",
+        "pdfPage": 545
+      },
+      {
+        "title": "Chapter 17: Making Complex Decisions",
+        "pdfPage": 579
+      },
+      {
+        "title": "Chapter 18: Multiagent Decision Making",
+        "pdfPage": 616
+      },
+      {
+        "title": "Chapter 19: Learning from Examples",
+        "pdfPage": 668
+      },
+      {
+        "title": "Chapter 20: Learning Probabilistic Models",
+        "pdfPage": 738
+      },
+      {
+        "title": "Chapter 21: Deep Learning",
+        "pdfPage": 767
+      },
+      {
+        "title": "Chapter 22: Reinforcement Learning",
+        "pdfPage": 806
+      },
+      {
+        "title": "Chapter 23: Natural Language Processing",
+        "pdfPage": 840
+      },
+      {
+        "title": "Chapter 24: Deep Learning for Natural Language Processing",
+        "pdfPage": 873
+      },
+      {
+        "title": "Chapter 25: Computer Vision",
+        "pdfPage": 898
+      },
+      {
+        "title": "Chapter 26: Robotics",
+        "pdfPage": 942
+      },
+      {
+        "title": "Chapter 27: Philosophy, Ethics, and Safety of AI",
+        "pdfPage": 998
+      },
+      {
+        "title": "Chapter 28: The Future of AI",
+        "pdfPage": 1029
+      }
+    ],
+    "file": "russel_stuart_norvig_peter_artificial_intelligence_a_modern.pdf"
+  },
+  {
+    "id": "miller",
+    "title": "AI Prompt Engineering: Absolute Beginner’s Guide",
+    "authors": "Michael Miller",
+    "category": "Prompting",
+    "courseId": "prompt-engineering",
+    "pageCount": 345,
+    "chapters": [
+      {
+        "title": "1. Understanding Generative AI",
+        "pdfPage": 36
+      },
+      {
+        "title": "2. What Is Prompt Engineering—and Why Is It Important?",
+        "pdfPage": 50
+      },
+      {
+        "title": "3. The Anatomy of a Perfect Prompt",
+        "pdfPage": 59
+      },
+      {
+        "title": "4. Defining Output in Your Prompts",
+        "pdfPage": 74
+      },
+      {
+        "title": "5. Understanding and Comparing Different Prompting Strategies",
+        "pdfPage": 82
+      },
+      {
+        "title": "6. Using Zero-Shot Prompting",
+        "pdfPage": 93
+      },
+      {
+        "title": "7. Using One-Shot Prompting",
+        "pdfPage": 101
+      },
+      {
+        "title": "8. Using Few-Shot Prompting",
+        "pdfPage": 110
+      },
+      {
+        "title": "9. Using Role-Based Prompting",
+        "pdfPage": 120
+      },
+      {
+        "title": "10. Using Chain-of-Thought Prompting",
+        "pdfPage": 136
+      },
+      {
+        "title": "11. Using Self-Consistency Prompting",
+        "pdfPage": 146
+      },
+      {
+        "title": "12. Using Prompt Chaining",
+        "pdfPage": 160
+      },
+      {
+        "title": "13. Using Multimodal Prompts",
+        "pdfPage": 171
+      },
+      {
+        "title": "14. Evaluating Prompt Performance",
+        "pdfPage": 181
+      },
+      {
+        "title": "15. Refining Your Prompts",
+        "pdfPage": 191
+      },
+      {
+        "title": "16. Prompting for Writing",
+        "pdfPage": 197
+      },
+      {
+        "title": "17. Prompting for Productivity",
+        "pdfPage": 208
+      },
+      {
+        "title": "18. Prompting for Image Generation",
+        "pdfPage": 220
+      },
+      {
+        "title": "19. Prompting for Video Generation",
+        "pdfPage": 238
+      },
+      {
+        "title": "20. Prompting for Music Generation",
+        "pdfPage": 249
+      },
+      {
+        "title": "21. Advanced Prompting Strategies and Tools",
+        "pdfPage": 262
+      },
+      {
+        "title": "22. Prompting Responsibly",
+        "pdfPage": 273
+      },
+      {
+        "title": "23. Troubleshooting Less-Effective Prompts",
+        "pdfPage": 287
+      },
+      {
+        "title": "24. Future Directions in AI and Prompt Engineering",
+        "pdfPage": 296
+      }
+    ],
+    "file": "miller_m_ai_prompt_engineering_absolute_beginners_guide_no_e.pdf"
+  },
+  {
+    "id": "davies",
+    "title": "Prompt Engineering in Practice",
+    "authors": "Davies · Fischer",
+    "category": "Prompting",
+    "courseId": "prompt-engineering",
+    "pageCount": 248,
+    "chapters": [
+      {
+        "title": "1 Prompt engineering: The blueprint",
+        "pdfPage": 26
+      },
+      {
+        "title": "2 Prompt design: Structural elements",
+        "pdfPage": 44
+      },
+      {
+        "title": "3 Prompt design: Linguistic elements",
+        "pdfPage": 66
+      },
+      {
+        "title": "4 Patterns",
+        "pdfPage": 83
+      },
+      {
+        "title": "5 Templates",
+        "pdfPage": 106
+      },
+      {
+        "title": "6 Prompt types",
+        "pdfPage": 119
+      },
+      {
+        "title": "7 Contextual prompting",
+        "pdfPage": 146
+      },
+      {
+        "title": "8 Prompt sampling",
+        "pdfPage": 158
+      },
+      {
+        "title": "9 Advanced prompt patterns",
+        "pdfPage": 171
+      },
+      {
+        "title": "10 Security",
+        "pdfPage": 190
+      },
+      {
+        "title": "11 Managing Prompts in Production",
+        "pdfPage": 214
+      }
+    ],
+    "file": "davies_richard_fischer_rafael_prompt_engineering_in_practice.pdf"
+  },
+  {
+    "id": "teacher",
+    "title": "ChatGPT Hacks for Teachers",
+    "authors": "Keshav Jha",
+    "category": "Education",
+    "courseId": "prompt-engineering",
+    "pageCount": 641,
+    "chapters": [
+      {
+        "title": "1. Introduction to AI Chatbot ChatGPT",
+        "pdfPage": null
+      },
+      {
+        "title": "2. Use ChatGPT to Develop Lesson Plans for Any Topic",
+        "pdfPage": null
+      },
+      {
+        "title": "3. Create Assessment Activities Based on YouTube Videos and Other Content",
+        "pdfPage": null
+      },
+      {
+        "title": "4. Use ChatGPT to Grade Assessments and Provide Feedback",
+        "pdfPage": null
+      },
+      {
+        "title": "5. How to Use ChatGPT to Brainstorm Topics to Study",
+        "pdfPage": null
+      },
+      {
+        "title": "6. Use ChatGPT to Improve Language Skills",
+        "pdfPage": null
+      },
+      {
+        "title": "7. Using ChatGPT to Create Summaries for Better Comprehension and",
+        "pdfPage": null
+      },
+      {
+        "title": "8. Proofread Edit and Obtain Feedback Using ChatGPT",
+        "pdfPage": null
+      },
+      {
+        "title": "9. Use ChatGPT to Generate Essay Topics and Outline",
+        "pdfPage": null
+      },
+      {
+        "title": "10.Perform Sentiment Analysis Using ChatGPT",
+        "pdfPage": null
+      },
+      {
+        "title": "11. Create Program Codes Using ChatGPT",
+        "pdfPage": null
+      },
+      {
+        "title": "12.Create Tabular Format Outputs",
+        "pdfPage": null
+      },
+      {
+        "title": "13.Create a PowerPoint Presentation Outline",
+        "pdfPage": null
+      },
+      {
+        "title": "14.Simplify and Adapt Teaching Resources",
+        "pdfPage": null
+      },
+      {
+        "title": "15.Merge Documents and Remove Duplicate Content",
+        "pdfPage": null
+      },
+      {
+        "title": "16.ChatGPT for Professional Development",
+        "pdfPage": null
+      },
+      {
+        "title": "17.Bonus 1165 ChatGPT Customisable Prompts",
+        "pdfPage": null
+      },
+      {
+        "title": "18.Fifty-Two Video Outputs of ChatGPT Prompts for Teaching, Learning and",
+        "pdfPage": null
+      },
+      {
+        "title": "19.Accuracy of AI Generated Content Detectors",
+        "pdfPage": null
+      }
+    ],
+    "file": "jha_keshav_chatgpt_hacks_for_teachers_a_comprehensive_chatgp.pdf"
+  },
+  {
+    "id": "mollick",
+    "title": "Co-Intelligence: Living and Working with AI",
+    "authors": "Ethan Mollick",
+    "category": "AI / Society",
+    "courseId": null,
+    "pageCount": 226,
+    "chapters": [
+      {
+        "title": "Chapter 1: CREATING ALIEN MINDS",
+        "pdfPage": null
+      },
+      {
+        "title": "Chapter 2: ALIGNING THE ALIEN",
+        "pdfPage": null
+      },
+      {
+        "title": "Chapter 3: FOUR RULES FOR CO-INTELLIGENCE",
+        "pdfPage": null
+      },
+      {
+        "title": "Chapter 4: AI AS A PERSON",
+        "pdfPage": null
+      },
+      {
+        "title": "Chapter 5: AI AS A CREATIVE",
+        "pdfPage": null
+      },
+      {
+        "title": "Chapter 6: AI AS A COWORKER",
+        "pdfPage": null
+      },
+      {
+        "title": "Chapter 7: AI AS A TUTOR",
+        "pdfPage": null
+      },
+      {
+        "title": "Chapter 8: AI AS A COACH",
+        "pdfPage": null
+      },
+      {
+        "title": "Chapter 9: AI AS OUR FUTURE",
+        "pdfPage": null
+      }
+    ],
+    "file": "mollick_ethan_cointelligence_living_and_working_with_ai.pdf"
+  },
+  {
+    "id": "db",
+    "title": "Database Systems (14e)",
+    "authors": "Coronel · Morris",
+    "category": "Databases",
+    "courseId": "databases",
+    "pageCount": 818,
+    "chapters": [
+      {
+        "title": "Chapter 1: Database Systems",
+        "pdfPage": 31
+      },
+      {
+        "title": "Chapter 2: Data Models",
+        "pdfPage": 61
+      },
+      {
+        "title": "Chapter 3: The Relational Database Model",
+        "pdfPage": 93
+      },
+      {
+        "title": "Chapter 4: Entity Relationship (ER) Modeling",
+        "pdfPage": 136
+      },
+      {
+        "title": "Chapter 5: Advanced Data Modeling",
+        "pdfPage": 190
+      },
+      {
+        "title": "Chapter 6: Normalization of Database Tables",
+        "pdfPage": 220
+      },
+      {
+        "title": "Chapter 7: Introduction to Structured Query Language (SQL)",
+        "pdfPage": 267
+      },
+      {
+        "title": "Chapter 8: Advanced SQL",
+        "pdfPage": 379
+      },
+      {
+        "title": "Chapter 9: Database Design",
+        "pdfPage": 459
+      },
+      {
+        "title": "Chapter 10: Transaction Management and Concurrency Control",
+        "pdfPage": 501
+      },
+      {
+        "title": "Chapter 11: Database Performance Tuning and Query Optimization",
+        "pdfPage": 534
+      },
+      {
+        "title": "Chapter 12: Distributed Database Management Systems",
+        "pdfPage": 567
+      },
+      {
+        "title": "Chapter 13: Business Intelligence and Data Warehouses",
+        "pdfPage": 601
+      },
+      {
+        "title": "Chapter 14: Big Data and NoSQL",
+        "pdfPage": 668
+      },
+      {
+        "title": "Chapter 15: Database Connectivity and Web Technologies",
+        "pdfPage": 703
+      },
+      {
+        "title": "Chapter 16: Database Administration and Security",
+        "pdfPage": 743
+      }
+    ],
+    "file": "coronel_carlos_morris_steven_database_systems_design_impleme.pdf"
+  },
+  {
+    "id": "hart",
+    "title": "Killer ChatGPT Prompts",
+    "authors": "Guy Hart-Davis",
+    "category": "Prompting",
+    "courseId": "prompt-engineering",
+    "pageCount": 243,
+    "chapters": [
+      {
+        "title": "Chapter 1 Get Started with ChatGPT Prompts",
+        "pdfPage": 11
+      },
+      {
+        "title": "Chapter 2 ChatGPT Prompts for Getting a Job",
+        "pdfPage": 41
+      },
+      {
+        "title": "Chapter 3 ChatGPT Prompts for Managing Your Work and Schedule",
+        "pdfPage": 59
+      },
+      {
+        "title": "Chapter 4 ChatGPT Prompts for Business Writing",
+        "pdfPage": 73
+      },
+      {
+        "title": "Chapter 5 ChatGPT Prompts for Research and Analysis",
+        "pdfPage": 87
+      },
+      {
+        "title": "Chapter 6 ChatGPT Prompts for Communication and Knowledge Sharing",
+        "pdfPage": 101
+      },
+      {
+        "title": "Chapter 7 ChatGPT Prompts for Web Development",
+        "pdfPage": 115
+      },
+      {
+        "title": "Chapter 8 ChatGPT Prompts for Programming",
+        "pdfPage": 125
+      },
+      {
+        "title": "Chapter 9 ChatGPT Prompts for HR and Training",
+        "pdfPage": 133
+      },
+      {
+        "title": "Chapter 10 ChatGPT Prompts for Sales and Marketing",
+        "pdfPage": 149
+      },
+      {
+        "title": "Chapter 11 ChatGPT Prompts for Teachers",
+        "pdfPage": 167
+      },
+      {
+        "title": "Chapter 12 ChatGPT Prompts for Students",
+        "pdfPage": 179
+      },
+      {
+        "title": "Chapter 13 ChatGPT Prompts for Creative Writing and Fiction Writing",
+        "pdfPage": 195
+      },
+      {
+        "title": "Chapter 14 ChatGPT Prompts for Home Efficiency and Enjoyment",
+        "pdfPage": 203
+      },
+      {
+        "title": "Chapter 15 ChatGPT Prompts for Personal Development and Relationships",
+        "pdfPage": 213
+      }
+    ],
+    "file": "share_file.pdf"
+  },
+  {
+    "id": "llm",
+    "title": "LLM Engineer’s Handbook",
+    "authors": "Iusztin · Labonne",
+    "category": "AI / Engineering",
+    "courseId": "llm-engineering",
+    "pageCount": 523,
+    "chapters": [
+      {
+        "title": "Chapter 1: Understanding the LLM Twin Concept and Its Architecture",
+        "pdfPage": 30
+      },
+      {
+        "title": "Chapter 2: Tooling and Installation",
+        "pdfPage": 54
+      },
+      {
+        "title": "Chapter 3: Data Engineering",
+        "pdfPage": 84
+      },
+      {
+        "title": "Chapter 4: RAG Feature Pipeline",
+        "pdfPage": 128
+      },
+      {
+        "title": "Chapter 5: Supervised Fine-Tuning",
+        "pdfPage": 206
+      },
+      {
+        "title": "Chapter 6: Fine-Tuning with Preference Alignment",
+        "pdfPage": 258
+      },
+      {
+        "title": "Chapter 7: Evaluating LLMs",
+        "pdfPage": 290
+      },
+      {
+        "title": "Chapter 8: Inference Optimization",
+        "pdfPage": 318
+      },
+      {
+        "title": "Chapter 9: RAG Inference Pipeline",
+        "pdfPage": 346
+      },
+      {
+        "title": "Chapter 10: Inference Pipeline Deployment",
+        "pdfPage": 384
+      },
+      {
+        "title": "Chapter 11: MLOps and LLMOps",
+        "pdfPage": 430
+      }
+    ],
+    "file": "28066972.pdf"
+  },
+  {
+    "id": "roche",
+    "title": "The Art and Science of Prompt Engineering",
+    "authors": "Ivan Roche",
+    "category": "Prompting",
+    "courseId": "prompt-engineering",
+    "pageCount": 54,
+    "chapters": [
+      {
+        "title": "Chapter 1 — Understanding AI-Language Models",
+        "pdfPage": 9
+      },
+      {
+        "title": "Chapter 2 — The Basics of Prompt Design",
+        "pdfPage": 13
+      },
+      {
+        "title": "Chapter 3 — Language and Communication in Prompt Design",
+        "pdfPage": 17
+      },
+      {
+        "title": "Chapter 4 — Eliciting Creative Responses",
+        "pdfPage": 21
+      },
+      {
+        "title": "Chapter 5 — Problem-Solving Prompts",
+        "pdfPage": 25
+      },
+      {
+        "title": "Chapter 6 — Factual and Informational Prompts",
+        "pdfPage": 29
+      },
+      {
+        "title": "Chapter 7 — Optimizing Prompts for Different Domains",
+        "pdfPage": 33
+      },
+      {
+        "title": "Chapter 8 — Interactive and Dynamic Prompting",
+        "pdfPage": 35
+      },
+      {
+        "title": "Chapter 9 — Exercises for Aspiring Prompt Engineers",
+        "pdfPage": 37
+      },
+      {
+        "title": "Chapter 10 — Case Studies: Successes and Failures in Prompt Engineering",
+        "pdfPage": 41
+      },
+      {
+        "title": "Chapter 11 — The Future of Prompt Engineering",
+        "pdfPage": 45
+      }
+    ],
+    "file": "Guiding AI.pdf"
+  }
+]

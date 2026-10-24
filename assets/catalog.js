@@ -1,0 +1,683 @@
+window.ALC_DATA = {
+  "name": "Free AI Learning Center",
+  "version": "1.0",
+  "courses": [
+    {
+      "id": "python",
+      "title": "Python Essentials",
+      "subtitle": "Your first steps into programming, without the jargon.",
+      "tag": "Start here",
+      "category": "foundations",
+      "accent": "#4868e8",
+      "symbol": "Py",
+      "level": "Absolute beginner",
+      "outcome": "Write small programs that use data, decisions, and reusable functions.",
+      "lessons": [
+        {
+          "id": "hello-variables",
+          "title": "Values & variables",
+          "minutes": 5,
+          "goal": "Print information and store a value.",
+          "explain": "Python runs instructions from top to bottom. A variable is a name that refers to a value. Strings represent text, while integers represent whole numbers. The print() function displays a result.",
+          "analogy": "Think of a variable as a labeled drawer: the label is the name, and the value is what you put inside.",
+          "points": [
+            "Assign a value using = (this is not a mathematical equality statement).",
+            "Use f-strings to insert values into readable output."
+          ],
+          "code": "name = \"Sam\"\nlessons = 3\nprint(f\"Hi {name}! You finished {lessons} lessons.\")\n",
+          "challenge": {
+            "question": "What does `score = 10` do?",
+            "options": [
+              "Compares score with 10",
+              "Assigns 10 to score",
+              "Prints 10"
+            ],
+            "correct": 1,
+            "explanation": "The single = assigns a value. The comparison operator is ==."
+          },
+          "takeaway": "A program becomes useful when you can name, store, and display information.",
+          "practice": "Change the name, increase the lesson count to 5, and predict the exact output before running it."
+        },
+        {
+          "id": "lists-loops",
+          "title": "Lists & loops",
+          "minutes": 5,
+          "goal": "Repeat work over a collection.",
+          "explain": "A list stores several items in order. A for loop visits each item once. This avoids writing the same instruction again and again. Use len() to count items.",
+          "analogy": "A list is a shopping basket. A for loop picks up each item in the basket and checks it.",
+          "points": [
+            "Lists use square brackets; positions begin at 0.",
+            "Use `for item in items:` with an indented body."
+          ],
+          "code": "scores = [70, 85, 90]\nfor score in scores:\n    print('Score:', score)\nprint('Count:', len(scores))\n",
+          "challenge": {
+            "question": "How many times does this loop run for `[4, 5, 6]`?",
+            "options": [
+              "Two",
+              "Three",
+              "Four"
+            ],
+            "correct": 1,
+            "explanation": "The list has three elements, so the body executes three times."
+          },
+          "takeaway": "Collections and loops let you process many records with a few lines.",
+          "practice": "Add 100 to the scores list and print the new item count and total using sum()."
+        },
+        {
+          "id": "functions-decisions",
+          "title": "Functions & decisions",
+          "minutes": 5,
+          "goal": "Create reusable logic with conditions.",
+          "explain": "A function packages instructions under a name. Parameters accept inputs; return sends back a result. An if statement selects a branch depending on whether a condition is true.",
+          "analogy": "A function resembles a small machine: supply inputs, and it returns a predictable output.",
+          "points": [
+            "Define a function with `def name(parameter):`.",
+            "Keep the function focused on one understandable task."
+          ],
+          "code": "def grade(score):\n    if score >= 60:\n        return 'Pass'\n    return 'Try again'\n\nprint(grade(75))\n",
+          "challenge": {
+            "question": "What will `grade(40)` return?",
+            "options": [
+              "Pass",
+              "Try again",
+              "40"
+            ],
+            "correct": 1,
+            "explanation": "Because 40 is below 60, the if condition is false and execution reaches the second return."
+          },
+          "takeaway": "Functions make programs easier to reuse, test, and explain.",
+          "practice": "Change the passing threshold to 70. Test the function with 69, 70, and 71."
+        },
+        {
+          "id": "data-dictionaries",
+          "title": "Dictionaries & simple data",
+          "minutes": 5,
+          "goal": "Store structured information and compute a summary.",
+          "explain": "A dictionary stores values under meaningful keys, such as a person’s name or a score. Dictionaries are useful for records, configuration, and data analysis. You can combine dictionaries with basic arithmetic.",
+          "analogy": "A dictionary is a filing cabinet: each labeled folder leads to its corresponding value.",
+          "points": [
+            "Read a value with `record[\"key\"]`.",
+            "Use `sum()` and `len()` to compute a simple average."
+          ],
+          "code": "student = {'name': 'Ava', 'scores': [80, 90, 100]}\naverage = sum(student['scores']) / len(student['scores'])\nprint(student['name'], 'average:', average)\n",
+          "challenge": {
+            "question": "Which structure is best for `{\"name\": \"Ava\", \"age\": 19}`?",
+            "options": [
+              "A list",
+              "A dictionary",
+              "A float"
+            ],
+            "correct": 1,
+            "explanation": "A dictionary associates each key with a value."
+          },
+          "takeaway": "When your data has named fields, dictionaries are often clearer than parallel lists.",
+          "practice": "Add a fourth score of 95 and calculate the new average; compare it with the original."
+        }
+      ]
+    },
+    {
+      "id": "ml",
+      "title": "Machine Learning",
+      "subtitle": "Understand patterns, predictions, and model evaluation.",
+      "tag": "Most popular",
+      "category": "foundations",
+      "accent": "#0b9987",
+      "symbol": "ML",
+      "level": "Beginner",
+      "outcome": "Explain training, create a tiny predictor, and judge its mistakes.",
+      "lessons": [
+        {
+          "id": "what-is-ml",
+          "title": "What is machine learning?",
+          "minutes": 5,
+          "goal": "Tell conventional code apart from learning from examples.",
+          "explain": "Traditional programs follow rules written by people. In supervised machine learning, an algorithm fits a model to input-output examples so it can predict outcomes for new inputs. Learning a pattern is not the same as understanding causes.",
+          "analogy": "Instead of writing every rule for recognizing fruit, show the model examples with measurable features and labels.",
+          "points": [
+            "Features are the input measurements; labels are target answers.",
+            "A model learns from examples, then predicts for unseen examples."
+          ],
+          "code": "examples = [(1, 2), (2, 4), (3, 6)]\n# Illustration: all examples follow y = 2 * x.\ndef predict(x):\n    return 2 * x\nprint('Prediction for 4:', predict(4))\n",
+          "challenge": {
+            "question": "In supervised learning, what are labels?",
+            "options": [
+              "The target answers",
+              "The computer model",
+              "The training time"
+            ],
+            "correct": 0,
+            "explanation": "Labels are the known outcomes used to guide training."
+          },
+          "takeaway": "ML learns patterns from data; predicting well requires meaningful evaluation.",
+          "practice": "Change the input from 4 to 7. Explain why a hard-coded rule is only a teaching illustration, not a trained model."
+        },
+        {
+          "id": "train-test",
+          "title": "Train, validate, test",
+          "minutes": 5,
+          "goal": "Understand why a fair test uses unseen data.",
+          "explain": "A training set fits the model. A validation set helps select model settings. A test set estimates performance after choices are finalized. If you tune a model against the test set, its estimate becomes optimistic.",
+          "analogy": "Practicing on last year’s exam solutions differs from sitting a new exam you have never seen.",
+          "points": [
+            "Keep the test set out of the model-selection process.",
+            "Prevent leakage: near-duplicate records or a person’s records should not cross splits when they create dependency."
+          ],
+          "code": "data = list(range(10))\ntrain = data[:6]\nvalidation = data[6:8]\ntest = data[8:]\nprint('Train:', train)\nprint('Validation:', validation)\nprint('Test:', test)\n",
+          "challenge": {
+            "question": "Which split should estimate final generalization after tuning?",
+            "options": [
+              "Training",
+              "Validation",
+              "Held-out test"
+            ],
+            "correct": 2,
+            "explanation": "The held-out test set is reserved for an unbiased final check under the assumed sampling design."
+          },
+          "takeaway": "A convincing score depends on proper data separation, not just a powerful model.",
+          "practice": "Create a 5-item training split, 3-item validation split, and 2-item test split without overlapping records."
+        },
+        {
+          "id": "nearest-neighbor",
+          "title": "Build a tiny classifier",
+          "minutes": 5,
+          "goal": "Use the nearest labeled example to make a prediction.",
+          "explain": "A one-nearest-neighbor classifier predicts the label of the closest training example under a chosen distance metric. It is a useful baseline, but feature scale and noise matter. Here we use one-dimensional distance for clarity.",
+          "analogy": "If a new fruit has weight close to a known apple, a nearest-neighbor rule might assign the apple label.",
+          "points": [
+            "Measure distance between a query and each training sample.",
+            "Choose the label attached to the smallest distance."
+          ],
+          "code": "training = [(1, 'low'), (5, 'medium'), (9, 'high')]\nquery = 6\nclosest = min(training, key=lambda row: abs(row[0] - query))\nprint('Predicted label:', closest[1])\n",
+          "challenge": {
+            "question": "For query 8, which point is nearest: 1, 5, or 9?",
+            "options": [
+              "1",
+              "5",
+              "9"
+            ],
+            "correct": 2,
+            "explanation": "Distance from 8 to 9 is 1; to 5 is 3; to 1 is 7."
+          },
+          "takeaway": "Even a simple baseline can establish whether a complex model is necessary.",
+          "practice": "Try queries 2 and 8. Record which training label the distance rule selects."
+        },
+        {
+          "id": "evaluation",
+          "title": "Metrics & overfitting",
+          "minutes": 5,
+          "goal": "Calculate accuracy and recognize its limits.",
+          "explain": "Accuracy is the fraction of correct predictions. It can be misleading when classes are imbalanced: predicting the majority class may look excellent while missing every rare event. Also compare training and held-out performance to detect overfitting.",
+          "analogy": "A weather forecast saying “no rain” every day can appear accurate in a dry region, yet fail whenever rain matters.",
+          "points": [
+            "Compute accuracy as correct predictions divided by total predictions.",
+            "For imbalanced problems, examine precision, recall, and a confusion matrix too."
+          ],
+          "code": "true = [1, 0, 1, 0, 1]\npred = [1, 0, 0, 0, 1]\ncorrect = sum(a == b for a, b in zip(true, pred))\nprint('Accuracy:', correct / len(true))\n",
+          "challenge": {
+            "question": "A classifier gets 95% accuracy on a dataset with 95% negatives by always predicting negative. Is it reliable?",
+            "options": [
+              "Always",
+              "Not necessarily",
+              "Only for Python"
+            ],
+            "correct": 1,
+            "explanation": "It may detect none of the positive cases. Check class-specific metrics and intended use."
+          },
+          "takeaway": "Evaluation asks what kinds of mistakes matter, not only how many.",
+          "practice": "Flip the third prediction to 1, recalculate accuracy, and explain which error was corrected."
+        }
+      ]
+    },
+    {
+      "id": "blockchain",
+      "title": "Blockchain Basics",
+      "subtitle": "Blocks, hashes, ledgers, and what decentralization does—and does not—solve.",
+      "tag": "Understand systems",
+      "category": "systems",
+      "accent": "#b86c2c",
+      "symbol": "BC",
+      "level": "Beginner",
+      "outcome": "Build a toy chain and reason about its guarantees and limitations.",
+      "lessons": [
+        {
+          "id": "shared-ledger",
+          "title": "A shared ledger",
+          "minutes": 5,
+          "goal": "Explain what a blockchain records.",
+          "explain": "A blockchain is an append-oriented sequence of records grouped into blocks, where each block references a previous block through a cryptographic hash. Some blockchains use distributed consensus to agree on the current ledger. A blockchain does not make entered data automatically truthful.",
+          "analogy": "Picture a notebook copied across many desks: everyone needs a rule for which new pages belong in the official copy.",
+          "points": [
+            "Transactions record events or changes in state.",
+            "Consensus and cryptographic checks address different trust problems."
+          ],
+          "code": "ledger = []\nledger.append({'from': 'A', 'to': 'B', 'amount': 3})\nledger.append({'from': 'B', 'to': 'C', 'amount': 1})\nfor event in ledger:\n    print(event)\n",
+          "challenge": {
+            "question": "Does storing data on a blockchain prove the data was true before entry?",
+            "options": [
+              "Yes",
+              "No",
+              "Only for large blocks"
+            ],
+            "correct": 1,
+            "explanation": "A ledger can preserve submitted records, but external data may still be inaccurate or fraudulent."
+          },
+          "takeaway": "Blockchain is a shared record-keeping architecture, not a universal truth engine.",
+          "practice": "Append a third transaction and print the entire ledger. Explain what this still cannot verify."
+        },
+        {
+          "id": "hashes",
+          "title": "Hashes & tamper evidence",
+          "minutes": 5,
+          "goal": "Observe how a hash changes when input changes.",
+          "explain": "A cryptographic hash transforms arbitrary data into a fixed-size digest. SHA-256 is deterministic, and tiny input changes usually produce very different digests. A hash is not encryption: there is no decryption key for recovering the original message.",
+          "analogy": "A hash resembles a fingerprint of data, except it is computed mathematically and not uniquely guaranteed for all possible inputs.",
+          "points": [
+            "Use a canonical encoding before hashing structured records.",
+            "Hashes help expose edits, but alone do not prove authorship or establish consensus."
+          ],
+          "code": "import hashlib\nfor text in ['hello', 'Hello']:\n    digest = hashlib.sha256(text.encode()).hexdigest()\n    print(text, digest[:16])\n",
+          "challenge": {
+            "question": "What happens when you change one character in a message?",
+            "options": [
+              "The SHA-256 digest usually changes significantly",
+              "The digest stays the same",
+              "The message becomes encrypted"
+            ],
+            "correct": 0,
+            "explanation": "Cryptographic avalanche behavior makes small edits produce substantially different digests."
+          },
+          "takeaway": "Hash links are an important ingredient of tamper evidence.",
+          "practice": "Hash your own two messages that differ by one character; compare their first 16 digest characters."
+        },
+        {
+          "id": "linked-blocks",
+          "title": "Make a toy blockchain",
+          "minutes": 5,
+          "goal": "Connect two blocks using a previous hash.",
+          "explain": "Each block can store a payload and a digest of the prior block. When a previous block changes, its hash no longer matches the next block’s stored link. This demonstration omits consensus, signatures, networking, and persistence; it is not a secure cryptocurrency.",
+          "analogy": "It is like numbering pages and including the previous page’s checksum on the next page.",
+          "points": [
+            "Serialize records consistently before hashing.",
+            "Linking blocks detects inconsistency, but an attacker able to rewrite every block may recompute all hashes."
+          ],
+          "code": "import hashlib, json\n\ndef digest(record):\n    raw = json.dumps(record, sort_keys=True).encode()\n    return hashlib.sha256(raw).hexdigest()\n\nfirst = {'prev': 'GENESIS', 'data': 'A pays B'}\nsecond = {'prev': digest(first), 'data': 'B pays C'}\nprint(second['prev'] == digest(first))\n",
+          "challenge": {
+            "question": "If an attacker rewrites the first block and all following hashes, what is still needed to resist the attack?",
+            "options": [
+              "A larger font",
+              "An external trust or consensus mechanism",
+              "More print statements"
+            ],
+            "correct": 1,
+            "explanation": "Hash links alone are insufficient against someone who can recompute the entire chain."
+          },
+          "takeaway": "Security claims require an explicit threat model, not just a hash function.",
+          "practice": "Change first[\"data\"] after creating second. Re-run the link check and explain why it now fails."
+        },
+        {
+          "id": "consensus-contracts",
+          "title": "Consensus & smart contracts",
+          "minutes": 5,
+          "goal": "Distinguish shared agreement from programmed rules.",
+          "explain": "Consensus rules help network participants agree on an ordered history despite failures or adversarial behavior under stated assumptions. A smart contract is code whose state transitions are executed according to platform rules. Contracts can still contain bugs and depend on unreliable external inputs.",
+          "analogy": "Consensus decides which pages belong in the shared notebook; a smart contract is a rule written on those pages.",
+          "points": [
+            "Different consensus approaches make different tradeoffs in speed, cost, and trust assumptions.",
+            "Audits, tests, and careful oracle design matter for real contracts."
+          ],
+          "code": "balance = {'alice': 10, 'bob': 0}\ndef transfer(amount):\n    if amount <= 0 or balance['alice'] < amount:\n        return False\n    balance['alice'] -= amount\n    balance['bob'] += amount\n    return True\nprint(transfer(4), balance)\n",
+          "challenge": {
+            "question": "Does this Python function by itself constitute a decentralized smart contract?",
+            "options": [
+              "Yes",
+              "No",
+              "Only if run twice"
+            ],
+            "correct": 1,
+            "explanation": "It is local business logic; on-chain execution and consensus require a blockchain platform."
+          },
+          "takeaway": "Distributed agreement and contract logic are separate pieces of the design.",
+          "practice": "Attempt transfers of 15 and then 0. Check that both fail and balances remain unchanged."
+        }
+      ]
+    },
+    {
+      "id": "llms",
+      "title": "Large Language Models",
+      "subtitle": "Tokens, prompts, retrieval, and responsible tool use.",
+      "tag": "Build with language",
+      "category": "generative",
+      "accent": "#835ac3",
+      "symbol": "LLM",
+      "level": "Beginner",
+      "outcome": "Design grounded LLM workflows and identify common failure modes.",
+      "lessons": [
+        {
+          "id": "tokens-context",
+          "title": "Tokens & context",
+          "minutes": 5,
+          "goal": "Understand the basic units used by language models.",
+          "explain": "Language models operate on tokens, which may represent words, word pieces, punctuation, or other units. They predict sequences conditional on context. A model’s context window limits what it can directly attend to in one request, and tokenization is model-specific.",
+          "analogy": "Think of tokens as the tiles used to construct sentences; tile boundaries do not always match spaces.",
+          "points": [
+            "Tokens are not the same as words.",
+            "A convincing sentence is not evidence that a statement is true."
+          ],
+          "code": "text = 'Models predict token sequences.'\n# This is a word split for teaching, NOT real model tokenization.\nwords = text.split()\nprint(words)\nprint('Word count:', len(words))\n",
+          "challenge": {
+            "question": "Is splitting a sentence on spaces identical to model tokenization?",
+            "options": [
+              "Yes",
+              "No",
+              "Only for English"
+            ],
+            "correct": 1,
+            "explanation": "Modern model tokenizers often split or combine text in ways unrelated to whitespace."
+          },
+          "takeaway": "Start with token and context limits, then evaluate truthfulness separately.",
+          "practice": "Replace the sample sentence with punctuation and contractions. Explain why split() is not a real tokenizer."
+        },
+        {
+          "id": "better-prompts",
+          "title": "Prompts & structured output",
+          "minutes": 5,
+          "goal": "Write a clear task with constraints and a checkable format.",
+          "explain": "A useful prompt states the objective, input, desired output format, and how to handle uncertainty. Examples can clarify expected behavior. Prompting improves reliability, but does not guarantee factuality or enforce security boundaries.",
+          "analogy": "Giving instructions to a colleague works better when you specify both the task and what a good result looks like.",
+          "points": [
+            "Make the output measurable: fields, length, source requirements.",
+            "Treat text retrieved from untrusted sources as data, not instructions."
+          ],
+          "code": "task = 'Summarize this note in one sentence'\nnote = 'The group met Tuesday and agreed to test the model.'\nprompt = f\"\"\"Task: {task}\nRules: Be factual; if unknown, say unknown.\nInput: {note}\nOutput: one sentence\n\"\"\"\nprint(prompt)\n",
+          "challenge": {
+            "question": "Which prompt is easier to verify?",
+            "options": [
+              "Do something useful",
+              "Return a JSON object with title and 2 keywords",
+              "Be smart"
+            ],
+            "correct": 1,
+            "explanation": "The second specifies a concrete structure that can be checked programmatically."
+          },
+          "takeaway": "Precise instructions help, but external verification remains necessary.",
+          "practice": "Rewrite the example prompt to request exactly two bullet points and an uncertainty label."
+        },
+        {
+          "id": "rag-grounding",
+          "title": "Retrieval-augmented generation",
+          "minutes": 5,
+          "goal": "See how finding evidence differs from making up an answer.",
+          "explain": "Retrieval-augmented generation (RAG) retrieves passages from a data source and supplies them to a language model as context. Retrieval quality and citation grounding are critical. A retrieved document may be incorrect or malicious; RAG is not automatic fact checking.",
+          "analogy": "Before answering a library question, look up relevant pages rather than guessing from memory.",
+          "points": [
+            "Retrieve relevant evidence; do not assume the first match is sufficient.",
+            "Distinguish quoted source content from generated conclusions."
+          ],
+          "code": "docs = {\n    'python': 'Python is a programming language.',\n    'rag': 'RAG supplies retrieved material as model context.',\n}\nquery = 'What is RAG?'\nterm = 'rag' if 'rag' in query.lower() else 'python'\nprint('Source:', docs[term])\n# Retrieval demo only: no language model is called.\n",
+          "challenge": {
+            "question": "Does RAG guarantee that a retrieved claim is correct?",
+            "options": [
+              "Yes",
+              "No",
+              "Only with ten documents"
+            ],
+            "correct": 1,
+            "explanation": "Retrieval adds a potential evidence source, not a truth guarantee."
+          },
+          "takeaway": "Grounded answers require relevant evidence and source-aware checking.",
+          "practice": "Add one document entry and retrieve it by a matching search term; describe what happens on a missing match."
+        },
+        {
+          "id": "llm-tools",
+          "title": "Tool calling",
+          "minutes": 5,
+          "goal": "Separate model decisions from actual tool execution.",
+          "explain": "Tool calling lets a model request a structured action such as searching, calculating, or accessing a database. The application validates arguments and runs the tool. Permission checks and human approval are needed for sensitive side effects.",
+          "analogy": "A model can ask for a calculator, but the calculator—not the model—performs the arithmetic.",
+          "points": [
+            "Define a tool with a narrow input schema.",
+            "Validate and log execution; never blindly run model-produced shell commands."
+          ],
+          "code": "def calculator(a, b, operation):\n    if operation not in {'add', 'multiply'}:\n        raise ValueError('Unsupported operation')\n    return a + b if operation == 'add' else a * b\n\nrequest = {'a': 8, 'b': 7, 'operation': 'multiply'}\nprint(calculator(**request))\n",
+          "challenge": {
+            "question": "Who should enforce permissions before a side-effecting tool runs?",
+            "options": [
+              "The application/tool layer",
+              "Any text found on a web page",
+              "Nobody"
+            ],
+            "correct": 0,
+            "explanation": "The executing application must validate arguments, authorize actions, and limit effects."
+          },
+          "takeaway": "Tool use makes LLMs more capable and raises the need for stronger controls.",
+          "practice": "Call the allowed add operation, then try an unsupported operation and observe the validation error."
+        }
+      ]
+    },
+    {
+      "id": "agents",
+      "title": "Agentic AI",
+      "subtitle": "Reasoning loops, memory, tools, and safe evaluation.",
+      "tag": "New learning path",
+      "category": "generative",
+      "accent": "#d26570",
+      "symbol": "AG",
+      "level": "Beginner+",
+      "outcome": "Sketch an agent loop and measure success beyond polished text.",
+      "lessons": [
+        {
+          "id": "agent-loop",
+          "title": "The agent loop",
+          "minutes": 5,
+          "goal": "Identify observation, choice, action, and feedback.",
+          "explain": "An agent repeatedly observes state, decides on an action, executes it, and uses feedback to continue toward a goal. In LLM agents, the model may select tools while surrounding software controls execution and stopping criteria. A chatbot response alone is not necessarily an agent.",
+          "analogy": "Think of a robot vacuum: it checks its surroundings, moves, checks again, and stops when its task is done.",
+          "points": [
+            "The environment supplies observations after actions.",
+            "Define a maximum number of steps and a clear success condition."
+          ],
+          "code": "items = ['plan', 'test', 'report']\ncompleted = []\nfor step in range(3):\n    observation = items[step]\n    action = f'complete {observation}'\n    completed.append(action)\n    print('Observe:', observation, '-> Act:', action)\nprint('Done:', completed)\n",
+          "challenge": {
+            "question": "What makes an action loop different from a one-shot answer?",
+            "options": [
+              "It receives feedback and can act again",
+              "It always uses ten models",
+              "It never calls tools"
+            ],
+            "correct": 0,
+            "explanation": "The essential difference is a repeated observe-decide-act-feedback cycle."
+          },
+          "takeaway": "Useful autonomy depends on feedback, limits, and explicit goals.",
+          "practice": "Add a fourth task, remove the hard-coded step count, and confirm the loop terminates after all items."
+        },
+        {
+          "id": "plan-tools",
+          "title": "Planning & tools",
+          "minutes": 5,
+          "goal": "Break a task into bounded, observable actions.",
+          "explain": "Planning decomposes a goal into steps and revises them when evidence changes. Tools connect agents to code, files, browsers, and databases. A robust plan checks preconditions, handles failure, and avoids performing irreversible actions without authorization.",
+          "analogy": "Planning a trip means choosing stops, checking transport, and adapting when a train is cancelled.",
+          "points": [
+            "Choose small steps with verifiable outputs.",
+            "Keep tool permissions narrow and distinguish read-only actions from writes."
+          ],
+          "code": "plan = [\n    {'task': 'read file', 'requires_approval': False},\n    {'task': 'delete file', 'requires_approval': True},\n]\nfor step in plan:\n    state = 'ask user' if step['requires_approval'] else 'can inspect'\n    print(step['task'], '=>', state)\n",
+          "challenge": {
+            "question": "Which action should typically require additional approval?",
+            "options": [
+              "Reading a public webpage",
+              "Deleting files",
+              "Counting list elements"
+            ],
+            "correct": 1,
+            "explanation": "Deleting data is a high-impact side effect and should require appropriate authorization."
+          },
+          "takeaway": "A good agent design is a control system, not just a lengthy prompt.",
+          "practice": "Add a read-only search step and a payment step that requires approval; inspect the output."
+        },
+        {
+          "id": "agent-memory",
+          "title": "Short- & long-term memory",
+          "minutes": 5,
+          "goal": "Choose what state an agent needs to retain.",
+          "explain": "Working memory keeps relevant context for the current run. Persistent memory can store verified preferences, knowledge, or past results for future tasks. Memory can become stale, mistaken, sensitive, or inconsistent, so provenance and correction mechanisms matter.",
+          "analogy": "A sticky note helps with today’s errands; a labeled archive helps you find trustworthy records later.",
+          "points": [
+            "Keep temporary task state separate from persistent knowledge.",
+            "Store only what is necessary and give users control over personal data."
+          ],
+          "code": "working_memory = {'task': 'draft checklist', 'step': 2}\nknowledge = {'python': 'A general-purpose language'}\nprint('Current step:', working_memory['step'])\nprint('Known fact:', knowledge.get('python'))\n",
+          "challenge": {
+            "question": "Which item belongs in working memory rather than long-term memory?",
+            "options": [
+              "Current tool step",
+              "A verified reusable reference",
+              "A project glossary"
+            ],
+            "correct": 0,
+            "explanation": "A current step is usually transient and does not need persistent storage."
+          },
+          "takeaway": "Memory is useful only when its accuracy, scope, and lifecycle are controlled.",
+          "practice": "Change the current step from 2 to 3 and add a temporary observation; keep the knowledge dictionary unchanged."
+        },
+        {
+          "id": "agent-eval",
+          "title": "Evaluation & guardrails",
+          "minutes": 5,
+          "goal": "Specify success, cost, and safety checks.",
+          "explain": "Agent evaluation should measure actual task outcomes, not only fluent explanations. Track success rate, incorrect tool calls, cost, latency, and unintended side effects. Use held-out cases and repeat runs where stochastic behavior matters. A successful benchmark result does not prove general reliability.",
+          "analogy": "A delivery service should be graded on correct deliveries, delays, and damage—not on how confidently it describes routes.",
+          "points": [
+            "Define tests with observable pass/fail criteria.",
+            "Log tool actions and include failure cases, timeouts, and prompt-injection tests."
+          ],
+          "code": "runs = [True, False, True, True, False]\nsuccesses = sum(runs)\nprint('Success rate:', successes / len(runs))\nprint('Failures to inspect:', len(runs) - successes)\n",
+          "challenge": {
+            "question": "Which metric directly measures whether the task was completed?",
+            "options": [
+              "Task success rate",
+              "Number of adjectives",
+              "Length of reasoning"
+            ],
+            "correct": 0,
+            "explanation": "Task success rate targets the intended outcome, although safety and cost must also be measured."
+          },
+          "takeaway": "Evaluate agents as software systems operating in an environment.",
+          "practice": "Change one failed run to a success, recompute the success rate, and state the change in percentage points."
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "name": "Machine Learning slides",
+      "kind": "Course slides",
+      "description": "Original public lecture decks on classification, clustering, and introductory ML.",
+      "repo": "raja21068/Machine-Learning-For-Beginerrs-Course-PPT",
+      "links": [
+        [
+          "Introduction PPTX",
+          "Lecture 01 - Introduction.pptx",
+          "https://github.com/raja21068/Machine-Learning-For-Beginerrs-Course-PPT/blob/main/Lecture%2001%20-%20Introduction.pptx"
+        ],
+        [
+          "KNN classification PPTX",
+          "Lecture 6 - Classification-KNN.pptx",
+          "https://github.com/raja21068/Machine-Learning-For-Beginerrs-Course-PPT/blob/main/Lecture%206%20-%20Classification-KNN.pptx"
+        ],
+        [
+          "Clustering PPTX",
+          "Lecture 11 - Clustering.pptx",
+          "https://github.com/raja21068/Machine-Learning-For-Beginerrs-Course-PPT/blob/main/Lecture%2011%20-%20Clustering.pptx"
+        ]
+      ],
+      "url": "https://github.com/raja21068/Machine-Learning-For-Beginerrs-Course-PPT"
+    },
+    {
+      "name": "Network Security slides",
+      "kind": "Course slides",
+      "description": "Existing public PowerPoint chapters; older .ppt file format.",
+      "repo": "raja21068/Network-Security-Course_PPT",
+      "links": [
+        [
+          "Chapter 1 PPT",
+          "chapter1(1).ppt",
+          "https://github.com/raja21068/Network-Security-Course_PPT/blob/main/chapter1%281%29.ppt"
+        ],
+        [
+          "Chapter 2 PPT",
+          "chapter2(1).ppt",
+          "https://github.com/raja21068/Network-Security-Course_PPT/blob/main/chapter2%281%29.ppt"
+        ]
+      ],
+      "url": "https://github.com/raja21068/Network-Security-Course_PPT"
+    },
+    {
+      "name": "Big Data Analytics slides",
+      "kind": "Course slides",
+      "description": "Public decks introducing analytics, sampling, streams, and distributed processing.",
+      "repo": "raja21068/Big-Data-Analytics-and-Mining-Course-PPT",
+      "links": [
+        [
+          "Introduction PPTX",
+          "Lecture 1 Intro-new.pptx",
+          "https://github.com/raja21068/Big-Data-Analytics-and-Mining-Course-PPT/blob/main/Lecture%201%20Intro-new.pptx"
+        ],
+        [
+          "Data streams PPTX",
+          "Lecture 5 Data Stream.pptx",
+          "https://github.com/raja21068/Big-Data-Analytics-and-Mining-Course-PPT/blob/main/Lecture%205%20Data%20Stream.pptx"
+        ],
+        [
+          "Hadoop & Spark PPTX",
+          "Lecture 7 Hadoop-Spark.pptx",
+          "https://github.com/raja21068/Big-Data-Analytics-and-Mining-Course-PPT/blob/main/Lecture%207%20Hadoop-Spark.pptx"
+        ]
+      ],
+      "url": "https://github.com/raja21068/Big-Data-Analytics-and-Mining-Course-PPT"
+    },
+    {
+      "name": "Federated Learning framework",
+      "kind": "Related project",
+      "description": "Verified related Python project. The originally supplied Federated-learning-PPT address is unavailable (404).",
+      "repo": "raja21068/Federated-Learning-Framework",
+      "links": [
+        [
+          "Repository README",
+          "README.md",
+          "https://github.com/raja21068/Federated-Learning-Framework/blob/main/README.md"
+        ],
+        [
+          "Sample client code",
+          "client1.py",
+          "https://github.com/raja21068/Federated-Learning-Framework/blob/main/client1.py"
+        ]
+      ],
+      "url": "https://github.com/raja21068/Federated-Learning-Framework"
+    },
+    {
+      "name": "Blockchain smart contracts",
+      "kind": "Related project",
+      "description": "A separate, verified repository with a smart-contract demonstration and original slide material.",
+      "repo": "raja21068/Smart-Contract-Blockchain",
+      "links": [
+        [
+          "Decentralized web PPTX",
+          "IPFS Decentralized web system.pptx",
+          "https://github.com/raja21068/Smart-Contract-Blockchain/blob/master/IPFS%20Decentralized%20web%20system.pptx"
+        ],
+        [
+          "Repository README",
+          "README.md",
+          "https://github.com/raja21068/Smart-Contract-Blockchain/blob/master/README.md"
+        ]
+      ],
+      "url": "https://github.com/raja21068/Smart-Contract-Blockchain"
+    }
+  ],
+  "stats": {
+    "tracks": 5,
+    "lessons": 20,
+    "minutes": 100
+  }
+};

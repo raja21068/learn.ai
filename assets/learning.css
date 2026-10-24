@@ -1,0 +1,151 @@
+/* Phase 1 student-facing learning controls. Uses existing design tokens. */
+.learn-page { max-width: 1050px; padding-top: 42px; padding-bottom: 85px; }
+.learn-head { margin-bottom: 25px; }
+.learn-head > a { font-size: 14px; color: var(--link); font-weight: 650; }
+.learn-head h1 { font-size: clamp(29px, 4vw, 46px); margin: 11px 0 9px; }
+.learn-head p { max-width: 760px; margin: 0; color: var(--muted); }
+.learn-page h2 { font-size: 21px; }
+.learn-panel, .learn-challenge { background: var(--panel); border: 1px solid var(--line); padding: 24px; border-radius: var(--r); box-shadow: var(--shadow); }
+.learn-panel h2 { margin-top: 4px; }
+.learn-muted { color: var(--muted); font-size: 14px; }
+.learn-hero-links, .learn-actions, .learn-course-cta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 15px 0; }
+.learn-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.learn-metrics > div { display: grid; gap: 4px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 12px; padding: 15px 18px; }
+.learn-metrics b { font-size: 29px; color: var(--ink); line-height: 1.1; }
+.learn-metrics span { color: var(--muted); font-size: 13px; }
+.learn-course-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 35px; }
+.learn-course-grid .learn-panel { padding: 19px; }
+.learn-course-grid p { margin: 7px 0; font-size: 14px; color: var(--muted); }
+.learn-course-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.learn-course-top b { color: var(--ink); }
+.learn-course-top span { font-size: 12px; color: var(--muted); }
+.learn-diag-q { border: 0; margin: 20px 0; padding: 0 0 18px; border-bottom: 1px solid var(--line); }
+.learn-diag-q legend { margin-bottom: 12px; }
+.learn-diag-q legend b, .learn-diag-q legend span { display: block; }
+.learn-diag-q legend span { margin-top: 6px; font-size: 15px; }
+.learn-diag-q label, .learn-choice-list label { display: flex; gap: 10px; align-items: baseline; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--line); margin: 6px 0; cursor: pointer; }
+.learn-diag-q label:hover, .learn-choice-list label:hover { background: var(--bg-soft); border-color: var(--line-strong); }
+.learn-diag-q input, .learn-choice-list input { accent-color: var(--accent); }
+.learn-diagnostic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 22px; }
+.learn-diagnostic-grid > div { background: var(--bg-soft); padding: 12px; border-radius: 9px; }
+.learn-diagnostic-grid b, .learn-diagnostic-grid span { display: block; font-size: 13px; }
+.learn-diagnostic-grid span { color: var(--muted); margin-top: 2px; }
+.learn-error, .learn-feedback-text.error { color: var(--bad); }
+.learn-feedback-text.success { color: var(--ok); }
+.learn-feedback-text { font-size: 14px; margin: 12px 0 0; min-height: 22px; }
+.learn-lesson-meta { border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; margin: 10px 0 23px; display: flex; flex-wrap: wrap; align-items: center; gap: 9px 16px; background: var(--bg-soft); font-size: 12px; color: var(--muted); }
+.learn-lesson-meta #skill-stage { color: var(--ink); font-weight: 700; }
+.learn-lesson-meta > a { margin-left: auto; color: var(--link); font-weight: 600; }
+.learn-challenge { margin: 25px 0; box-shadow: none; border-left: 3px solid var(--accent); }
+.learn-challenge h2 { margin: 2px 0 10px; }
+.learn-challenge > p { color: var(--text); }
+.learn-order { list-style: decimal; margin: 14px 0; padding: 0; counter-reset: learning; }
+.learn-order li { display: flex; gap: 12px; justify-content: space-between; align-items: center; padding: 10px 14px; margin: 6px 0; border: 1px solid var(--line); border-radius: 9px; background: var(--bg-soft); }
+.learn-order li span { flex: 1; font-size: 14px; }
+.learn-reorder { display: flex; gap: 5px; }
+.learn-reorder button { background: var(--panel); color: var(--ink); border: 1px solid var(--line-strong); min-width: 35px; height: 35px; border-radius: 7px; }
+.learn-reorder button:disabled { opacity: .32; }
+.learn-text-label { display: block; margin: 12px 0 5px; color: var(--muted); font-size: 13px; }
+.challenge-text, #challenge-text { width: 100%; font: inherit; padding: 10px; border-radius: 9px; background: var(--panel); color: var(--ink); border: 1px solid var(--line-strong); margin-bottom: 12px; }
+.learn-choice-list { margin-bottom: 12px; }
+.learn-review-list { display: grid; gap: 0; }
+.learn-review-list a, .learn-review-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.learn-review-list a:last-child, .learn-review-row:last-child { border-bottom: 0; }
+.learn-review-list b, .learn-review-row b { color: var(--ink); font-size: 14px; }
+.learn-review-list span, .learn-review-row small { color: var(--muted); font-size: 12px; }
+.learn-review-row > span { color: var(--link); font-size: 13px; font-weight: 600; }
+.learn-review-options { display: grid; gap: 9px; margin: 18px 0; }
+.learn-review-options button { text-align: left; background: var(--panel); border: 1px solid var(--line-strong); border-radius: 9px; padding: 12px; }
+.learn-review-options button:hover:not(:disabled) { border-color: var(--ink); }
+.learn-review-options .correct { background: var(--ok-soft); border-color: var(--ok); }
+.learn-review-options .incorrect { background: var(--bad-soft); border-color: var(--bad); }
+.learn-review-options button:disabled { cursor: default; opacity: .9; }
+.learn-feedback { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 16px; }
+.learn-feedback p { margin: 10px 0; color: var(--muted); font-size: 14px; }
+.learn-review-options + #review-feedback .btn { margin: 5px 7px 0 0; }
+@media (max-width: 700px) {
+ .learn-page { padding-top: 24px; }
+ .learn-course-grid, .learn-diagnostic-grid { grid-template-columns: 1fr; }
+ .learn-metrics { gap: 6px; }
+ .learn-metrics > div { padding: 10px; }
+ .learn-metrics b { font-size: 24px; }
+ .learn-panel, .learn-challenge { padding: 15px; }
+ .learn-review-list a, .learn-review-row { align-items: start; flex-direction: column; gap: 3px; }
+}
+
+.learn-skill-details { margin-top: 13px; border-top: 1px solid var(--line); padding-top: 11px; }
+.learn-skill-details summary { font-size: 13px; font-weight: 700; cursor: pointer; color: var(--link); }
+.learn-skill-details ul { list-style: none; padding: 0; margin: 10px 0 0; max-height: 265px; overflow-y: auto; }
+.learn-skill-details li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 2px; border-bottom: 1px solid var(--line); font-size: 12px; }
+.learn-skill-details li a { color: var(--ink); flex: 1; }
+.learn-skill-details li a:hover { color: var(--link); text-decoration: underline; }
+.learn-skill-details li .learn-status { font-size: 11px; color: var(--muted); text-align: right; flex: none; }
+.learn-skill-details li .learn-status.due { color: var(--bad); }
+.learn-skill-details li .learn-status.retained { color: var(--ok); }
+
+.learn-challenges { margin: 28px 0; } .learn-challenges > h2 { margin-bottom: 10px; }
+.learn-challenges .learn-challenge { margin-bottom: 14px; }
+
+/* Per-part skill indicators and placement results */
+.rm-skill { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.rm-skill small { font-size: 11px; color: var(--muted); }
+.rm-dots { display: inline-flex; gap: 3px; flex-wrap: wrap; }
+.rm-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); border: 1px solid var(--line-strong); }
+.rm-dots i.diagnostic { background: var(--warn); border-color: var(--warn); }
+.rm-dots i.practicing { background: color-mix(in srgb, var(--accent) 55%, var(--panel)); border-color: var(--accent); }
+.rm-dots i.scheduled, .rm-dots i.retained { background: var(--ok); border-color: var(--ok); }
+.rm-dots i.due { background: var(--bad); border-color: var(--bad); }
+.learn-part-results { display: grid; gap: 6px; margin: 14px 0; }
+.learn-part-result { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); }
+.learn-part-result.gap { border-color: var(--warn); }
+.learn-part-result.ok { border-color: var(--ok); }
+.learn-part-result small { color: var(--muted); white-space: nowrap; }
+.learn-recommend { margin: 12px 0; padding: 12px 14px; border-radius: 10px; background: var(--accent-soft); }
+@media (max-width: 520px) { .learn-part-result { grid-template-columns: 1fr auto; } .learn-part-result .rm-dots { grid-column: 1 / -1; } }
+
+/* ---------- Predict-then-run ---------- */
+.predict-card { padding: 16px 18px; border-bottom: 1px solid var(--line); background: var(--accent-soft); }
+.predict-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 8px; }
+.predict-tag { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; background: var(--accent); color: #fff; }
+.predict-form { border: 0; margin: 0; padding: 0; min-width: 0; }
+.predict-form legend { font-weight: 700; padding: 0; margin-bottom: 10px; line-height: 1.45; }
+.predict-opt { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; margin: 6px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); cursor: pointer; }
+.predict-opt:hover { border-color: var(--accent); }
+.predict-opt:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.predict-opt input { margin-top: 3px; flex: none; }
+.predict-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.predict-actions button { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line-strong, var(--line)); background: var(--panel); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+.predict-actions button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.predict-actions button:disabled { opacity: .5; cursor: not-allowed; }
+.predict-skip { border-style: dashed !important; }
+.predict-reveal { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); }
+.predict-reveal.good { border-color: var(--ok); }
+.predict-reveal.warn { border-color: var(--warn); }
+.predict-reveal p { margin: 6px 0 0; }
+.predict-reveal:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Hidden, not just dimmed: the widget's own readouts would give the answer away. */
+.w.predict-locked { height: 0; overflow: hidden; visibility: hidden; padding: 0; margin: 0; }
+
+/* ---------- Personalised explanations (AI Agents) ---------- */
+.coach { margin: 22px 0; padding: 12px 16px; }
+.coach summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.coach-inner { margin-top: 12px; }
+.coach-why { margin: 0 0 10px; font-size: 14px; }
+.coach-body { margin-top: 12px; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; line-height: 1.6; }
+.coach-body p { margin: 0; }
+
+/* ---------- Evidence of understanding ---------- */
+.ev-limits { margin: 0 0 18px; font-size: 14px; border-left: 3px solid var(--warn); }
+.ev-table td small { color: var(--muted); }
+.ev-part { margin: 22px 0; }
+.ev-item { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 14px 0; background: var(--bg-soft); min-width: 0; }
+.ev-item legend { font-weight: 700; padding: 0 6px; }
+.ev-opt { display: flex; gap: 10px; align-items: flex-start; padding: 8px 12px; margin: 6px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.ev-opt.right { border-color: var(--ok); } .ev-opt.wrong { border-color: var(--bad); }
+.ev-why { margin: 10px 0 0; padding: 10px 14px; border-radius: 10px; background: var(--panel); border: 1px solid var(--line); }
+.ev-why.good { border-color: var(--ok); } .ev-why.warn { border-color: var(--warn); }
+.ev-points { list-style: none; margin: 8px 0; padding: 0; } .ev-points li.hit { color: var(--ok); } .ev-points li.miss { color: var(--muted); }
+.ev-teach textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); resize: vertical; }
+.ev-teach-bar { display: flex; gap: 12px; align-items: center; margin-top: 10px; }
+@media print { .ev-page .learn-actions, header, .site-header { display: none !important; } }
+.predict-card[data-state=done] .predict-hint { display: none; }

@@ -1,0 +1,79 @@
+/* Deep Learning course widgets */
+.mock-layers { display: flex; gap: 5px; align-items: center; justify-content: center; margin: 6px 0; }
+.mock-layers i { display: flex; flex-direction: column; gap: 3px; }
+.mock-layers i b { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); opacity: .75; }
+
+.dl-loop { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.dl-loop button { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--panel); font-weight: 600; }
+.dl-loop button b { font-size: 18px; }
+.dl-loop button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+.dl-loop em { font-style: normal; color: var(--muted); font-weight: 700; }
+
+.dl-bc { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.dl-bc > b { font-size: 22px; color: var(--muted); }
+.dl-bc input, .dl-layers input { width: 54px; font: inherit; font-size: 13px; padding: 3px 6px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--panel); color: var(--ink); }
+.w-head input[type=number] { width: 46px; font: inherit; font-size: 13px; padding: 3px 6px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--panel); color: var(--ink); }
+.dl-mat { display: grid; gap: 2px; }
+.dl-mat i { min-width: 30px; height: 26px; display: grid; place-items: center; font-style: normal; font-family: var(--mono); font-size: 11px; border-radius: 4px; color: var(--ink); }
+.dl-mat i.a { background: color-mix(in srgb, #3d6df2 25%, var(--panel)); }
+.dl-mat i.b { background: color-mix(in srgb, #e8505b 25%, var(--panel)); }
+.dl-mat i.res { background: var(--ok-soft); border: 1px solid var(--ok); }
+.dl-mat i.stretched { background: repeating-linear-gradient(45deg, var(--ok-soft) 0 4px, var(--bg-soft) 4px 8px); border: 1px dashed var(--ok); }
+
+.dl-soft { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.dl-soft > div { display: flex; flex-direction: column; gap: 6px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-soft); }
+.dl-soft > div.true { border-color: var(--ok); box-shadow: 0 0 0 2px var(--ok-soft); }
+.dl-soft small { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+.dl-layers { display: grid; gap: 5px; }
+.dl-layers > div { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); font-size: 13px; }
+.dl-layers b { min-width: 70px; color: var(--ink); }
+.dl-layers span { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+.dl-conv { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.dl-cells { display: grid; gap: 2px; width: min(280px, 100%); }
+.dl-cells.out { width: min(180px, 60%); }
+.dl-cells i { aspect-ratio: 1; border-radius: 3px; background: var(--panel); border: 1px solid var(--line); }
+.dl-cells i.pad { background: repeating-linear-gradient(45deg, var(--line) 0 3px, transparent 3px 6px); }
+.dl-cells i.win { background: var(--accent); border-color: var(--accent); }
+.dl-cells i.done { background: var(--accent-soft); }
+
+.dl-zoo { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px; }
+.dl-zoo button { display: flex; flex-direction: column; gap: 3px; padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); text-align: left; }
+.dl-zoo button b { color: var(--ink); font-size: 13px; } .dl-zoo button small { color: var(--muted); font-size: 11px; }
+.dl-zoo button.on { border-color: var(--accent); background: var(--accent-soft); }
+.dl-zoo .ag-hbar { height: 18px; } .dl-zoo .ag-hbar span { font-size: 10.5px; top: 1px; }
+.dl-grad { display: flex; align-items: flex-end; gap: 3px; height: 90px; margin: 8px 0; padding: 4px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-soft); }
+.dl-grad i { flex: 1; background: var(--accent); border-radius: 3px 3px 0 0; transition: height .3s; }
+.dl-grad i.hot { background: var(--bad); } .dl-grad i.cold { background: var(--line-strong); }
+
+.dl-rnn { display: flex; gap: 2px; overflow-x: auto; padding-bottom: 4px; }
+.dl-rnn > div { display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative; padding-right: 14px; }
+.dl-rnn b { font-family: var(--mono); font-size: 16px; color: var(--ink); }
+.dl-rnn span { color: var(--muted); font-size: 12px; }
+.dl-rnn i { font-style: normal; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; align-content: center; font-size: 11px; font-weight: 700; color: var(--ink); background: color-mix(in srgb, var(--accent) calc((var(--h) + 1) * 30%), var(--bg-soft)); border: 1px solid var(--line-strong); }
+.dl-rnn i small { font-family: var(--mono); font-size: 10px; font-weight: 500; }
+.dl-rnn em { position: absolute; right: 0; top: 44px; font-style: normal; color: var(--muted); }
+
+.dl-beam { display: grid; gap: 8px; }
+.dl-beam > div { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.dl-beam .w-label { width: 100%; }
+.dl-beam span { font-family: var(--mono); font-size: 12.5px; padding: 4px 9px; border-radius: 8px; border: 1px dashed var(--line-strong); color: var(--muted); }
+.dl-beam span.kept { border-style: solid; border-color: var(--accent); background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+.dl-beam small { font-size: 10.5px; opacity: .8; }
+
+.dl-sim { display: flex; align-items: flex-end; gap: 1px; height: 60px; margin-top: 6px; }
+.dl-sim i { flex: 1; background: var(--line-strong); border-radius: 2px 2px 0 0; }
+.dl-sim i.me { background: var(--accent); }
+
+.dl-word { display: flex; align-items: center; gap: 3px; margin-bottom: 4px; }
+.dl-word i { font-style: normal; font-family: var(--mono); font-size: 12.5px; padding: 2px 6px; border-radius: 5px; background: var(--bg-soft); border: 1px solid var(--line); color: var(--ink); }
+.dl-word i.m { background: var(--accent-soft); border-color: var(--accent); font-weight: 700; }
+.dl-word small { margin-left: 6px; color: var(--muted); font-size: 12px; }
+.dl-pair { display: flex; justify-content: space-between; padding: 5px 10px; border-radius: 8px; font-size: 13px; }
+.dl-pair.top { background: var(--accent-soft); font-weight: 700; }
+
+.dl-mf td { text-align: center; font-weight: 700; color: var(--ink); }
+.dl-mf td small { display: block; font-size: 10px; font-weight: 500; color: var(--muted); }
+.dl-mf td.miss { background: var(--accent-soft); }
+.dl-mf td.miss b { font-size: 15px; color: var(--accent); }
