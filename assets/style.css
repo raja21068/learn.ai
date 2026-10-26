@@ -408,3 +408,56 @@ body.in-player .site-header, body.in-player .footer { display: none; }
 /* About / credit block on the home page */
 .about-block { text-align: center; } .about-block p { max-width: 62ch; margin: 0 auto; } .about-block h2 a { color: var(--accent); } .about-block h2 a:hover { text-decoration: underline; }
 .foot-bottom a { text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---------- Learning paths (home "Choose your learning path" + #/path/<id>) ---------- */
+.paths-lead { color: var(--muted); margin: 8px 0 20px; max-width: 60ch; }
+.paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.path-card { display: flex; flex-direction: column; gap: 6px; padding: 20px 22px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); color: var(--text); text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+.path-card:hover, .path-card:focus-visible { border-color: var(--line-strong); box-shadow: var(--shadow); }
+.path-card h3 { margin: 6px 0 0; font-size: 20px; color: var(--ink); }
+.path-card p { margin: 0; color: var(--muted); }
+.path-card small { margin-top: auto; padding-top: 10px; color: var(--muted); font-size: 13px; }
+.path-ico { display: inline-flex; color: var(--accent); }
+.path-ico.lg svg { width: 44px; height: 44px; }
+.path-page .crumbs { color: var(--muted); }
+.path-page .crumbs a { color: var(--link); }
+.path-page .crumbs a:hover { color: var(--ink); text-decoration: underline; }
+.path-head { display: flex; gap: 18px; align-items: flex-start; margin: 8px 0 20px; }
+.path-head p { margin: 10px 0 6px; color: var(--text); max-width: 65ch; }
+.path-head small { color: var(--muted); }
+.path-steps { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 14px; }
+.path-steps li { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; }
+.step-n { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: var(--accent); border: 2px solid var(--accent); margin-top: 14px; }
+.step-card { display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 16px 20px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); color: var(--text); text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+.step-card:hover, .step-card:focus-visible { border-color: var(--line-strong); box-shadow: var(--shadow); }
+.step-card h3 { margin: 4px 0 6px; font-size: 18px; color: var(--ink); }
+.step-card p { margin: 0 0 6px; color: var(--muted); }
+.step-card small { color: var(--muted); font-size: 13px; }
+.path-other { margin-top: 28px; color: var(--muted); }
+.path-other a { color: var(--link); }
+@media (max-width: 600px) { .path-head { flex-direction: column; } .path-steps li { grid-template-columns: 32px 1fr; gap: 10px; } .step-n { width: 30px; height: 30px; } }
+/* Path labels: the per-course accent colours are too light for small text, so use theme text colours */
+#paths .kicker, .path-page .kicker { color: var(--link); }
+.path-steps .card-level { color: var(--muted); font-weight: 600; }
+
+/* ---------- Course at a glance ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.glance-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 20px; margin: 4px 0 18px; }
+.glance-facts div { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); }
+.glance-facts dt { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.glance-facts dd { margin: 4px 0 0; color: var(--ink); font-weight: 600; }
+.glance-facts dd a, .glance-parts a { color: var(--link); }
+.glance-outcome { border-left: 4px solid var(--accent); padding: 8px 14px; margin: 0 0 18px; background: var(--bg-soft); border-radius: 0 10px 10px 0; }
+.glance-outcome b { color: var(--ink); }
+.glance-outcome p { margin: 4px 0 0; color: var(--text); }
+.glance-parts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.glance-parts li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; }
+.glance-parts b { color: var(--ink); font-size: 15px; }
+.glance-parts small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+.gp-mark { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.glance-parts .yes .gp-mark { background: var(--ok-soft); color: var(--ok); }
+.glance-parts .no .gp-mark { background: var(--bg-soft); color: var(--muted); border: 1px solid var(--line); }
+/* Glance contrast: keep the green tint as the signal, draw marks and labels in full-contrast text colours */
+.glance-facts dt { color: var(--text); }
+.glance-parts .yes .gp-mark { color: var(--ink); border: 1px solid var(--ok); }
+.glance-parts .no .gp-mark { color: var(--text); }

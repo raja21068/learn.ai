@@ -62,6 +62,52 @@
   let cat = 'all', query = '';
   const featured = [window.LLM_COURSE, window.DL_COURSE, window.AI_COURSE, window.PROMPT_COURSE, window.ML_COURSE, window.AGENTS_COURSE, window.DB_COURSE].filter(Boolean).map(c => getCourse(c.id));
   let featuredId = featured[0] && featured[0].id, featureTimer = null, featureTouched = false;
+
+  /* ---------- Learning paths: start from the student's goal, then follow courses in order ---------- */
+  const ICO = d => `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const PATHS = [
+    { id: 'ai-beginner', title: 'AI Beginner', blurb: 'Python, machine learning and AI foundations',
+      who: 'No programming experience needed. Start with Python basics, then learn to train and evaluate machine-learning models, then the core ideas of AI.',
+      icon: ICO('<path d="M12 21v-8"/><path d="M12 13c0-4 3-6 7-6 0 4-3 6-7 6Z"/><path d="M12 15c0-3-2.5-5-6-5 0 3 2.5 5 6 5Z"/>'),
+      courses: ['python', 'machine-learning', 'ai-foundations'] },
+    { id: 'ai-engineer', title: 'AI Engineer', blurb: 'Prompts, deep learning, LLMs and agents',
+      who: 'For learners who can write some Python and want to build with modern models, from prompt design to deployed agents.',
+      icon: ICO('<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>'),
+      courses: ['prompt-engineering', 'deep-learning', 'llm-engineering', 'ai-agents'] },
+    { id: 'computer-science', title: 'Computer Science', blurb: 'Databases, operating systems, networking and algorithms',
+      who: 'Core computer-science courses that follow standard university textbooks, with labs you run in the browser.',
+      icon: ICO('<path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m14 5-4 14"/>'),
+      courses: ['databases', 'operating-systems', 'computer-networking', 'algorithm-design'] },
+    { id: 'ai-researcher', title: 'AI Researcher', blurb: 'Statistics, deep learning and agents in depth, with research case studies',
+      who: 'For students heading into research: rigorous statistical learning and modern models, then real case studies showing how published work was done.',
+      icon: ICO('<path d="M9 3h6"/><path d="M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M7.5 15h9"/>'),
+      courses: ['statistical-learning', 'deep-learning', 'ai-agents'],
+      extra: { label: 'Research case studies', href: 'https://raja21068.github.io/raja/Research_Lab/#case-studies',
+               text: 'Problem, method, results and reproducibility for ResearchLedger, AutoResearch and a published medical-imaging paper.' } }
+  ];
+  const pathCourses = p => p.courses.map(getCourse).filter(Boolean);
+  const pathSummary = p => { const cs = pathCourses(p); return `${cs.length} courses · ${cs.reduce((a, c) => a + c.lessons.length, 0)} lessons · ${fmtMin(cs.reduce((a, c) => a + minutes(c), 0))}`; };
+  const pathsSection = () => `<section class="container section-sm" id="paths" aria-labelledby="paths-h">
+      <span class="kicker">Start here</span><h2 class="h2" id="paths-h">Choose your learning path</h2>
+      <p class="paths-lead">Not sure where to begin? Pick a goal and follow its courses in order.</p>
+      <div class="paths">${PATHS.filter(p => pathCourses(p).length).map(p => `<a class="path-card" href="#/path/${p.id}"><span class="path-ico">${p.icon}</span><h3>${esc(p.title)}</h3><p>${esc(p.blurb)}</p><small>${pathSummary(p)}</small></a>`).join('')}</div>
+    </section>`;
+  function pathPage(p) {
+    const cs = pathCourses(p);
+    document.title = `${p.title} learning path · learn/ai`;
+    const next = cs.find(c => countDone(c) < c.lessons.length) || cs[0];
+    app.innerHTML = `<section class="container section path-page">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Home</a> / <a href="#/" data-goto="paths">Learning paths</a> / ${esc(p.title)}</nav>
+      <div class="path-head"><span class="path-ico lg">${p.icon}</span><div><span class="kicker">Learning path</span><h1 class="h2">${esc(p.title)}</h1><p>${esc(p.who)}</p><small>${pathSummary(p)}</small></div></div>
+      <a class="btn primary" href="${courseURL(next)}">${cs.some(c => countDone(c)) ? 'Continue with ' : 'Start with '}${esc(next.short || next.title)} →</a>
+      <ol class="path-steps">${cs.map((c, i) => `<li><span class="step-n" aria-hidden="true">${i + 1}</span><a class="step-card" href="${courseURL(c)}" style="${courseVars(c)}">
+        <div><span class="card-level">Step ${i + 1} · ${esc(c.level)}</span><h3>${esc(c.title)}</h3><p>${esc(c.outcome || c.subtitle)}</p>
+        <small>${c.lessons.length} lessons · ${fmtMin(minutes(c))}${countDone(c) ? ` · ${countDone(c)}/${c.lessons.length} done` : ''}</small></div>${countDone(c) ? ring(pct(c)) : ''}</a></li>`).join('')}
+        ${p.extra ? `<li><span class="step-n" aria-hidden="true">${cs.length + 1}</span><a class="step-card" href="${p.extra.href}" target="_blank" rel="noopener"><div><span class="card-level">Then · applied research</span><h3>${esc(p.extra.label)} ↗</h3><p>${esc(p.extra.text)}</p></div></a></li>` : ''}
+      </ol>
+      <p class="path-other">Other paths: ${PATHS.filter(q => q !== p && pathCourses(q).length).map(q => `<a href="#/path/${q.id}">${esc(q.title)}</a>`).join(' · ')} · <a href="#/" data-goto="courses">All courses</a></p>
+    </section>`;
+  }
   const MOCKS = {
     databases: c => `<div class="mock-main"><b>${esc(c.lessons[7].title)}</b><span></span><span></span><span class="short"></span><div class="mock-venn"><i></i><i></i></div></div><div class="mock-lab"><code>SELECT V_NAME<br>FROM VENDOR V<br>LEFT JOIN PRODUCT P…</code><div class="mock-grid">${'<i></i>'.repeat(9)}</div><span class="mock-ok">✓ Correct</span></div>`,
     'machine-learning': c => `<div class="mock-main"><b>${esc(c.lessons[3].title)}</b><span></span><span class="short"></span><svg viewBox="0 0 100 50" class="mock-curve"><path d="M5 8 Q50 70 95 8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="27" r="3.5"/><circle cx="35" cy="38" r="3.5"/><circle cx="48" cy="41" r="4.5" fill="var(--ink)"/></svg></div><div class="mock-lab"><code>from sklearn.ensemble import<br>&nbsp;&nbsp;RandomForestClassifier<br>forest.fit(X_train, y_train)</code><div class="mock-grid">${'<i></i>'.repeat(6)}</div><span class="mock-ok">✓ All tests passed</span></div>`,
@@ -119,6 +165,7 @@
         ${featured.length > 1 ? `<div class="feature-tabs" role="tablist" aria-label="Featured courses">${featured.map(c => `<button type="button" role="tab" data-feature="${c.id}" aria-selected="${c.id === featuredId}" class="${c.id === featuredId ? 'on' : ''}" style="${courseVars(c)}"><i class="ft-dot"></i>${esc(c.tabLabel || c.short || c.title)}</button>`).join('')}</div>` : ''}
         <div id="feature-slot" role="tabpanel">${featureCard(getCourse(featuredId))}</div></div>` : ''}
     </div></section>
+    ${pathsSection()}
     ${started.length ? `<section class="container section-sm"><h2 class="h2">Continue learning</h2><div class="continue">${started.map(c => { const next = c.lessons.find(l => !isDone(c, l)) || c.lessons[0]; return `<a class="cont-card" href="${lessonURL(c, next)}" style="${courseVars(c)}">${ring(pct(c))}<div><small>${esc(c.short || c.title)}</small><b>${esc(next.title)}</b></div><span>→</span></a>`; }).join('')}</div></section>` : ''}
     <section class="container section" id="courses">
       <div class="sec-head"><div><span class="kicker">Course catalog</span><h2 class="h2">Explore courses</h2></div>
@@ -155,6 +202,37 @@
     return `<span class="rm-skill" title="Practice evidence from your attempts, not a measure of mastery"><span class="rm-dots">${inf.map(x => `<i class="${x.code}"></i>`).join('')}</span><small>${practiced}/${ls.length} practiced${due ? ' · ' + due + ' due' : ''}</small></span>`;
   };
 
+  /* ---------- Course at a glance: the six-part course structure, counted from the course data ---------- */
+  function glanceHTML(c) {
+    const M = window.COURSE_META || { courses: {}, status: {} }, m = M.courses[c.id] || {};
+    const labs = c.lessons.reduce((a, l) => a + (labTasks(l) || (l.lab ? 1 : 0)), 0);
+    const widgets = c.lessons.filter(l => l.widget).length;
+    const quizzed = c.lessons.filter(l => (l.quiz || []).length).length;
+    const project = c.lessons.find(l => /project|capstone/i.test(l.title));
+    const demos = widgets ? `${widgets} interactive simulations` : (bookFor(c) ? 'Interactive chapter figures' : '');
+    const pre = (m.prereq || []).map(getCourse).filter(Boolean).map(p => `<a href="${courseURL(p)}">${esc(p.short || p.title)}</a>`).join(', ');
+    const preText = [pre, esc(m.note || '')].filter(Boolean).join('. ') || 'None.';
+    const parts = [
+      ['Introduction and learning outcomes', `${(c.learn || []).length} stated outcomes`, (c.learn || []).length > 0],
+      ['Short lessons with visual explanations', `${c.lessons.length} lessons`, true],
+      ['Interactive demonstrations', demos || 'Not in this course', !!demos],
+      ['Coding exercises with feedback', labs ? `${labs} auto-graded ${c.lang === 'sql' ? 'SQL' : 'Python'} labs` : 'Not in this course: guided reading', !!labs],
+      ['Concept quizzes and review', `Quizzes in ${quizzed} of ${c.lessons.length} lessons, plus <a href="#/review">spaced review</a>`, quizzed > 0],
+      ['Final mini-project and assessment', project ? `<a href="${lessonURL(c, project)}">${esc(project.title)}</a>` : 'Not yet', !!project]
+    ];
+    return `<section class="panel glance" aria-labelledby="glance-h"><h2 id="glance-h">Course at a glance</h2>
+      <dl class="glance-facts">
+        <div><dt>Level</dt><dd>${esc(c.level)}</dd></div>
+        <div><dt>Estimated time</dt><dd>${fmtMin(minutes(c))}</dd></div>
+        <div><dt>Prerequisites</dt><dd>${preText}</dd></div>
+        ${m.status ? `<div><dt>Status</dt><dd>${esc(M.status[m.status] || m.status)}</dd></div>` : ''}
+        ${M.updated ? `<div><dt>Last updated</dt><dd>${esc(M.updated)}</dd></div>` : ''}
+      </dl>
+      ${c.outcome ? `<div class="glance-outcome"><b>Learning outcome</b><p>${esc(c.outcome)}</p></div>` : ''}
+      <ol class="glance-parts">${parts.map(([t, d, ok], i) => `<li class="${ok ? 'yes' : 'no'}"><span class="gp-mark" aria-hidden="true">${ok ? '✓' : '–'}</span><div><b>${i + 1}. ${t}</b><small>${d}</small></div><span class="sr-only">${ok ? 'Included' : 'Not included'}</span></li>`).join('')}</ol>
+    </section>`;
+  }
+
   /* ---------- COURSE LANDING ---------- */
   function coursePage(c) {
     document.title = c.title + ' · learn/ai';
@@ -175,6 +253,7 @@
         ${window.VideoLib?window.VideoLib.courseStrip(c.id):''}
         ${window.BookMasterclass&&bookFor(c)?window.BookMasterclass.chapterStrip(bookFor(c),6):''}
         ${c.parts ? `<section class="panel"><h2>Your roadmap</h2><div class="roadmap">${groups.map(([name, ls], gi) => { const d = ls.filter(l => isDone(c, l)).length, first = ls.find(l => !isDone(c, l)) || ls[0]; return `<a class="rm-step ${d === ls.length ? 'done' : d ? 'part' : ''}" href="${lessonURL(c, first)}"><span class="rm-n">${d === ls.length ? '✓' : gi + 1}</span><b>${esc(name)}</b><small>${ls.length} lesson${ls.length > 1 ? 's' : ''} · ${fmtMin(ls.reduce((a, l) => a + (l.minutes || 5), 0))}</small>${skillDots(c, ls)}<span class="mini-bar"><i style="width:${Math.round(d / ls.length * 100)}%"></i></span></a>`; }).join('')}</div></section>` : ''}
+        ${glanceHTML(c)}
         <section class="panel"><h2>What you'll learn</h2><ul class="learn">${c.learn.slice(0, 8).map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>
         <section class="panel"><h2>Course outline</h2>${groups.map(([name, ls], gi) => `<details class="part" ${gi < 2 || ls.some(l => l === next) ? 'open' : ''}><summary><span>${c.parts ? `Part ${gi + 1} · ` : ''}${esc(name)}</span><small>${ls.length} lessons · ${fmtMin(ls.reduce((a, l) => a + (l.minutes || 5), 0))}</small></summary>
           ${ls.map(l => { n++; return `<a class="o-row ${isDone(c, l) ? 'done' : ''}" href="${lessonURL(c, l)}"><span class="o-n">${isDone(c, l) ? '✓' : n}</span><span class="o-t"><b>${esc(l.title)}</b><small>${esc(l.chapter ? l.chapter + ' · ' : '')}${esc(l.goal)}</small></span><span class="o-badges">${l.widget ? '<i title="Interactive">🕹</i>' : ''}${l.lab ? `<i title="Lab">🧪${labTasks(l) > 1 ? '×' + labTasks(l) : ''}</i>` : ''}${window.VideoLib ? window.VideoLib.badge(c.id, l.id) : ''}<i title="Quiz">✎</i></span><span class="o-m">${l.minutes || 5} min</span></a>`; }).join('')}</details>`).join('')}</section>
@@ -533,6 +612,7 @@
     else if (parts[0] === 'visualize' && window.VisualizationLab) window.VisualizationLab.render(app, parts.slice(1));
     else if (parts[0] === 'practice' && window.PracticeHub) window.PracticeHub.render(app, parts.slice(1));
     else if (parts[0] === 'prompts') promptLibraryPage();
+    else if (parts[0] === 'path' && PATHS.find(p => p.id === parts[1])) pathPage(PATHS.find(p => p.id === parts[1]));
     else if (parts[0] === 'course' && getCourse(parts[1])) {
       const c = getCourse(parts[1]); const l = parts[2] && c.lessons.find(x => x.id === parts[2]);
       if (parts[2] && !l) notFound(); else l ? lessonPage(c, l) : coursePage(c);
