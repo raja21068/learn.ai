@@ -6,7 +6,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from _browser import launch_browser
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
-html=(root/'index.html').read_text();scripts=re.findall(r'<script src="(assets/[^"]+\.js)"',html);styles=re.findall(r'<link rel="stylesheet" href="(assets/[^"]+\.css)"',html)
+html=(root/'index.html').read_text();scripts=re.findall(r'<script src="(assets/[^"]+\.js)"',html)+[s for g in __import__('json').loads(re.search(r'<script type="application/json" id="lazy-scripts">(.*?)</script>',html,re.S).group(1)).values() for s in g if s.startswith('assets/')];styles=re.findall(r'<link rel="stylesheet" href="(assets/[^"]+\.css)"',html)
 clean=re.sub(r'<script\b[^>]*>.*?</script>','',html,flags=re.I|re.S)
 testfile=root/'tests'/'artifacts'/'sample_local_readonly.pdf';doc=fitz.open();doc.new_page().insert_text((50,50),'PDF stays local in browser');doc.save(testfile);doc.close()
 with sync_playwright() as p:

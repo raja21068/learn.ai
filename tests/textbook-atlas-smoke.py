@@ -5,7 +5,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from _browser import launch_browser
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
-html=(root/'index.html').read_text(); scripts=re.findall(r'<script src="(assets/[^"]+\.js)"',html); styles=re.findall(r'<link rel="stylesheet" href="(assets/[^"]+\.css)"',html); clean=re.sub(r'<script\b[^>]*>.*?</script>','',html,flags=re.I|re.S)
+html=(root/'index.html').read_text(); scripts=re.findall(r'<script src="(assets/[^"]+\.js)"',html)+[s for g in __import__('json').loads(re.search(r'<script type="application/json" id="lazy-scripts">(.*?)</script>',html,re.S).group(1)).values() for s in g if s.startswith('assets/')]; styles=re.findall(r'<link rel="stylesheet" href="(assets/[^"]+\.css)"',html); clean=re.sub(r'<script\b[^>]*>.*?</script>','',html,flags=re.I|re.S)
 def load_site(page):
  page.set_content(clean,wait_until='domcontentloaded');page.evaluate('''() => {window.__mem={}; Object.defineProperty(window,'localStorage',{configurable:true,value:{getItem:k=>window.__mem[k]||null,setItem:(k,v)=>{window.__mem[k]=String(v)},removeItem:k=>{delete window.__mem[k]}}});window.toggleTheme=()=>{};}''')
  for path in styles:page.add_style_tag(content=(root/path).read_text())

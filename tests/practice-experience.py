@@ -22,6 +22,8 @@ def main():
         pg.on('pageerror', lambda e: errors.append(str(e)))
         pg.goto(BASE); pg.wait_for_timeout(600)
         pg.evaluate("localStorage.removeItem('learnai-practice-v1')")
+        # Practice data now loads on demand: open the practice hub once so its data is present.
+        pg.evaluate("location.hash='#/practice'"); pg.wait_for_function("window.PRACTICE_QUIZZES && window.PRACTICE_LABS && window.PracticeHub")
 
         def go(h):
             pg.evaluate(f"location.hash='{h}'"); pg.wait_for_timeout(350)

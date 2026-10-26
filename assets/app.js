@@ -486,11 +486,41 @@
   }
   let labEditor = null;
 
+  /* ---------- On-demand scripts: pages load their extra files the first time they open ---------- */
+  window.__learnaiLazy = true;  // tells index.html's fallback that this app.js loads page scripts itself
+  const LAZY = (() => { try { return JSON.parse(document.getElementById('lazy-scripts').textContent); } catch (_) { return {}; } })();
+  const READY = { editor: () => !!window.CodeMirror, practice: () => !!window.PracticeHub, atlas: () => !!window.TextbookAtlas, videos: () => !!window.VideoLib, viz: () => !!window.CHAPTER_VIZ };
+  const OPTIONAL = { editor: true };  // labs fall back to a plain textarea without CodeMirror
+  const loading = {}, settled = {};  // settled: a load was attempted, so never retry in a loop
+  function loadGroup(name) {
+    if (!loading[name]) loading[name] = new Promise((resolve, reject) => {
+      const list = LAZY[name] || []; let left = list.length;
+      if (!left) { settled[name] = true; return resolve(); }
+      list.forEach(src => {  // download in parallel, run in listed order
+        const el = document.createElement('script'); el.src = src; el.async = false;
+        el.onload = () => { if (!--left) { settled[name] = true; resolve(); } };
+        el.onerror = () => { delete loading[name]; reject(new Error('Could not load ' + src)); };
+        document.body.appendChild(el);
+      });
+    });
+    return loading[name];
+  }
+  const NEEDS = { course: ['editor', 'videos', 'viz'], practice: ['practice'], books: ['atlas', 'videos', 'viz'], book: ['atlas', 'videos', 'viz'], videos: ['videos'], visualize: ['viz'] };
+  function ensureFor(parts) {
+    const missing = (NEEDS[parts[0]] || []).filter(g => !READY[g]() && !settled[g]);
+    if (!missing.length) return true;
+    app.innerHTML = '<div class="container notfound" role="status" aria-live="polite"><p>Loading…</p></div>';
+    Promise.all(missing.map(g => loadGroup(g).catch(err => { if (!OPTIONAL[g]) throw err; settled[g] = true; })))
+      .then(route, () => { app.innerHTML = '<div class="container notfound"><h1>This page could not load.</h1><p>Check your connection and try again.</p><a class="btn primary" href="#/">Back home</a></div>'; });
+    return false;
+  }
+
   /* ---------- Router & events ---------- */
   function route() {
     const parts = (location.hash || '#/').replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
     document.body.classList.toggle('in-player', parts[0] === 'course' && !!parts[2]);
     current = null; app.onclick = null; app.onchange = null; app.oninput = null;
+    if (!ensureFor(parts)) return;
     if (!parts.length) home();
     else if (parts[0] === 'algo-lab') window.AlgorithmDepth.render(app, parts[1]);
     else if (parts[0] === 'studio') window.Phase2UI.render(app, parts[1]);

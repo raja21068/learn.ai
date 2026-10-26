@@ -24,7 +24,7 @@ def launch(p):
     return p.chromium.launch(headless=True)
 
 INDEX = (ROOT/'index.html').read_text(encoding='utf-8')
-SCRIPTS = re.findall(r'<script src="(assets/[^\"]+\.js)"', INDEX)
+SCRIPTS = re.findall(r'<script src="(assets/[^\"]+\.js)"', INDEX)+[s for g in __import__('json').loads(re.search(r'<script type="application/json" id="lazy-scripts">(.*?)</script>',INDEX,re.S).group(1)).values() for s in g if s.startswith('assets/')]
 CSS = re.findall(r'<link rel="stylesheet" href="(assets/[^\"]+\.css)"', INDEX)
 CLEAN_HTML = re.sub(r'<script\b[^>]*>.*?</script>', '', INDEX, flags=re.I | re.S)
 

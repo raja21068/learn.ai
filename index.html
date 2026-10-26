@@ -110,9 +110,6 @@
     </div>
     <div class="container foot-bottom"><span>© 2026 <a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">Rajesh Kumar</a> (<a href="https://raja21068.github.io/raja/" target="_blank" rel="noopener">academic portfolio</a>) · learn/ai. Original lessons CC BY 4.0 · code MIT.</span><span>Independent educational resource. No publisher or university affiliation implied.</span></div>
   </footer>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
   <script src="assets/catalog.js"></script>
   <script src="assets/db-course.js"></script>
   <script src="assets/ai-course.js"></script>
@@ -160,7 +157,6 @@
   <script src="assets/db-evidence.js"></script>
   <script src="assets/phase2-core.js"></script>
   <script src="assets/phase2-ui.js"></script>
-  <script src="assets/textbook-atlas-data.js"></script>
   <script src="assets/book-source-map.js"></script>
   <script src="assets/book-masterclass-data.js"></script>
   <script src="assets/book-figure-map.js"></script>
@@ -181,16 +177,44 @@
   <script src="assets/algo-depth-course.js"></script>
   <script src="assets/algo-v7.js"></script>
   <script src="assets/algo-v7-course.js"></script>
-  <script src="assets/textbook-atlas.js"></script>
-  <script src="assets/practice-quizzes-data.js"></script>
-  <script src="assets/practice-labs-data.js"></script>
-  <script src="assets/practice-sources-data.js"></script>
-  <script src="assets/practice-notebooks-data.js"></script>
-  <script src="assets/practice-hub.js"></script>
-  <script src="assets/chapter-viz-data.js"></script>
   <script src="assets/visualize.js"></script>
-  <script src="assets/videos-data.js"></script>
-  <script src="assets/videos.js"></script>
+  <!-- Loaded on demand by app.js (see LAZY in assets/app.js): only the pages that need them download these. -->
+  <script type="application/json" id="lazy-scripts">{
+    "editor": [
+      "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"
+    ],
+    "practice": [
+      "assets/practice-quizzes-data.js",
+      "assets/practice-labs-data.js",
+      "assets/practice-sources-data.js",
+      "assets/practice-notebooks-data.js",
+      "assets/practice-hub.js"
+    ],
+    "atlas": [
+      "assets/textbook-atlas-data.js",
+      "assets/textbook-atlas.js"
+    ],
+    "videos": [
+      "assets/videos-data.js",
+      "assets/videos.js"
+    ],
+    "viz": [
+      "assets/chapter-viz-data.js"
+    ]
+  }</script>
   <script src="assets/app.js"></script>
+  <script>
+    /* Safety net: a browser holding an older cached app.js (without the on-demand loader) loads every page script as before. */
+    if (!window.__learnaiLazy) (function () {
+      var g = JSON.parse(document.getElementById('lazy-scripts').textContent), list = [];
+      Object.keys(g).forEach(function (k) { g[k].forEach(function (s) { if (list.indexOf(s) < 0) list.push(s); }); });
+      var left = list.length;
+      list.forEach(function (s) { var e = document.createElement('script'); e.src = s; e.async = false;
+        e.onload = e.onerror = function () { if (!--left) window.dispatchEvent(new HashChangeEvent('hashchange')); };
+        document.body.appendChild(e); });
+    })();
+  </script>
 </body>
 </html>

@@ -22,7 +22,7 @@ def launch(p):
     return p.chromium.launch(headless=True)
 
 HTML=(ROOT/'index.html').read_text(encoding='utf-8')
-SCRIPTS=re.findall(r'<script src="(assets/[^\"]+\.js)"',HTML)
+SCRIPTS=re.findall(r'<script src="(assets/[^\"]+\.js)"',HTML)+[s for g in __import__('json').loads(re.search(r'<script type="application/json" id="lazy-scripts">(.*?)</script>',HTML,re.S).group(1)).values() for s in g if s.startswith('assets/')]
 CLEAN=re.sub(r'<script\b[^>]*>.*?</script>','',HTML, flags=re.S|re.I)
 with sync_playwright() as p:
   b=launch(p)
