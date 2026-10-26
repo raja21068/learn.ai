@@ -4,7 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Free interactive courses in database systems, Python, machine learning, LLMs and agentic AI. Live SQL and Python labs run in your browser.">
+  <meta name="author" content="Rajesh Kumar">
+  <link rel="author" href="https://github.com/raja21068">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"learn/ai","description":"Free interactive courses in databases, machine learning, LLMs and AI agents that run in your browser.","author":{"@type":"Person","name":"Rajesh Kumar","url":"https://github.com/raja21068","sameAs":["https://github.com/raja21068"]},"license":"https://creativecommons.org/licenses/by/4.0/"}</script>
   <title>learn/ai · Interactive courses in databases &amp; AI</title>
+  <script>
+    /* Opened by double-clicking index.html? Videos (YouTube Error 153) and a few readers need a web address, so say how to get one. */
+    if (location.protocol === 'file:') document.addEventListener('DOMContentLoaded', function () {
+      var b = document.createElement('div'); b.className = 'file-banner'; b.setAttribute('role', 'note');
+      b.innerHTML = '<span><b>You opened this page as a file.</b> Videos and a few readers need a local web server. Windows: double-click <code>start-site.bat</code>. Mac or Linux: run <code>sh start-site.sh</code>. Or run <code>python -m http.server 8000</code> and open http://localhost:8000</span><button type="button" aria-label="Dismiss">&times;</button>';
+      b.querySelector('button').onclick = function () { b.remove(); };
+      document.body.insertBefore(b, document.body.firstChild);
+    });
+  </script>
   <script>
     (function () {
       var r = document.documentElement, mq = window.matchMedia('(prefers-color-scheme: dark)'), saved = null;
@@ -37,6 +49,8 @@
   <link rel="stylesheet" href="assets/book-masterclass.css">
   <link rel="stylesheet" href="assets/algo-depth.css">
   <link rel="stylesheet" href="assets/practice.css">
+  <link rel="stylesheet" href="assets/visualize.css">
+  <link rel="stylesheet" href="assets/videos.css">
 </head>
 <body>
   <a class="skip-link" href="#app">Skip to content</a>
@@ -63,7 +77,7 @@
             <a href="#/" data-goto="courses" class="all">Browse all courses →</a>
           </div>
         </div>
-        <a href="#/practice">Practice</a><a href="#/books">Textbooks</a>
+        <a href="#/practice">Practice</a><a href="#/visualize">Visualize</a><a href="#/videos">Videos</a><a href="#/books">Textbooks</a>
         <a href="#/studio">Interactive Labs</a>
         <a href="#/my-learning">My learning</a>
         <a href="#/review">Review</a>
@@ -75,16 +89,16 @@
       <a class="btn primary sm header-cta" href="#/" data-goto="courses">Start learning</a>
       <button type="button" class="icon-btn menu" id="menu-toggle" aria-label="Menu">☰</button>
     </div>
-    <nav class="mobile-nav" id="mobile-nav" hidden><a href="#/" data-goto="courses">Courses</a><a href="#/practice">Practice: quizzes &amp; coding labs</a><a href="#/books">Textbooks &amp; figures</a><a href="#/prompts">Prompt Library</a><a href="#/course/prompt-engineering">Prompt Engineering</a><a href="#/course/llm-engineering">LLM Engineering</a><a href="#/course/databases">Database Systems</a><a href="#/course/operating-systems">Operating Systems</a><a href="#/course/computer-networking">Computer Networking</a><a href="#/course/algorithm-design">Algorithm Design</a><a href="#/course/ai-agents">AI Agents</a><a href="#/course/machine-learning">Machine Learning</a><a href="#/course/ai-foundations">AI Foundations</a><a href="#/course/deep-learning">Deep Learning</a><a href="#/studio">Interactive Labs</a><a href="#/my-learning">My learning</a><a href="#/review">Review</a><a href="#/" data-goto="resources">Resources</a></nav>
+    <nav class="mobile-nav" id="mobile-nav" hidden><a href="#/" data-goto="courses">Courses</a><a href="#/practice">Practice: quizzes &amp; coding labs</a><a href="#/visualize">Visualization lab</a><a href="#/videos">Videos</a><a href="#/books">Textbooks &amp; figures</a><a href="#/prompts">Prompt Library</a><a href="#/course/prompt-engineering">Prompt Engineering</a><a href="#/course/llm-engineering">LLM Engineering</a><a href="#/course/databases">Database Systems</a><a href="#/course/operating-systems">Operating Systems</a><a href="#/course/computer-networking">Computer Networking</a><a href="#/course/algorithm-design">Algorithm Design</a><a href="#/course/ai-agents">AI Agents</a><a href="#/course/machine-learning">Machine Learning</a><a href="#/course/ai-foundations">AI Foundations</a><a href="#/course/deep-learning">Deep Learning</a><a href="#/studio">Interactive Labs</a><a href="#/my-learning">My learning</a><a href="#/review">Review</a><a href="#/" data-goto="resources">Resources</a></nav>
   </header>
   <main id="app" tabindex="-1"></main>
   <footer class="footer">
     <div class="container foot">
       <div><span class="brand-foot">learn<b>/</b>ai</span><p>Free, interactive, hands-on courses.<br>Learn it, play with it, code it.</p></div>
       <div><strong>Courses</strong><a href="#/course/prompt-engineering">Prompt Engineering</a><a href="#/course/llm-engineering">LLM Engineering</a><a href="#/course/databases">Database Systems</a><a href="#/course/operating-systems">Operating Systems</a><a href="#/course/computer-networking">Computer Networking</a><a href="#/course/algorithm-design">Algorithm Design</a><a href="#/course/ai-agents">AI Agents</a><a href="#/course/machine-learning">Machine Learning</a><a href="#/course/ai-foundations">AI Foundations</a><a href="#/course/deep-learning">Deep Learning</a><a href="#/course/python">Python Essentials</a><a href="#/course/llms">Large Language Models</a><a href="#/course/agents">Agentic AI</a></div>
-      <div><strong>More</strong><a href="#/practice">Practice hub</a><a href="#/books">Textbooks &amp; figures</a><a href="#/prompts">Prompt Library</a><a href="#/" data-goto="resources">Resource library</a><a href="downloads/starter-pack.zip" download>Starter kit ↓</a><a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
+      <div><strong>More</strong><a href="#/practice">Practice hub</a><a href="#/visualize">Visualization lab</a><a href="#/videos">Videos</a><a href="#/books">Textbooks &amp; figures</a><a href="#/prompts">Prompt Library</a><a href="#/" data-goto="resources">Resource library</a><a href="downloads/starter-pack.zip" download>Starter kit ↓</a><a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
     </div>
-    <div class="container foot-bottom"><span>© 2026 learn/ai. Original lessons CC BY 4.0 · code MIT.</span><span>Independent educational resource. No publisher or university affiliation implied.</span></div>
+    <div class="container foot-bottom"><span>© 2026 <a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">Rajesh Kumar</a> · learn/ai. Original lessons CC BY 4.0 · code MIT.</span><span>Independent educational resource. No publisher or university affiliation implied.</span></div>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
@@ -163,6 +177,10 @@
   <script src="assets/practice-sources-data.js"></script>
   <script src="assets/practice-notebooks-data.js"></script>
   <script src="assets/practice-hub.js"></script>
+  <script src="assets/chapter-viz-data.js"></script>
+  <script src="assets/visualize.js"></script>
+  <script src="assets/videos-data.js"></script>
+  <script src="assets/videos.js"></script>
   <script src="assets/app.js"></script>
 </body>
 </html>

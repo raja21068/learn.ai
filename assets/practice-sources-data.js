@@ -207,9 +207,9 @@ window.PRACTICE_SOURCES = {
    "name": "TensorFlow Playground",
    "target": "Deep Learning",
    "license": "Apache-2.0",
-   "status": "linked",
-   "used": "link only",
-   "why": "Best used from the original page; embedding it would mean copying its code and assets.",
+   "status": "imported",
+   "used": "the built site (HTML, JS, CSS) runs inside the Visualization lab and the deep-learning textbook chapters",
+   "why": "One change, recorded in CHANGES.md: the Google Analytics script is replaced by an empty function so nothing is sent to Google. The TypeScript source is not included; this is the released 2017 build.",
    "url": "https://github.com/tensorflow/playground"
   },
   {
@@ -223,23 +223,33 @@ window.PRACTICE_SOURCES = {
    "url": "https://github.com/jupyterlite/jupyterlite"
   },
   {
+   "repo": "d3/d3",
+   "name": "d3",
+   "target": "Visualization",
+   "license": "ISC",
+   "status": "imported",
+   "used": "d3.min.js 7.9.0, required by Observable Plot",
+   "why": "The release file is bundled unmodified. d3 was not in your catalog; it is a dependency of Plot.",
+   "url": "https://github.com/d3/d3"
+  },
+  {
    "repo": "mermaid-js/mermaid",
    "name": "Mermaid",
-   "target": "Site engine",
+   "target": "Visualization",
    "license": "MIT",
-   "status": "linked",
-   "used": "candidate for diagrams",
-   "why": "A library to load from a CDN, not material to copy.",
+   "status": "imported",
+   "used": "mermaid.min.js 12.2.0 draws the diagrams of the Visualization lab and of all 70 textbook chapters",
+   "why": "The release file is bundled unmodified (5 MB, loaded only when a diagram is shown).",
    "url": "https://github.com/mermaid-js/mermaid"
   },
   {
    "repo": "observablehq/plot",
    "name": "Observable Plot",
-   "target": "Site engine",
+   "target": "Visualization",
    "license": "ISC",
-   "status": "linked",
-   "used": "candidate for charts",
-   "why": "A library to load from a CDN, not material to copy.",
+   "status": "imported",
+   "used": "plot.umd.min.js 0.6.17 draws the interactive charts",
+   "why": "The release file is bundled unmodified.",
    "url": "https://github.com/observablehq/plot"
   },
   {

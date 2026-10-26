@@ -134,6 +134,8 @@
         <div><span class="how-n">3</span><h3>Code in the lab</h3><p>A real SQLite or Python runtime sits beside every lesson. Run code and get your answer checked automatically.</p></div>
         <div><span class="how-n">4</span><h3>Check yourself</h3><p>Quick quizzes with explanations. Progress is saved in your browser.</p></div>
       </div></div></section>
+    <section class="container section-sm about-block" id="about"><span class="kicker">About</span><h2 class="h2">Created by <a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">Rajesh Kumar</a></h2>
+      <p>learn/ai is a free, independent learning site made by <b>Rajesh Kumar</b>. The lessons are original; the open-source material it builds on is credited, with licences, on the <a href="#/practice/sources">Sources &amp; licences</a> page. Found a mistake or have an idea? <a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">Reach out on GitHub</a>.</p></section>
     ${base.resources && base.resources.length ? `<section class="container section" id="resources"><span class="kicker">Open library</span><h2 class="h2">More free resources</h2><div class="res-grid">${base.resources.map(r => `<a class="res" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer"><span class="pill">${esc(r.kind)}</span><h3>${esc(r.name)}</h3><p>${esc(r.description)}</p><span class="res-link">GitHub ↗</span></a>`).join('')}</div>
       <div class="kit"><div><h3>Take it offline</h3><p>Starter kit: Jupyter notebooks, Python scripts and slide decks for the AI courses.</p></div><a class="btn" href="downloads/starter-pack.zip" download>↓ Download starter kit</a></div></section>` : ''}`;
     drawGrid();
@@ -170,11 +172,12 @@
     ${c.systemMap ? `<div class="container sm-wrap">${systemMapHTML(c)}</div>` : ''}
     <div class="container c-body">
       <div>
+        ${window.VideoLib?window.VideoLib.courseStrip(c.id):''}
         ${window.BookMasterclass&&bookFor(c)?window.BookMasterclass.chapterStrip(bookFor(c),6):''}
         ${c.parts ? `<section class="panel"><h2>Your roadmap</h2><div class="roadmap">${groups.map(([name, ls], gi) => { const d = ls.filter(l => isDone(c, l)).length, first = ls.find(l => !isDone(c, l)) || ls[0]; return `<a class="rm-step ${d === ls.length ? 'done' : d ? 'part' : ''}" href="${lessonURL(c, first)}"><span class="rm-n">${d === ls.length ? '✓' : gi + 1}</span><b>${esc(name)}</b><small>${ls.length} lesson${ls.length > 1 ? 's' : ''} · ${fmtMin(ls.reduce((a, l) => a + (l.minutes || 5), 0))}</small>${skillDots(c, ls)}<span class="mini-bar"><i style="width:${Math.round(d / ls.length * 100)}%"></i></span></a>`; }).join('')}</div></section>` : ''}
         <section class="panel"><h2>What you'll learn</h2><ul class="learn">${c.learn.slice(0, 8).map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>
         <section class="panel"><h2>Course outline</h2>${groups.map(([name, ls], gi) => `<details class="part" ${gi < 2 || ls.some(l => l === next) ? 'open' : ''}><summary><span>${c.parts ? `Part ${gi + 1} · ` : ''}${esc(name)}</span><small>${ls.length} lessons · ${fmtMin(ls.reduce((a, l) => a + (l.minutes || 5), 0))}</small></summary>
-          ${ls.map(l => { n++; return `<a class="o-row ${isDone(c, l) ? 'done' : ''}" href="${lessonURL(c, l)}"><span class="o-n">${isDone(c, l) ? '✓' : n}</span><span class="o-t"><b>${esc(l.title)}</b><small>${esc(l.chapter ? l.chapter + ' · ' : '')}${esc(l.goal)}</small></span><span class="o-badges">${l.widget ? '<i title="Interactive">🕹</i>' : ''}${l.lab ? `<i title="Lab">🧪${labTasks(l) > 1 ? '×' + labTasks(l) : ''}</i>` : ''}<i title="Quiz">✎</i></span><span class="o-m">${l.minutes || 5} min</span></a>`; }).join('')}</details>`).join('')}</section>
+          ${ls.map(l => { n++; return `<a class="o-row ${isDone(c, l) ? 'done' : ''}" href="${lessonURL(c, l)}"><span class="o-n">${isDone(c, l) ? '✓' : n}</span><span class="o-t"><b>${esc(l.title)}</b><small>${esc(l.chapter ? l.chapter + ' · ' : '')}${esc(l.goal)}</small></span><span class="o-badges">${l.widget ? '<i title="Interactive">🕹</i>' : ''}${l.lab ? `<i title="Lab">🧪${labTasks(l) > 1 ? '×' + labTasks(l) : ''}</i>` : ''}${window.VideoLib ? window.VideoLib.badge(c.id, l.id) : ''}<i title="Quiz">✎</i></span><span class="o-m">${l.minutes || 5} min</span></a>`; }).join('')}</details>`).join('')}</section>
       </div>
       <aside class="c-aside">
         <div class="panel sticky"><h3>This course includes</h3><ul class="incl"><li>${c.lessons.length} concise lessons</li>${widgets ? `<li>${widgets} interactive simulations</li>` : ''}${labs ? `<li>${labs} auto-graded ${c.lang === 'sql' ? 'SQL' : 'Python'} labs in the browser</li>` : `<li>Source-linked diagrams and worked exercises</li>`}<li>${c.lessons.reduce((a, l) => a + (l.quiz || []).length, 0)} quiz questions</li><li>Progress saved locally</li></ul>
@@ -252,6 +255,7 @@
         <div class="learn-lesson-meta"><span id="skill-stage">${esc(window.LearningEngine.info(c.id, l.id).label)}</span><span id="skill-review">${window.LearningEngine.info(c.id, l.id).nextReviewAt ? 'Next review ' + new Date(window.LearningEngine.info(c.id, l.id).nextReviewAt).toLocaleDateString() : 'First successful attempt schedules review'}</span><a href="#/my-learning">My learning ↗</a></div>
         ${l.sections.map((s, si) => `<section><h2>${esc(s.h)}</h2>${s.html}</section>${si === 1 && l.widget ? widgetSlot(c, l) : ''}`).join('')}
         ${l.widget && l.sections.length < 2 ? widgetSlot(c, l) : ''}
+        ${window.VideoLib ? window.VideoLib.lessonStrip(c.id, l.id) : ''}
         ${window.BookMasterclass&&bookFor(c)?window.BookMasterclass.inline(bookFor(c),l.chapter):''}
         ${l.terms ? `<section class="terms"><h2>Key terms</h2><dl>${l.terms.map(t => `<div><dt>${esc(t[0])}</dt><dd>${esc(t[1])}</dd></div>`).join('')}</dl></section>` : ''}
         ${l.lab && l.lab.practice ? `<section class="callout practice"><b>Practice in the lab →</b> ${esc(l.lab.practice)}</section>` : ''}
@@ -495,6 +499,8 @@
     else if (parts[0] === 'review') window.LearningUI.reviewPage(app, courses, parts);
     else if (parts[0] === 'evidence' && getCourse(parts[1]) && window.AgentsEvidence && window.AgentsEvidence.supports(getCourse(parts[1]))) window.AgentsEvidence.page(app, getCourse(parts[1]));
     else if (parts[0] === 'books' || parts[0] === 'book') window.TextbookAtlas.render(app, parts[0] === 'book' ? parts[1] : null);
+    else if (parts[0] === 'videos' && window.VideoLib) window.VideoLib.render(app, parts.slice(1));
+    else if (parts[0] === 'visualize' && window.VisualizationLab) window.VisualizationLab.render(app, parts.slice(1));
     else if (parts[0] === 'practice' && window.PracticeHub) window.PracticeHub.render(app, parts.slice(1));
     else if (parts[0] === 'prompts') promptLibraryPage();
     else if (parts[0] === 'course' && getCourse(parts[1])) {

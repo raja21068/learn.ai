@@ -30,7 +30,7 @@ def main():
             return ' '.join(pg.locator(sel).first.inner_text().split())
 
         counts = pg.evaluate("[PRACTICE_QUIZZES.sets.map(s => s.lessons.length), PRACTICE_LABS.length, PRACTICE_SOURCES.sources.length]")
-        assert counts == [[26, 24, 20], 27, 30], counts
+        assert counts == [[26, 24, 20], 27, 31], counts
 
         # ---------- hub ----------
         go('#/practice')
@@ -100,9 +100,9 @@ def main():
 
         # ---------- sources page ----------
         go('#/practice/sources')
-        assert pg.locator('.ph-src').count() == 30 and pg.locator('.ph-src.imported').count() == 13
+        assert pg.locator('.ph-src').count() == 31 and pg.locator('.ph-src.imported').count() == 17
         pg.click('[data-f="linked"]'); pg.wait_for_timeout(100)
-        assert pg.locator('.ph-src').count() == 17 and 'Why not copied' in txt('.ph-src')
+        assert pg.locator('.ph-src').count() == 14 and 'Why not copied' in txt('.ph-src')
         assert 'OSTEP source code' in pg.locator('#ph-srcs').inner_text() and 'No licence file' in pg.locator('#ph-srcs').inner_text()
 
         # ---------- notebooks and course texts ----------

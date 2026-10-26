@@ -1,0 +1,36 @@
+/* Videos: click-to-play cards. No image is loaded before the click, so the card is drawn with CSS only. */
+.yt-page { padding-top: 22px; padding-bottom: 60px; } .yt-page .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.yt-hero h1 { font-size: clamp(26px, 4vw, 38px); margin: 6px 0 10px; } .yt-hero p { max-width: 72ch; }
+.yt-hero p a, .yt-note a { color: var(--link); text-decoration: underline; }
+.yt-privacy { background: var(--ok-soft); border-radius: 10px; padding: 10px 14px; font-size: 14px; }
+.yt-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.yt-tab { border: 1px solid var(--line-strong); background: var(--panel); border-radius: 999px; padding: 6px 14px; font-size: 14px; } .yt-tab.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.yt-search { display: block; max-width: 420px; } .yt-search span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.yt-search input { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--ink); font: inherit; }
+.yt-topic { margin-top: 30px; } .yt-topic h2 { margin: 0 0 4px; font-size: 22px; } .yt-blurb { color: var(--muted); max-width: 80ch; margin: 0 0 12px; }
+.yt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.yt-card[hidden], .yt-topic[hidden], .yt-empty[hidden] { display: none; }
+.yt-card { border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); overflow: hidden; min-width: 0; }
+.yt-stage { aspect-ratio: 16 / 9; background: linear-gradient(135deg, #0d1530, #1f2f6b 55%, #3d5af1); }
+.yt-stage iframe { width: 100%; height: 100%; border: 0; display: block; }
+.yt-play { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; padding: 14px; color: #fff; position: relative; }
+.yt-play:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.yt-ico { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, .92); color: #0d1530; display: grid; place-items: center; font-size: 16px; padding-left: 3px; transition: transform .15s; }
+.yt-play:hover .yt-ico { transform: scale(1.1); }
+.yt-title { font-weight: 650; font-size: 15px; line-height: 1.3; text-shadow: 0 1px 6px rgba(0, 0, 0, .5); }
+.yt-meta { display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; font-size: 12px; color: var(--muted); } .yt-meta a { color: var(--link); text-decoration: underline; }
+.yt-strip { margin: 28px 0; padding: 20px; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg-soft); }
+.yt-strip .yt-grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.yt-note { font-size: 12px; color: var(--muted); margin: 14px 0 0; }
+@media (max-width: 480px) { .yt-page { padding-left: 16px; padding-right: 16px; } .yt-grid { grid-template-columns: 1fr; } }
+
+.yt-fallback { height: 100%; overflow: auto; padding: 12px 14px; background: #0d1530; color: #e9edf8; font-size: 13px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; } .yt-fallback p { margin: 0; } .yt-fallback code { background: rgba(255,255,255,.12); padding: 1px 5px; border-radius: 5px; font-size: 12px; }
+.yt-card.playing .yt-stage:has(.yt-fallback) { aspect-ratio: auto; min-height: 190px; }
+
+/* inside a lesson the column is narrow: keep unplayed cards compact, full size once playing */
+.yt-lesson .yt-grid { grid-template-columns: 1fr; gap: 10px; }
+.yt-lesson .yt-card:not(.playing) .yt-stage { aspect-ratio: 16 / 6; }
+.yt-lesson .yt-card:not(.playing) .yt-play { justify-content: center; padding-right: 64px; }
+.yt-lesson .yt-card:not(.playing) .yt-ico { top: 50%; transform: translateY(-50%); }
+.yt-lesson .yt-card:not(.playing) .yt-play:hover .yt-ico { transform: translateY(-50%) scale(1.1); }
+.yt-badge { font-style: normal; }

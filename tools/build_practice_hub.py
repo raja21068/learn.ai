@@ -138,18 +138,22 @@ def main():
             ('ShangtongZhang/reinforcement-learning-an-introduction', 'sutton-barto-python', 'MIT, Copyright (c) 2019 Shangtong Zhang'), ('karpathy/micrograd', 'micrograd', 'MIT, Copyright (c) 2020 Andrej Karpathy'),
             ('intro-stat-learning/ISLP_labs', 'islp-labs', 'BSD 2-Clause, Copyright (c) 2023 intro-stat-learning'), ('ageron/handson-ml3', 'handson-ml3', 'Apache-2.0'),
             ('karpathy/nn-zero-to-hero', 'nn-zero-to-hero', 'MIT, Copyright (c) 2022 Andrej Karpathy'), ('langchain-ai/langchain-academy', 'langchain-academy', 'MIT, Copyright (c) 2026 LangChain, Inc.'),
-            ('huggingface/agents-course', 'agents-course', 'Apache-2.0'), ('ossu/computer-science', 'ossu-computer-science', 'MIT, Copyright (c) 2015-2023 Open Source Society University')]
-    kinds = {'islp-labs': 'Lab notebooks', 'handson-ml3': 'Chapter notebooks', 'nn-zero-to-hero': 'Lecture notebooks and README', 'langchain-academy': 'LangGraph notebooks', 'agents-course': 'English course text', 'ossu-computer-science': 'Curriculum README'}
+            ('huggingface/agents-course', 'agents-course', 'Apache-2.0'), ('ossu/computer-science', 'ossu-computer-science', 'MIT, Copyright (c) 2015-2023 Open Source Society University'),
+            ('tensorflow/playground', 'tensorflow-playground', 'Apache-2.0, Copyright 2016 Google Inc.; one change, see CHANGES.md'), ('mermaid-js/mermaid', 'mermaid', 'MIT, Copyright (c) 2014-2022 Knut Sveidqvist'),
+            ('observablehq/plot', 'observable-plot', 'ISC, Copyright 2020-2025 Observable, Inc.'), ('d3/d3', 'd3', 'ISC, Copyright 2010-2023 Mike Bostock')]
+    kinds = {'islp-labs': 'Lab notebooks', 'handson-ml3': 'Chapter notebooks', 'nn-zero-to-hero': 'Lecture notebooks and README', 'langchain-academy': 'LangGraph notebooks', 'agents-course': 'English course text', 'ossu-computer-science': 'Curriculum README', 'tensorflow-playground': 'Neural network playground (built site)', 'mermaid': 'Diagram library (release file)', 'observable-plot': 'Chart library (release file)', 'd3': 'Chart dependency (release file)'}
     default_kind = 'Reference code files shown as "compare with"'
     crow = '\n'.join(f"| {kinds.get(d, default_kind)} | [{r}](https://github.com/{r}) | {lic} | `third_party/{d}/` (unchanged) |" for r, d, lic in code)
     (ROOT / 'THIRD_PARTY_NOTICES.md').write_text(f"""# Third-party material
 
-The Practice hub (`#/practice`) uses the following open-source material, all under permissive licences (MIT, BSD 2-Clause, Apache-2.0). Every file is copied unchanged and its licence text is bundled next to it. Apache-2.0 requires stating changes: there are none, the files are byte-for-byte the originals (see `third_party/MANIFEST.json`).
+The Practice hub (`#/practice`), the Notebooks page and the Visualization lab (`#/visualize`) use the following open-source material, all under permissive licences (MIT, BSD 2-Clause, Apache-2.0). Every file is copied unchanged and its licence text is bundled next to it. Apache-2.0 requires stating changes: there are none, the files are byte-for-byte the originals (see `third_party/MANIFEST.json`).
 
 | What | Source | Licence | Where in this repository |
 |---|---|---|---|
 {rows}
 {crow}
+
+The Videos page and the "Watch" strips embed videos by 3Blue1Brown from YouTube's official player (privacy-enhanced domain), only after a click. Nothing is copied or downloaded; the videos belong to their creator and the list is built by `tools/build_videos.py`.
 
 Repositories with no licence file or an unclear or mixed licence (for example OSTEP, Build Your Own X, Dive into Deep Learning) are only linked, and so are files that were too large to bundle. See `#/practice/sources` and `docs/SOURCES_AUDIT.md`.
 

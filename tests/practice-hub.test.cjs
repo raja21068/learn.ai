@@ -85,7 +85,7 @@ assert.ok(SRC.sources.length >= 25); assert.equal(new Set(SRC.sources.map(s => s
 for (const s of SRC.sources) {
   assert.ok(['imported', 'linked'].includes(s.status)); assert.ok(s.license && s.url.startsWith('https://github.com/' + s.repo));
   if (s.status === 'linked') assert.ok(s.why.length > 20, s.repo + ' must say why it is only linked');
-  if (s.status === 'imported') assert.ok(['MIT', 'BSD-2-Clause', 'Apache-2.0'].includes(s.license), s.repo + ': only permissively licensed material is copied');
+  if (s.status === 'imported') assert.ok(['MIT', 'BSD-2-Clause', 'Apache-2.0', 'ISC'].includes(s.license), s.repo + ': only permissively licensed material is copied');
   if (['NOASSERTION', 'none'].includes(s.license)) assert.equal(s.status, 'linked', s.repo + ': unclear licence means link only');
 }
 assert.equal(SRC.sources.filter(s => s.status === 'imported').length, bundled.size - 0, 'every bundled folder is an imported source: ' + [...bundled]);
