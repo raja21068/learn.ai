@@ -103,7 +103,7 @@
     }, 5000);
   }
   function home() {
-    document.title = 'learn/ai · Interactive courses in databases & AI';
+    document.title = 'learn/ai · Free interactive courses in AI, machine learning, LLMs & computer science';
     if (!getCourse(featuredId)) featuredId = featured[0] && featured[0].id;
     const started = courses.filter(c => countDone(c) > 0 || (P.last && P.last.startsWith(c.id + '/')));
     app.innerHTML = `
@@ -134,8 +134,8 @@
         <div><span class="how-n">3</span><h3>Code in the lab</h3><p>A real SQLite or Python runtime sits beside every lesson. Run code and get your answer checked automatically.</p></div>
         <div><span class="how-n">4</span><h3>Check yourself</h3><p>Quick quizzes with explanations. Progress is saved in your browser.</p></div>
       </div></div></section>
-    <section class="container section-sm about-block" id="about"><span class="kicker">About</span><h2 class="h2">Created by <a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">Rajesh Kumar</a></h2>
-      <p>learn/ai is a free, independent learning site made by <b>Rajesh Kumar</b>. The lessons are original; the open-source material it builds on is credited, with licences, on the <a href="#/practice/sources">Sources &amp; licences</a> page. Found a mistake or have an idea? <a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">Reach out on GitHub</a>.</p></section>
+    <section class="container section-sm about-block" id="about"><span class="kicker">About</span><h2 class="h2">Created by <a href="https://raja21068.github.io/raja/" target="_blank" rel="noopener">Dr. Rajesh Kumar</a></h2>
+      <p>learn/ai is a free, independent learning site made by <b>Dr. Rajesh Kumar</b>, a postdoctoral researcher in AI at Beihang University (Hangzhou). See the <a href="https://raja21068.github.io/raja/" target="_blank" rel="noopener">academic portfolio</a> for research, publications and collaboration. The lessons are original; the open-source material it builds on is credited, with licences, on the <a href="#/practice/sources">Sources &amp; licences</a> page. Found a mistake or have an idea? <a href="https://github.com/raja21068" target="_blank" rel="noopener noreferrer">Reach out on GitHub</a>.</p></section>
     ${base.resources && base.resources.length ? `<section class="container section" id="resources"><span class="kicker">Open library</span><h2 class="h2">More free resources</h2><div class="res-grid">${base.resources.map(r => `<a class="res" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer"><span class="pill">${esc(r.kind)}</span><h3>${esc(r.name)}</h3><p>${esc(r.description)}</p><span class="res-link">GitHub ↗</span></a>`).join('')}</div>
       <div class="kit"><div><h3>Take it offline</h3><p>Starter kit: Jupyter notebooks, Python scripts and slide decks for the AI courses.</p></div><a class="btn" href="downloads/starter-pack.zip" download>↓ Download starter kit</a></div></section>` : ''}`;
     drawGrid();
