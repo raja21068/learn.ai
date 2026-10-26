@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Quick check of the shipped data (no browser needed)
         run: |
-          for f in tests/credits.test.cjs tests/practice-hub.test.cjs tests/visualize.test.cjs tests/quiz-guessability.test.cjs tests/content-bank.test.cjs; do node "$f"; done
+          for f in tests/credits.test.cjs tests/practice-hub.test.cjs tests/visualize.test.cjs tests/quiz-guessability.test.cjs tests/content-bank.test.cjs tests/confidence-mastery.test.cjs tests/misconceptions.test.cjs; do node "$f"; done
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

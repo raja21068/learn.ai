@@ -217,8 +217,8 @@
       ['Short lessons with visual explanations', `${c.lessons.length} lessons`, true],
       ['Interactive demonstrations', demos || 'Not in this course', !!demos],
       ['Coding exercises with feedback', labs ? `${labs} auto-graded ${c.lang === 'sql' ? 'SQL' : 'Python'} labs` : 'Not in this course: guided reading', !!labs],
-      ['Concept quizzes and review', `Quizzes in ${quizzed} of ${c.lessons.length} lessons, plus <a href="#/review">spaced review</a>`, quizzed > 0],
-      ['Final mini-project and assessment', project ? `<a href="${lessonURL(c, project)}">${esc(project.title)}</a>` : 'Not yet', !!project]
+      ['Concept quizzes and review', `Quizzes in ${quizzed} of ${c.lessons.length} lessons, <a href="#/review">spaced review</a>${window.Mastery ? ', and an end-of-part mastery check for each part' : ''}`, quizzed > 0],
+      ['Final mini-project and assessment', [project ? `Mini-project: <a href="${lessonURL(c, project)}">${esc(project.title)}</a>` : 'No mini-project yet', window.Mastery && quizzed ? `<a href="#/check/${esc(c.id)}/final">final course check</a>` : ''].filter(Boolean).join(' · '), !!project]
     ];
     return `<section class="panel glance" aria-labelledby="glance-h"><h2 id="glance-h">Course at a glance</h2>
       <dl class="glance-facts">
@@ -232,6 +232,61 @@
       <ol class="glance-parts">${parts.map(([t, d, ok], i) => `<li class="${ok ? 'yes' : 'no'}"><span class="gp-mark" aria-hidden="true">${ok ? '✓' : '–'}</span><div><b>${i + 1}. ${t}</b><small>${d}</small></div><span class="sr-only">${ok ? 'Included' : 'Not included'}</span></li>`).join('')}</ol>
     </section>`;
   }
+
+  /* ---------- Mastery checks: end-of-part checks and a final course check (logic in assets/mastery.js) ---------- */
+  const statusText = r => r ? (r.mastered ? `Mastered ✓ · best ${r.best}%` : `Best ${r.best}% · aim for ${window.Mastery.PASS}%`) : 'Not attempted';
+  function masteryPanel(c) {
+    if (!window.Mastery) return '';
+    const M = window.Mastery, parts = M.parts(c), fin = M.get(c.id, 'final');
+    return `<section class="panel mastery" aria-labelledby="mastery-h"><h2 id="mastery-h">Check your mastery</h2>
+      <p class="w-small">After each part, answer ${M.PART_SIZE} mixed questions from its lessons. ${M.PASS}% or more shows mastery; missed questions link back to the lesson that teaches them.</p>
+      <ul class="mastery-list">${parts.map(p => { const r = M.get(c.id, p.index); return `<li class="${r && r.mastered ? 'done' : ''}"><div><b>${c.parts ? `Part ${p.index + 1} · ${esc(p.name)}` : 'Course check'}</b><small>${statusText(r)}</small></div><a class="btn sm" href="#/check/${esc(c.id)}/${p.index}">${r ? 'Retake' : 'Take check'}</a></li>`; }).join('')}
+        ${parts.length > 1 ? `<li class="final ${fin && fin.mastered ? 'done' : ''}"><div><b>Final course check</b><small>${M.FINAL_SIZE} questions from the whole course · ${statusText(fin)}</small></div><a class="btn sm" href="#/check/${esc(c.id)}/final">${fin ? 'Retake' : 'Take check'}</a></li>` : ''}</ul>
+    </section>`;
+  }
+  let currentCheck = null;
+  function checkPage(c, scope, fresh) {
+    const M = window.Mastery, final = scope === 'final';
+    const part = final ? null : M.parts(c).find(p => p.index === +scope);
+    if (!M || (!final && !part)) return notFound();
+    if (fresh || !currentCheck || currentCheck.c !== c || currentCheck.scope !== String(scope)) currentCheck = { c, scope: String(scope), items: M.build(c, final ? 'final' : +scope), graded: null };
+    const { items, graded } = currentCheck, title = final ? 'Final course check' : (c.parts ? `Part ${part.index + 1}: ${part.name}` : 'Course check');
+    const lessonOf = id => c.lessons.find(x => x.id === id);
+    document.title = `${title} · ${c.short || c.title} · learn/ai`;
+    const prev = M.get(c.id, final ? 'final' : part.index);
+    const head = `<nav class="crumbs" aria-label="Breadcrumb"><a href="#/">Home</a> / <a href="${courseURL(c)}">${esc(c.short || c.title)}</a> / Mastery check</nav>
+      <span class="kicker">Mastery check</span><h1 class="h2">${esc(title)}</h1>`;
+    if (!graded) {
+      app.innerHTML = `<section class="container section check-page">${head}
+        <p class="check-intro">${items.length} questions from across this ${final ? 'course' : 'part'}. Answer them all, then submit: feedback comes afterwards, as in a real test. ${M.PASS}% or more shows mastery.${prev ? ` Your best so far: ${prev.best}%.` : ''}</p>
+        <form id="check-form" novalidate>${items.map((it, i) => `<fieldset class="ck-q"><legend><span>Q${i + 1}</span> ${md(it.q.q)}</legend>${it.q.options.map((o, oi) => `<label class="ck-opt"><input type="radio" name="ck${i}" value="${oi}"> <span>${md(o)}</span></label>`).join('')}</fieldset>`).join('')}
+          <p class="ck-warn" id="ck-warn" role="alert" hidden></p>
+          <button type="submit" class="btn primary">Submit answers</button></form></section>`;
+      return;
+    }
+    const { g, rec } = graded, missedLessons = [...new Set(g.missed.map(r => r.lessonId))].map(lessonOf).filter(Boolean);
+    app.innerHTML = `<section class="container section check-page">${head}
+      <div class="ck-result ${g.passed ? 'pass' : 'fail'}" role="status"><b>${g.passed ? 'Mastered ✓' : 'Not yet'}: ${g.pct}% (${g.right} of ${g.total})</b>
+        <span>${g.passed ? 'You have shown mastery of this ' + (final ? 'course' : 'part') + '. Come back in a few days and retake it: spacing makes it stick.' : `Aim for ${M.PASS}%. Review the lessons below, then try a new set of questions.`}${rec.attempts > 1 ? ` Best so far: ${rec.best}%.` : ''}</span></div>
+      ${missedLessons.length ? `<div class="ck-review"><b>Lessons to review</b>${missedLessons.map(x => `<a href="${lessonURL(c, x)}">${esc(x.title)} →</a>`).join('')}</div>` : ''}
+      <ol class="ck-answers">${g.results.map(r => { const lsn = lessonOf(r.lessonId), mis = !r.ok && r.pick != null ? misconception(c, lsn, r.qi, r.q, r.pick) : ''; return `<li class="${r.ok ? 'ok' : 'no'}"><p class="ck-qt"><span aria-hidden="true">${r.ok ? '✓' : '✗'}</span><span class="sr-only">${r.ok ? 'Correct' : 'Incorrect'}.</span> ${md(r.q.q)}</p>
+        ${r.ok ? '' : `<p><b>Your answer:</b> ${r.pick == null ? 'not answered' : md(r.q.options[r.pick])}${mis ? ` <span class="ck-mis">${md(mis)}</span>` : ''}</p>`}
+        <p><b>Correct answer:</b> ${md(r.q.options[r.q.correct])}${r.q.why ? ` <span class="ck-why">${md(r.q.why)}</span>` : ''}</p>
+        ${r.ok ? '' : `<a href="${lessonURL(c, lsn)}">Review: ${esc(lsn.title)} →</a>`}</li>`; }).join('')}</ol>
+      <div class="ck-actions"><a class="btn primary" href="#/check/${esc(c.id)}/${esc(currentCheck.scope)}" data-check-new>Try a new set</a><a class="btn" href="${courseURL(c)}">Back to course</a></div></section>`;
+    window.scrollTo(0, 0);
+  }
+  document.addEventListener('submit', e => {
+    if (e.target.id !== 'check-form' || !currentCheck) return;
+    e.preventDefault();
+    const form = e.target, answers = currentCheck.items.map((_, i) => { const x = form.querySelector(`input[name="ck${i}"]:checked`); return x ? +x.value : null; });
+    const blank = answers.filter(a => a == null).length, warn = document.getElementById('ck-warn');
+    if (blank && !form.dataset.warned) { form.dataset.warned = '1'; warn.hidden = false; warn.textContent = `${blank} question${blank > 1 ? 's are' : ' is'} unanswered and will count as missed. Submit again to finish anyway.`; return; }
+    const g = window.Mastery.grade(currentCheck.items, answers);
+    const rec = window.Mastery.record(currentCheck.c.id, currentCheck.scope === 'final' ? 'final' : +currentCheck.scope, g.pct);
+    currentCheck.graded = { g, rec };
+    checkPage(currentCheck.c, currentCheck.scope);
+  });
 
   /* ---------- COURSE LANDING ---------- */
   function coursePage(c) {
@@ -257,6 +312,7 @@
         <section class="panel"><h2>What you'll learn</h2><ul class="learn">${c.learn.slice(0, 8).map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>
         <section class="panel"><h2>Course outline</h2>${groups.map(([name, ls], gi) => `<details class="part" ${gi < 2 || ls.some(l => l === next) ? 'open' : ''}><summary><span>${c.parts ? `Part ${gi + 1} · ` : ''}${esc(name)}</span><small>${ls.length} lessons · ${fmtMin(ls.reduce((a, l) => a + (l.minutes || 5), 0))}</small></summary>
           ${ls.map(l => { n++; return `<a class="o-row ${isDone(c, l) ? 'done' : ''}" href="${lessonURL(c, l)}"><span class="o-n">${isDone(c, l) ? '✓' : n}</span><span class="o-t"><b>${esc(l.title)}</b><small>${esc(l.chapter ? l.chapter + ' · ' : '')}${esc(l.goal)}</small></span><span class="o-badges">${l.widget ? '<i title="Interactive">🕹</i>' : ''}${l.lab ? `<i title="Lab">🧪${labTasks(l) > 1 ? '×' + labTasks(l) : ''}</i>` : ''}${window.VideoLib ? window.VideoLib.badge(c.id, l.id) : ''}<i title="Quiz">✎</i></span><span class="o-m">${l.minutes || 5} min</span></a>`; }).join('')}</details>`).join('')}</section>
+        ${masteryPanel(c)}
       </div>
       <aside class="c-aside">
         <div class="panel sticky"><h3>This course includes</h3><ul class="incl"><li>${c.lessons.length} concise lessons</li>${widgets ? `<li>${widgets} interactive simulations</li>` : ''}${labs ? `<li>${labs} auto-graded ${c.lang === 'sql' ? 'SQL' : 'Python'} labs in the browser</li>` : `<li>Source-linked diagrams and worked exercises</li>`}<li>${c.lessons.reduce((a, l) => a + (l.quiz || []).length, 0)} quiz questions</li><li>Progress saved locally</li></ul>
@@ -341,7 +397,8 @@
         ${studioLessonHTML(c, l)}
         ${window.AgentsCoach ? window.AgentsCoach.html(c, l) : ''}
         ${window.LearningUI.activityHTML(c, l)}
-        <section class="quiz" id="quiz"><h2>Check your understanding</h2>${(l.quiz || []).map((q, qi) => quizHTML(c, l, q, qi)).join('')}</section>
+        <section class="quiz" id="quiz"><h2>Check your understanding</h2>${(l.quiz || []).length && window.Confidence ? '<p class="q-intro">Before each answer, say how sure you are. It helps you notice what you only think you know.</p>' : ''}${(l.quiz || []).map((q, qi) => quizHTML(c, l, q, qi)).join('')}${calibHTML(c)}</section>
+        ${partCheckPrompt(c, l)}
         <div class="l-done">${isDone(c, l) ? '<span class="pill ok">✓ Completed</span>' : `<span class="w-small">Complete the quiz${labTasks(l) ? ' and lab tasks' : ''} to finish this lesson.</span>`}</div>
         <nav class="l-nav">${prev ? `<a href="${lessonURL(c, prev)}">← ${esc(prev.title)}</a>` : '<span></span>'}${next ? `<a class="btn primary" href="${lessonURL(c, next)}">Next: ${esc(next.title)} →</a>` : `<a class="btn primary" href="${courseURL(c)}">Finish course →</a>`}</nav>
       </article></main>
@@ -356,9 +413,21 @@
     document.getElementById('p-main').scrollTop = 0;
   }
   const widgetSlot = (c, l) => `<figure class="widget"><figcaption>🕹 ${esc((window.WIDGET_TITLES || {})[l.widget] || 'Interactive')}</figcaption>${window.PredictUI ? window.PredictUI.card(c, l) : ''}<div class="w" data-widget="${l.widget}"></div></figure>`;
+  // Why a particular wrong option is wrong: inline q.wrong, or a course's misconception bank (window.MISCONCEPTIONS).
+  const misconception = (c, l, qi, q, pick) => (q.wrong && q.wrong[pick]) || ((((window.MISCONCEPTIONS || {})[c.id] || {})[l.id] || {})[qi] || {})[pick] || '';
+  const confRow = () => window.Confidence ? `<div class="q-conf" role="group" aria-label="How sure are you before answering?"><span>How sure are you?</span>${window.Confidence.LEVELS.map(([v, t]) => `<button type="button" data-conf="${v}" aria-pressed="false">${t}</button>`).join('')}</div>` : '';
+  const calibHTML = c => { const m = window.Confidence ? window.Confidence.message(window.Confidence.summary(c.id)) : ''; return `<p class="calib" id="calib" aria-live="polite" ${m ? '' : 'hidden'}>${m ? '🧭 ' + esc(m) : ''}</p>`; };
   function quizHTML(c, l, q, qi) {
     const ok = P.quiz[k(c, l) + '#' + qi];
-    return `<div class="q ${ok ? 'answered' : ''}" data-q="${qi}"><p class="q-text"><span>Q${qi + 1}</span> ${md(q.q)}</p><div class="q-opts">${q.options.map((o, oi) => `<button type="button" data-opt="${oi}" class="${ok && oi === q.correct ? 'right' : ''}">${md(o)}</button>`).join('')}</div><p class="q-why" ${ok ? '' : 'hidden'}>${ok ? '✓ ' + md(q.why || '') : ''}</p></div>`;
+    return `<div class="q ${ok ? 'answered' : ''}" data-q="${qi}"><p class="q-text"><span>Q${qi + 1}</span> ${md(q.q)}</p>${ok ? '' : confRow()}<div class="q-opts">${q.options.map((o, oi) => `<button type="button" data-opt="${oi}" class="${ok && oi === q.correct ? 'right' : ''}">${md(o)}</button>`).join('')}</div><p class="q-why" ${ok ? '' : 'hidden'}>${ok ? '✓ ' + md(q.why || '') : ''}</p></div>`;
+  }
+  // After the last lesson of a part, invite the learner to show mastery of the whole part.
+  function partCheckPrompt(c, l) {
+    if (!window.Mastery) return '';
+    const part = window.Mastery.parts(c).find(p => p.lessons[p.lessons.length - 1] === l);
+    if (!part) return '';
+    const res = window.Mastery.get(c.id, part.index);
+    return `<div class="part-check-cta"><div><b>${c.parts ? `End of Part ${part.index + 1}: ${esc(part.name)}` : 'End of the course'}</b><span>${res && res.mastered ? `Mastered ✓ (best ${res.best}%)` : `Show you've mastered it: ${window.Mastery.PART_SIZE} mixed questions, ${window.Mastery.PASS}% to pass.`}</span></div><a class="btn" href="#/check/${esc(c.id)}/${part.index}">${res && res.mastered ? 'Retake check' : 'Take the check'} →</a></div>`;
   }
   function updateSkillUI(c, l) {
     const info = window.LearningEngine.info(c.id, l.id), stage = document.getElementById('skill-stage'), review = document.getElementById('skill-review');
@@ -613,6 +682,7 @@
     else if (parts[0] === 'practice' && window.PracticeHub) window.PracticeHub.render(app, parts.slice(1));
     else if (parts[0] === 'prompts') promptLibraryPage();
     else if (parts[0] === 'path' && PATHS.find(p => p.id === parts[1])) pathPage(PATHS.find(p => p.id === parts[1]));
+    else if (parts[0] === 'check' && getCourse(parts[1])) checkPage(getCourse(parts[1]), parts[2] === undefined ? 'final' : parts[2], true);  // arriving at a check always starts a fresh set
     else if (parts[0] === 'course' && getCourse(parts[1])) {
       const c = getCourse(parts[1]); const l = parts[2] && c.lessons.find(x => x.id === parts[2]);
       if (parts[2] && !l) notFound(); else l ? lessonPage(c, l) : coursePage(c);
@@ -629,12 +699,27 @@
     const fb = e.target.closest('[data-feature]'); if (fb) { featureTouched = true; clearInterval(featureTimer); showFeature(fb.dataset.feature); return; }
     const cb = e.target.closest('[data-cat]'); if (cb) { cat = cb.dataset.cat; drawGrid(); return; }
     if (window.LearningUI.handleChallenge(e, current)) { if (current) updateSkillUI(current.c, current.l); return; }
+    const newSet = e.target.closest('[data-check-new]');
+    if (newSet && currentCheck) { e.preventDefault(); checkPage(currentCheck.c, currentCheck.scope, true); window.scrollTo(0, 0); return; }
+    const confBtn = e.target.closest('.q [data-conf]');
+    if (confBtn) {
+      const box = confBtn.closest('.q'); box.dataset.conf = confBtn.dataset.conf;
+      box.querySelectorAll('[data-conf]').forEach(b => { const on = b === confBtn; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+      return;
+    }
     const opt = e.target.closest('.q [data-opt]');
     if (opt && current) {
       const box = opt.closest('.q'), qi = +box.dataset.q, q = current.l.quiz[qi], pick = +opt.dataset.opt, why = box.querySelector('.q-why');
       box.querySelectorAll('[data-opt]').forEach(b => b.classList.remove('right', 'wrong'));
       opt.classList.add(pick === q.correct ? 'right' : 'wrong'); why.hidden = false;
-      why.innerHTML = pick === q.correct ? '✓ ' + md(q.why || 'Correct!') : '✗ Not quite. Try again.';
+      const cal = window.Confidence ? window.Confidence.record(current.c.id, current.l.id, qi, box.dataset.conf, pick === q.correct) : null;
+      const mis = pick === q.correct ? '' : misconception(current.c, current.l, qi, q, pick);
+      why.innerHTML = pick === q.correct ? '✓ ' + md(q.why || 'Correct!')
+        : '✗ ' + (mis ? md(mis) + ' Try again.' : 'Not quite. Try again.')
+          + (cal && cal.confidentMistake ? '<span class="q-flag">You felt sure about this one. Confident mistakes are the most useful to revisit: reread the idea before retrying.</span>' : '');
+      box.querySelector('.q-conf')?.remove();
+      const calEl = document.getElementById('calib');
+      if (calEl && cal && cal.first) { const m = window.Confidence.message(window.Confidence.summary(current.c.id)); calEl.hidden = !m; calEl.textContent = m ? '🧭 ' + m : ''; }
       window.LearningEngine.recordAttempt(current.c.id, current.l.id, 'quiz', qi, pick === q.correct); updateSkillUI(current.c, current.l);
       if (pick === q.correct) { box.classList.add('answered'); P.quiz[k(current.c, current.l) + '#' + qi] = true; save(); checkComplete(current.c, current.l); }
       return;

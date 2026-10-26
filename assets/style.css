@@ -461,3 +461,51 @@ body.in-player .site-header, body.in-player .footer { display: none; }
 .glance-facts dt { color: var(--text); }
 .glance-parts .yes .gp-mark { color: var(--ink); border: 1px solid var(--ok); }
 .glance-parts .no .gp-mark { color: var(--text); }
+
+/* ---------- Confidence ratings and calibration (assets/confidence.js) ---------- */
+.q-intro { color: var(--text); font-size: 14px; margin: -6px 0 14px; }
+.q-conf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 10px; font-size: 14px; color: var(--text); }
+.q-conf button { font: inherit; font-size: 13px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--text); cursor: pointer; }
+.q-conf button:hover { border-color: var(--ink); }
+.q-conf button.on { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.q-flag { display: block; margin-top: 8px; padding: 8px 12px; border-left: 4px solid var(--warn); background: var(--warn-soft); color: var(--ink); border-radius: 0 8px 8px 0; font-size: 14px; }
+.calib { margin: 14px 0 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); color: var(--text); font-size: 14px; }
+.part-check-cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin: 22px 0 6px; padding: 14px 18px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--bg-soft); }
+.part-check-cta b { display: block; color: var(--ink); }
+.part-check-cta span { color: var(--text); font-size: 14px; }
+
+/* ---------- Mastery checks (assets/mastery.js) ---------- */
+.mastery-list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.mastery-list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.mastery-list li.final { border-style: dashed; }
+.mastery-list li.done { border-color: var(--ok); }
+.mastery-list b { color: var(--ink); display: block; }
+.mastery-list small { color: var(--text); font-size: 13px; }
+.check-page { max-width: 820px; }
+.check-page .crumbs { color: var(--text); }
+.check-page .crumbs a, .ck-review a, .ck-answers a { color: var(--link); }
+.check-intro { color: var(--text); margin: 8px 0 22px; }
+.ck-q { border: 1px solid var(--line); border-radius: var(--r); padding: 14px 18px 10px; margin: 0 0 14px; background: var(--panel); }
+.ck-q legend { padding: 0 6px; color: var(--ink); font-weight: 600; line-height: 1.5; }
+.ck-q legend span, .ck-qt span:first-child { color: var(--accent); margin-right: 4px; }
+.ck-opt { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; cursor: pointer; color: var(--text); }
+.ck-opt:hover { background: var(--bg-soft); }
+.ck-opt input { margin-top: 4px; accent-color: var(--ink); }
+.ck-warn { padding: 10px 14px; border-left: 4px solid var(--warn); background: var(--warn-soft); color: var(--ink); border-radius: 0 8px 8px 0; }
+.ck-result { padding: 16px 18px; border-radius: var(--r); margin: 6px 0 18px; border: 1px solid; }
+.ck-result b { display: block; font-size: 20px; color: var(--ink); margin-bottom: 4px; }
+.ck-result span { color: var(--text); }
+.ck-result.pass { border-color: var(--ok); background: var(--ok-soft); }
+.ck-result.fail { border-color: var(--warn); background: var(--warn-soft); }
+.ck-review { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; margin: 0 0 18px; color: var(--ink); }
+.ck-answers { margin: 0; padding-left: 22px; display: grid; gap: 14px; }
+.ck-answers li { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--text); }
+.ck-answers li.no { border-left: 4px solid var(--warn); }
+.ck-answers li.ok { border-left: 4px solid var(--ok); }
+.ck-answers p { margin: 4px 0; }
+.ck-qt { color: var(--ink); font-weight: 600; }
+.ck-mis, .ck-why { display: block; margin-top: 4px; color: var(--text); }
+.ck-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+/* Mastery-check labels: the accent colour is too light for small text in light mode */
+.check-page .kicker { color: var(--link); }
+.ck-q legend span, .ck-qt span:first-child { color: var(--ink); }
