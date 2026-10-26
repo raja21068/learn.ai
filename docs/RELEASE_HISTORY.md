@@ -2,6 +2,22 @@
 
 This is the running log of every release of learn/ai, newest first. It used to be the README; the README now introduces the project.
 
+## Confidence calibration, mastery checks and misconception feedback (October 2026)
+
+Three evidence-based learning features, all static and stored only in the learner's browser:
+
+- **Confidence ratings** (`assets/confidence.js`). Before answering a lesson-quiz question a learner can mark *Sure*, *Unsure* or *Guessing*. Only first attempts are recorded, confident mistakes are flagged, and a calibration line compares confidence with accuracy. Basis: metacognitive calibration; high-confidence errors are the ones most worth correcting (hypercorrection effect).
+- **Mastery checks** (`assets/mastery.js`, `#/check/<course>/<part>` and `#/check/<course>/final`). Every part has an end-of-part check: 8 mixed questions drawn round-robin from its lessons, 80% to show mastery, feedback after submission, missed questions linked to the lesson that teaches them. A 15-question final check covers the whole course. Basis: mastery learning, retrieval practice and interleaving. Questions are reused from the lessons, so a check measures recall of taught material; it is not a calibrated exam.
+- **Misconception feedback** (`assets/misconceptions-ml.js`). Each of the 108 wrong options in the Machine Learning course explains the specific mistaken idea behind it, in lessons and in check results. Basis: elaborated, task-level feedback. Other courses still show "Not quite. Try again." until their banks are written; add `window.MISCONCEPTIONS['<course-id>']` in the same format.
+
+Tests: `node tests/confidence-mastery.test.cjs`, `node tests/misconceptions.test.cjs` (both in the deploy gate).
+
+## Learning paths, Course at a glance and faster loading (October 2026)
+
+- **Learning paths** (`#/path/<id>`): the home page asks the learner's goal first (AI Beginner, AI Engineer, Computer Science, AI Researcher), then lists that path's courses in order.
+- **Course at a glance** on every course page: level, estimated time, prerequisites, status, last updated, learning outcome and the six-part course structure, each part marked from the real course data. Prerequisites, status and the last-updated month are edited in `assets/course-meta.js`.
+- **On-demand scripts**: CodeMirror and the practice, textbook-atlas, video and chapter-visualisation scripts now load only on the pages that need them (69 startup scripts instead of 82).
+
 ## Practice hub and the v7 merge (October 2026)
 
 New at `#/practice`: **421 practice-quiz questions** (pre- and post-lesson quizzes for 70 lessons in Machine Learning, AI Foundations and Data Science; MIT, from three Microsoft repositories), **27 hands-on Python labs** graded by hidden tests in your browser (algorithms, AI search, autograd, reinforcement learning, machine learning), a **Visualization lab** at `#/visualize` (8 interactive charts, 9 editable diagrams, the bundled TensorFlow Playground; Observable Plot, Mermaid and the Playground are also built into **all 70 guided textbook chapters** as a "Visual summary"), a **Notebooks & course texts** page (65 notebooks and 79 texts copied unmodified from ISLP labs, Hands-On ML, Zero to Hero, LangChain Academy, the Hugging Face Agents Course and OSSU, with Colab and download links), and a **Sources & licences** page covering 30 repositories from your catalog (13 copied with their licence, 17 link only). The v7 textbook build (Textbooks atlas, Algorithm Design, ISLR, Operating Systems, Computer Networking) is merged in. See [`PHASE10_PRACTICE_HUB_NOTES.md`](notes/PHASE10_PRACTICE_HUB_NOTES.md), [`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md) and `docs/RESEARCH_ATLAS.md`.
